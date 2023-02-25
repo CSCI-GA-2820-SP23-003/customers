@@ -49,19 +49,20 @@ class TestCustomer(unittest.TestCase):
 
     def test_create_customer(self):
         """ It should Create a Customer and assert that it exists """
-        customer = Customer(first_name="Marwan",last_name="J",email="mya6510@nyu.edu")
+        customer = Customer(first_name="Marwan",last_name="J",email="mya6510@nyu.edu",password="12344321")
         self.assertEqual(str(customer), "<Customer J, Marwan id=[None]>")
         self.assertTrue(customer is not None)
         self.assertEqual(customer.id, None)
         self.assertEqual(customer.first_name,"Marwan")
         self.assertEqual(customer.last_name, "J")
         self.assertEqual(customer.email, "mya6510@nyu.edu")
+        self.assertEqual(customer.password, "12344321")
     
     def test_add_customer(self):
         """It should Create a Customer and add it to the database"""
         customers = Customer.all()
         self.assertEqual(customers,[])
-        customer = Customer(first_name="Marwan",last_name="J",email="mya6510@nyu.edu")
+        customer = Customer(first_name="Marwan",last_name="J",email="mya6510@nyu.edu",password="12344321")
         self.assertTrue(customer is not None)
         self.assertEqual(customer.id, None)
         customer.create()
@@ -107,10 +108,10 @@ class TestCustomer(unittest.TestCase):
         
     def test_update_no_id(self):
         """It should not Update a Customer with no id"""
-        Customer = CustomerFactory()
-        logging.debug(Customer)
-        Customer.id = None
-        self.assertRaises(DataValidationError, Customer.update)
+        customer = CustomerFactory()
+        logging.debug(customer)
+        customer.id = None
+        self.assertRaises(DataValidationError, customer.update)
     
     def test_delete_a_customer(self):
         """It should Delete a Customer"""
@@ -166,8 +167,13 @@ class TestCustomer(unittest.TestCase):
         data = {"id": 1, "first_name": "Kitty", "email": "kitty@gmail.com"}
         customer = Customer()
         self.assertRaises(DataValidationError, customer.deserialize, data)
-
     
+    def test_deserialize_bad_data(self):
+        """It should not deserialize bad data"""
+        data = "this is not a dictionary"
+        customer = Customer()
+        self.assertRaises(DataValidationError, customer.deserialize, data)
+
     def test_find_customer(self):
         """It should Find a Customer by ID"""
         customers = CustomerFactory.create_batch(5)
@@ -204,7 +210,7 @@ class TestCustomer(unittest.TestCase):
             customer.create()
         last_name = customers[0].last_name
         count = len([customer for customer in customers if customer.last_name == last_name])
-        found = Customer.find_by_first_name(last_name)
+        found = Customer.find_by_last_name(last_name)
         self.assertEqual(found.count(), count)
         for customer in found:
             self.assertEqual(customer.last_name, last_name)
@@ -216,7 +222,7 @@ class TestCustomer(unittest.TestCase):
             customer.create()
         email = customers[0].email
         count = len([customer for customer in customers if customer.email == email])
-        found = Customer.find_by_first_name(email)
+        found = Customer.find_by_email(email)
         self.assertEqual(found.count(), count)
         for customer in found:
             self.assertEqual(customer.email, email)
@@ -237,7 +243,6 @@ class TestCustomer(unittest.TestCase):
     def test_find_or_404_not_found(self):
         """It should return 404 not found"""
         self.assertRaises(NotFound, Customer.find_or_404, 0)
-    
 
 
         

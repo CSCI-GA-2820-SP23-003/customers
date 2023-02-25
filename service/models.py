@@ -50,7 +50,7 @@ class Customer(db.Model):
         """
         Creates a Customer to the database
         """
-        logger.info("Creating %s", self.name)
+        logger.info("Creating %s, %s", self.last_name,self.first_name)
         # id must be none to generate next primary key
         self.id = None  # pylint: disable=invalid-name
         db.session.add(self)
@@ -60,14 +60,14 @@ class Customer(db.Model):
         """
         Updates a Customer to the database
         """
-        logger.info("Updating/Saving %s", self.name)
+        logger.info("Updating/Saving %s, %s", self.last_name,self.first_name)
         if not self.id:
             raise DataValidationError("Update called with empty ID field")
         db.session.commit()
 
     def delete(self):
         """ Removes a Customer from the data store """
-        logger.info("Deleting %s", self.name)
+        logger.info("Deleting %s, %s", self.last_name,self.first_name)
         db.session.delete(self)
         db.session.commit()
 
@@ -92,14 +92,10 @@ class Customer(db.Model):
             self.last_name = data["last_name"]
             self.email = data["email"]
             self.password = data["password"]
-
         except KeyError as error:
             raise DataValidationError("Invalid Customer: missing " + error.args[0]) from error
         except TypeError as error:
-            raise DataValidationError(
-                "Invalid Customer: body of request contained bad or no data - "
-                "Error message: " + error
-            ) from error
+            raise DataValidationError("Invalid pet: body of request contained bad or no data " + str(error)) from error
         return self
 
     ################
@@ -165,3 +161,17 @@ class Customer(db.Model):
         """
         logger.info("Processing name query for %s ...", email)
         return cls.query.filter(cls.email == email)
+
+    @classmethod
+    def find_or_404(cls, customer_id: int):
+        """Find a Customer by it's id
+
+        :param customer_id: the id of the Customer to find
+        :type customer_id: int
+
+        :return: an instance with the customer_id, or 404_NOT_FOUND if not found
+        :rtype: Customer
+
+        """
+        logger.info("Processing lookup or 404 for id %s ...", customer_id)
+        return cls.query.get_or_404(customer_id)
