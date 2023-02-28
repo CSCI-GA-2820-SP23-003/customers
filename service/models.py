@@ -36,8 +36,7 @@ class Customer(db.Model):
     last_name = db.Column(db.String(255), nullable=False)
     email = db.Column(db.String(255), nullable=False)
     password = db.Column(db.String(255), nullable=False)
-    created_on = db.Column(db.DateTime(), server_default=func.now())
-    updated_on = db.Column(db.DateTime(), server_default=func.now(), onupdate=func.current_timestamp())
+    dummy_dt = db.Column(db.DateTime, nullable=True)
     
     ###############
     # Instance Methods
