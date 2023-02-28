@@ -216,7 +216,7 @@ class TestCustomer(unittest.TestCase):
             self.assertEqual(customer.last_name, last_name)
 
     def test_find_by_email(self):
-        """It should Find Customer by Last Name"""
+        """It should Find Customer by Email"""
         customers = CustomerFactory.create_batch(10)
         for customer in customers:
             customer.create()

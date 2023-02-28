@@ -6,6 +6,7 @@ All of the models are stored in this module
 import logging
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.sql import func
 
 logger = logging.getLogger("flask.app")
 
@@ -21,14 +22,13 @@ def init_db(app):
 class DataValidationError(Exception):
     """ Used for an data validation errors when deserializing """
 
-
 class Customer(db.Model):
     """
     Class that represents a Customer
     """
 
     ###############
-    # Table Schema
+    # Customer Schema
     ##############
 
     id = db.Column(db.Integer, primary_key=True)
@@ -36,8 +36,8 @@ class Customer(db.Model):
     last_name = db.Column(db.String(255), nullable=False)
     email = db.Column(db.String(255), nullable=False)
     password = db.Column(db.String(255), nullable=False)
-    # Phone Number
-    #phone_number = db.Column(db.String(255), nullable=True)
+    created_on = db.Column(db.TimeStamp(), server_default=func.now())
+    updated_on = db.Column(db.TimeStamp(), server_default=func.now(), onupdate=func.current_timestamp())
     
     ###############
     # Instance Methods
