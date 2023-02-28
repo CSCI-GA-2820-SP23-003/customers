@@ -36,7 +36,6 @@ class Customer(db.Model):
     last_name = db.Column(db.String(255), nullable=False)
     email = db.Column(db.String(255), nullable=False)
     password = db.Column(db.String(255), nullable=False)
-    dummy_dt = db.Column(db.DateTime, nullable=True)
     
     ###############
     # Instance Methods
