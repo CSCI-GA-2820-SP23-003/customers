@@ -223,7 +223,7 @@ class TestCustomer(unittest.TestCase):
         self.assertEqual(len(new_customer.addresses), 2)
         self.assertEqual(new_customer.addresses[1].street, address2.street)
 
-    def test_update_account_address(self):
+    def test_update_customer_address(self):
         """It should Update an Customer's address"""
         customers = Customer.all()
         self.assertEqual(customers, [])
@@ -231,6 +231,7 @@ class TestCustomer(unittest.TestCase):
         customer = CustomerFactory()
         address = AddressFactory(customer=customer)
         customer.create()
+        
         # Assert that it was assigned an id and shows up in the database
         self.assertIsNotNone(customer.id)
         customers = Customer.all()
