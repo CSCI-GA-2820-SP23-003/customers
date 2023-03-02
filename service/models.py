@@ -18,9 +18,79 @@ def init_db(app):
     """ Initializes the SQLAlchemy app """
     Customer.init_db(app)
 
-
 class DataValidationError(Exception):
     """ Used for an data validation errors when deserializing """
+
+class Address(db.Model):
+    """
+    Class that represents a Address
+    """
+
+    ################
+    # Address Schema
+    ################
+
+    logger = logging.getLogger('flask.app')
+    app = None
+
+    # Table Schema
+    address_id = db.Column(db.Integer, primary_key=True)
+    street = db.Column(db.String(255), nullable=False)
+    city = db.Column(db.String(255), nullable=False)
+    state = db.Column(db.String(255), nullable=False)
+    country = db.Column(db.String(255), nullable=False)
+    pin_code = db.Column(db.String(255), nullable=False)
+    customer_id = db.Column(db.Integer, db.ForeignKey('customer.id', ondelete="CASCADE"), nullable=False)
+
+    def __repr__(self):
+        return f"<Address {self.street} id=[{self.address_id}] customer[{self.id}]>"
+    
+    def __str__(self):
+        return f"{self.street}, {self.city}, {self.state}, {self.country}, {self.pin_code}"
+
+    def serialize(self):
+        """ 
+        Serializes an Address into a dictionary
+        """
+        return {"address_id": self.address_id,
+                "street": self.street,
+                "city": self.city,
+                "state": self.state,
+                "country": self.country,
+                "pin_code": self.pin_code,
+                "customer_id": self.customer_id
+                }
+
+    def deserialize(self, data):
+        """
+        Deserializes an Address from a dictionary
+
+        Args:
+            data (dict): A dictionary containing the Address data
+        """
+        try:
+            self.street = data['street']
+            self.city = data['city']
+            self.state = data['state']
+            self.country = data['country']
+            self.pin_code = data['pin_code']
+            # check
+            self.customer_id = data['customer_id']
+        except KeyError as error:
+            raise DataValidationError("Invalid Address: missing " + error.args[0]) from error
+        except TypeError as error:
+            raise DataValidationError("Invalid pet: Body of request contained bad or no data " + str(error)) from error
+        return self
+
+    def create(self):
+        """
+        Creates an Address in the database
+        """
+        Address.logger.info('Creating %s', self.street)
+        if not self.address_id:
+            db.session.add(self)
+        db.session.commit()
+        Customer.logger.info("Address is saved successfully")
 
 class Customer(db.Model):
     """
@@ -36,6 +106,8 @@ class Customer(db.Model):
     last_name = db.Column(db.String(255), nullable=False)
     email = db.Column(db.String(255), nullable=False)
     password = db.Column(db.String(255), nullable=False)
+    # check
+    addresses = db.relationship("Address", backref="customer", passive_deletes=True)
     
     ###############
     # Instance Methods
@@ -71,12 +143,17 @@ class Customer(db.Model):
 
     def serialize(self):
         """ Serializes a Customer into a dictionary """
-        return {"id": self.id,
-                "first_name": self.first_name,
-                "last_name": self.last_name,
-                "email": self.email,
-                "password": self.password
-                }
+        customer = {
+            "id": self.id,
+            "first_name": self.first_name,
+            "last_name": self.last_name,
+            "email": self.email,
+            "password": self.password,
+            "addresses": [],
+        }
+        for address in self.addresses:
+            customer["addresses"].append(address.serialize())
+        return customer
 
     def deserialize(self, data):
         """
@@ -90,6 +167,12 @@ class Customer(db.Model):
             self.last_name = data["last_name"]
             self.email = data["email"]
             self.password = data["password"]
+            # handle inner list of addresses
+            address_list = data.get("addresses")
+            for json_address in address_list:
+                address = Address()
+                address.deserialize(json_address)
+                self.addresses.append(address)
         except KeyError as error:
             raise DataValidationError("Invalid Customer: missing " + error.args[0]) from error
         except TypeError as error:
