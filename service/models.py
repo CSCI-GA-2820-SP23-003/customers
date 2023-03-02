@@ -74,7 +74,6 @@ class Address(db.Model):
             self.state = data['state']
             self.country = data['country']
             self.pin_code = data['pin_code']
-            # check
             self.customer_id = data['customer_id']
         except KeyError as error:
             raise DataValidationError("Invalid Address: missing " + error.args[0]) from error
@@ -90,7 +89,13 @@ class Address(db.Model):
         if not self.address_id:
             db.session.add(self)
         db.session.commit()
-        Customer.logger.info("Address is saved successfully")
+        logger.info("Address is saved successfully")
+
+    def delete(self):
+        """ Removes a Address from the database """
+        logger.info("Deleting %s, %s", self.street,self.city)
+        db.session.delete(self)
+        db.session.commit()
 
 class Customer(db.Model):
     """
@@ -106,7 +111,6 @@ class Customer(db.Model):
     last_name = db.Column(db.String(255), nullable=False)
     email = db.Column(db.String(255), nullable=False)
     password = db.Column(db.String(255), nullable=False)
-    # check
     addresses = db.relationship("Address", backref="customer", passive_deletes=True)
     
     ###############
