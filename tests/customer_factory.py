@@ -31,5 +31,4 @@ class AddressFactory(factory.Factory):
     country = factory.Faker("country")
     pin_code = FuzzyChoice(["11101", "68420"])
     customer_id = None
-    # check
     # customer = factory.SubFactory(CustomerFactory)
