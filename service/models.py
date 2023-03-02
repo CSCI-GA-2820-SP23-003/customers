@@ -43,7 +43,7 @@ class Address(db.Model):
     customer_id = db.Column(db.Integer, db.ForeignKey('customer.id', ondelete="CASCADE"), nullable=False)
 
     def __repr__(self):
-        return f"<Address {self.street} id=[{self.address_id}] customer[{self.id}]>"
+        return f"<Address {self.street} address_id=[{self.address_id}] customer[{self.id}]>"
     
     def __str__(self):
         return f"{self.street}, {self.city}, {self.state}, {self.country}, {self.pin_code}"
