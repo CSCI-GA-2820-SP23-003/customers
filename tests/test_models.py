@@ -5,9 +5,9 @@ Test cases for Customer Model
 import os
 import logging
 import unittest
-from service.models import Customer, DataValidationError, db
+from service.models import Customer, Address, DataValidationError, db
 from service import app
-from tests.customer_factory import CustomerFactory
+from tests.customer_factory import CustomerFactory, AddressFactory
 from werkzeug.exceptions import NotFound
 
 DATABASE_URI = os.getenv(
@@ -37,6 +37,7 @@ class TestCustomer(unittest.TestCase):
     def setUp(self):
         """ This runs before each test """
         db.session.query(Customer).delete()  # clean up the last tests
+        db.session.query(Address).delete()
         db.session.commit()
 
     def tearDown(self):
@@ -84,6 +85,7 @@ class TestCustomer(unittest.TestCase):
         self.assertEqual(found_customer.last_name, customer.last_name)
         self.assertEqual(found_customer.email, customer.email)
         self.assertEqual(found_customer.password, customer.password)
+        self.assertEqual(found_customer.addresses, [])
     
     def test_update_a_customer(self):
         """It should Update a Customer"""
@@ -137,6 +139,8 @@ class TestCustomer(unittest.TestCase):
     def test_serialize_a_customer(self):
         """It should serialize a Customer"""
         customer = CustomerFactory()
+        address = AddressFactory()
+        customer.addresses.append(address)
         data = customer.serialize()
         self.assertNotEqual(data, None)
         self.assertIn("id", data)
@@ -149,18 +153,41 @@ class TestCustomer(unittest.TestCase):
         self.assertEqual(data["email"], customer.email)
         self.assertIn("password", data)
         self.assertEqual(data["password"], customer.password)
-    
+        self.assertEqual(len(data["addresses"]), 1)
+        addresses = data["addresses"]
+        self.assertEqual(addresses[0]["address_id"], address.address_id)
+        self.assertEqual(addresses[0]["street"], address.street)
+        self.assertEqual(addresses[0]["city"], address.city)
+        self.assertEqual(addresses[0]["state"], address.state)
+        self.assertEqual(addresses[0]["country"], address.country)
+        self.assertEqual(addresses[0]["pin_code"], address.pin_code)
+        self.assertEqual(addresses[0]["customer_id"], address.customer_id)
+        
+    # def test_deserialize_a_customer(self):
+    #     """It should de-serialize a Customer"""
+    #     data = CustomerFactory().serialize()
+    #     customer = Customer()
+    #     customer.deserialize(data)
+    #     self.assertNotEqual(customer, None)
+    #     self.assertEqual(customer.id, None)
+    #     self.assertEqual(customer.first_name, data["first_name"])
+    #     self.assertEqual(customer.last_name, data["last_name"])
+    #     self.assertEqual(customer.email, data["email"])
+    #     self.assertEqual(customer.password, data["password"])
+
     def test_deserialize_a_customer(self):
-        """It should de-serialize a Customer"""
-        data = CustomerFactory().serialize()
-        customer = Customer()
-        customer.deserialize(data)
-        self.assertNotEqual(customer, None)
-        self.assertEqual(customer.id, None)
-        self.assertEqual(customer.first_name, data["first_name"])
-        self.assertEqual(customer.last_name, data["last_name"])
-        self.assertEqual(customer.email, data["email"])
-        self.assertEqual(customer.password, data["password"])
+        """It should Deserialize a Customer"""
+        customer = CustomerFactory()
+        customer.addresses.append(AddressFactory())
+        customer.create()
+        serial_customer = customer.serialize()
+        new_customer = Customer()
+        new_customer.deserialize(serial_customer)
+        self.assertEqual(new_customer.id, None)
+        self.assertEqual(new_customer.first_name, customer.first_name)
+        self.assertEqual(new_customer.last_name, customer.last_name)
+        self.assertEqual(new_customer.email, customer.email)
+        self.assertEqual(new_customer.password, customer.password)
     
     def test_deserialize_missing_data(self):
         """It should not deserialize a Customer with missing data"""
