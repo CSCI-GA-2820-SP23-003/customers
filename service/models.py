@@ -30,7 +30,7 @@ class Address(db.Model):
     # Address Schema
     ################
 
-    logger = logging.getLogger('flask.app')
+    # logger = logging.getLogger('flask.app')
     app = None
 
     # Table Schema
@@ -82,7 +82,7 @@ class Address(db.Model):
         """
         Creates an Address in the database
         """
-        Address.logger.info('Creating %s', self.street)
+        logger.info('Creating %s', self.street)
         if not self.address_id:
             db.session.add(self)
         db.session.commit()
