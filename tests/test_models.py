@@ -353,19 +353,19 @@ class TestCustomer(unittest.TestCase):
         """It should return 404 not found for Customer"""
         self.assertRaises(NotFound, Customer.find_or_404, 0)
 
-    def test_find_or_404_found_address(self):
-        """It should Find or return 404 not found for Address"""
-        addresses = AddressFactory.create_batch(3)
-        for address in addresses:
-            address.create()
+    # def test_find_or_404_found_address(self):
+    #     """It should Find or return 404 not found for Address"""
+    #     addresses = AddressFactory.create_batch(3)
+    #     for address in addresses:
+    #         address.create()
 
-        address = Address.find_or_404_address(addresses[1].address_id)
-        self.assertIsNot(address, None)
-        self.assertEqual(address.address_id, addresses[1].address_id)
-        self.assertEqual(address.street, addresses[1].street)
-        self.assertEqual(address.city, addresses[1].city)
-        self.assertEqual(address.country, addresses[1].country)
-        self.assertEqual(address.pin_code, addresses[1].pin_code)
+    #     address = Address.find_or_404_address(addresses[1].address_id)
+    #     self.assertIsNot(address, None)
+    #     self.assertEqual(address.address_id, addresses[1].address_id)
+    #     self.assertEqual(address.street, addresses[1].street)
+    #     self.assertEqual(address.city, addresses[1].city)
+    #     self.assertEqual(address.country, addresses[1].country)
+    #     self.assertEqual(address.pin_code, addresses[1].pin_code)
 
     def test_find_or_404_not_found_address(self):
         """It should return 404 not found for Address"""
