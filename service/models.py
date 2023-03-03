@@ -30,9 +30,6 @@ class Address(db.Model):
     # Address Schema
     ################
 
-    # logger = logging.getLogger('flask.app')
-    app = None
-
     # Table Schema
     address_id = db.Column(db.Integer, primary_key=True)
     street = db.Column(db.String(255), nullable=False)
@@ -138,6 +135,12 @@ class Address(db.Model):
         logger.info('Pincode query under progress for: %s ...', pin_code)
         addresses = cls.query.filter(cls.pin_code == pin_code)
         return [Customer.find(address.customer_id) for address in addresses]
+
+    @classmethod
+    def find(cls, address_id):
+        """ Finds a Address by it's ID """
+        logger.info("Processing lookup for id %s ...", address_id)
+        return cls.query.get(address_id)
 
     @classmethod
     def find_or_404_address(cls, address_id: int):
