@@ -7,7 +7,7 @@ import logging
 import unittest
 from service.models import Customer, Address, DataValidationError, db
 from service import app
-from tests.customer_factory import CustomerFactory, AddressFactory
+from tests.factories import CustomerFactory, AddressFactory
 from werkzeug.exceptions import NotFound
 
 DATABASE_URI = os.getenv(
