@@ -43,10 +43,7 @@ class Address(db.Model):
     customer_id = db.Column(db.Integer, db.ForeignKey('customer.id', ondelete="CASCADE"), nullable=False)
 
     def __repr__(self):
-        return f"<Address {self.street} address_id=[{self.address_id}] customer[{self.id}]>"
-    
-    def __str__(self):
-        return f"{self.street}, {self.city}, {self.state}, {self.country}, {self.pin_code}"
+        return f"<Address {self.street} address_id=[{self.address_id}] customer[{self.customer_id}]>"
 
     def serialize(self):
         """ 
@@ -78,7 +75,7 @@ class Address(db.Model):
         except KeyError as error:
             raise DataValidationError("Invalid Address: missing " + error.args[0]) from error
         except TypeError as error:
-            raise DataValidationError("Invalid pet: Body of request contained bad or no data " + str(error)) from error
+            raise DataValidationError("Invalid Address: Body of request contained bad or no data " + str(error)) from error
         return self
 
     def create(self):
@@ -91,11 +88,71 @@ class Address(db.Model):
         db.session.commit()
         logger.info("Address is saved successfully")
 
+    def update(self):
+        """
+        Updates an Address in the database
+        """
+        logger.info("Updating/Saving %s, %s", self.street, self.city)
+        if not self.address_id:
+            raise DataValidationError("Update called with empty ID field")
+        db.session.commit()
+
     def delete(self):
         """ Removes a Address from the database """
         logger.info("Deleting %s, %s", self.street,self.city)
         db.session.delete(self)
         db.session.commit()
+
+    @classmethod
+    def find_by_city(cls, city):
+        """
+        Returns all addresses with the given city name
+
+        Args:
+            city (string): The addressess corresponding to the city you want to list
+        """
+        logger.info('City query under progress for: %s ...', city)
+        addresses = cls.query.filter(cls.city == city)
+        return [Customer.find(address.customer_id) for address in addresses]
+
+    @classmethod
+    def find_by_state(cls, state):
+        """
+        Returns all addresses with the given state name
+
+        Args:
+            state (string): The addresses corresponding to the state you want to list
+        """
+        logger.info('State query under progress for: %s ...', state)
+        addresses = cls.query.filter(cls.state == state)
+        return [Customer.find(address.customer_id) for address in addresses]
+
+    @classmethod
+    def find_by_pin_code(cls, pin_code):
+        """
+        Returns all addresses in the given pin code
+
+        Args:
+            pin_code (string): the pin_code of the Addresses you want to match
+        """
+        logger.info('Pincode query under progress for: %s ...', pin_code)
+        addresses = cls.query.filter(cls.pin_code == pin_code)
+        return [Customer.find(address.customer_id) for address in addresses]
+
+    @classmethod
+    def find_or_404_address(cls, address_id: int):
+        """Find an Address by it's id
+
+        :param address_id: the id of the Address to find
+        :type address_id: int
+
+        :return: an instance with the address_id, or 404_NOT_FOUND if not found
+        :rtype: Address
+
+        """
+        logger.info("Processing lookup or 404 for id %s ...", address_id)
+        logger.info("")
+        return cls.query.get_or_404(address_id)
 
 class Customer(db.Model):
     """
@@ -180,7 +237,7 @@ class Customer(db.Model):
         except KeyError as error:
             raise DataValidationError("Invalid Customer: missing " + error.args[0]) from error
         except TypeError as error:
-            raise DataValidationError("Invalid pet: body of request contained bad or no data " + str(error)) from error
+            raise DataValidationError("Invalid Customer: body of request contained bad or no data " + str(error)) from error
         return self
 
     ################

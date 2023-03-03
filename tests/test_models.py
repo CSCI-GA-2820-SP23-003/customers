@@ -14,9 +14,9 @@ DATABASE_URI = os.getenv(
     "DATABASE_URI", "postgresql://postgres:postgres@localhost:5432/testdb"
 )
 
-######################################################################
-#  Customer   M O D E L   T E S T   C A S E S
-######################################################################
+############################################################################
+#                   M O D E L   T E S T   C A S E S                        #
+############################################################################
 class TestCustomer(unittest.TestCase):
     """ Test Cases for Customer Model """
 
@@ -44,13 +44,13 @@ class TestCustomer(unittest.TestCase):
         """ This runs after each test """
         db.session.remove()
 
-    ######################################################################
-    #  T E S T   C A S E S
-    ######################################################################
+    #####################################################################
+    #  C U S T O M E R   A N D   A D D R E S S   M O D E L   C A S E S  #
+    #####################################################################
 
     def test_create_customer(self):
         """ It should Create a Customer and assert that it exists """
-        customer = Customer(first_name="Marwan",last_name="J",email="mya6510@nyu.edu",password="12344321")
+        customer = Customer(first_name="Marwan",last_name="J",email="mya6510@nyu.edu",password="12344321", addresses=[])
         self.assertEqual(str(customer), "<Customer J, Marwan id=[None]>")
         self.assertTrue(customer is not None)
         self.assertEqual(customer.id, None)
@@ -63,7 +63,7 @@ class TestCustomer(unittest.TestCase):
         """It should Create a Customer and add it to the database"""
         customers = Customer.all()
         self.assertEqual(customers,[])
-        customer = Customer(first_name="Marwan",last_name="J",email="mya6510@nyu.edu",password="12344321")
+        customer = Customer(first_name="Marwan",last_name="J",email="mya6510@nyu.edu",password="12344321",  addresses=[])
         self.assertTrue(customer is not None)
         self.assertEqual(customer.id, None)
         customer.create()
@@ -114,6 +114,13 @@ class TestCustomer(unittest.TestCase):
         logging.debug(customer)
         customer.id = None
         self.assertRaises(DataValidationError, customer.update)
+
+    def test_update_no_address_id(self):
+        """It should not Update a Address with no Address id"""
+        address = AddressFactory()
+        logging.debug(address)
+        address.address_id = None
+        self.assertRaises(DataValidationError, address.update)
 
     def test_delete_a_customer(self):
         """It should Delete a Customer"""
@@ -207,6 +214,7 @@ class TestCustomer(unittest.TestCase):
         address = AddressFactory(customer=customer)
         customer.addresses.append(address)
         customer.create()
+        address.create()
         # Assert that it was assigned an id and shows up in the database
         self.assertIsNotNone(customer.id)
         customers = Customer.all()
@@ -231,7 +239,7 @@ class TestCustomer(unittest.TestCase):
         customer = CustomerFactory()
         address = AddressFactory(customer=customer)
         customer.create()
-        
+
         # Assert that it was assigned an id and shows up in the database
         self.assertIsNotNone(customer.id)
         customers = Customer.all()
@@ -245,6 +253,7 @@ class TestCustomer(unittest.TestCase):
         # Change the city
         old_address.city = "XX"
         customer.update()
+        address.update()
 
         # Fetch it back again
         customer = Customer.find(customer.id)
@@ -328,7 +337,7 @@ class TestCustomer(unittest.TestCase):
             self.assertEqual(customer.email, email)
 
     def test_find_or_404_found(self):
-        """It should Find or return 404 not found"""
+        """It should Find or return 404 not found for Customer"""
         customers = CustomerFactory.create_batch(3)
         for customer in customers:
             customer.create()
@@ -341,5 +350,49 @@ class TestCustomer(unittest.TestCase):
         self.assertEqual(customer.email, customers[1].email)
 
     def test_find_or_404_not_found(self):
-        """It should return 404 not found"""
+        """It should return 404 not found for Customer"""
         self.assertRaises(NotFound, Customer.find_or_404, 0)
+
+    def test_find_or_404_found_address(self):
+        """It should Find or return 404 not found for Address"""
+        addresses = AddressFactory.create_batch(3)
+        for address in addresses:
+            address.create()
+
+        address = Address.find_or_404_address(addresses[1].address_id)
+        self.assertIsNot(address, None)
+        self.assertEqual(address.address_id, addresses[1].address_id)
+        self.assertEqual(address.street, addresses[1].street)
+        self.assertEqual(address.city, addresses[1].city)
+        self.assertEqual(address.country, addresses[1].country)
+        self.assertEqual(address.pin_code, addresses[1].pin_code)
+
+    def test_find_or_404_not_found_address(self):
+        """It should return 404 not found for Address"""
+        self.assertRaises(NotFound, Address.find_or_404_address, 0)
+
+    def test_find_addr(self):
+        """It should Find Addresses by Given Search Criteria"""
+        customer = CustomerFactory()
+        address = Address (
+            street="251 Mercer St",
+            city="New York",
+            state="New York",
+            country="United States",
+            pin_code="10012",
+        )
+        customer.addresses.append(address)
+        customer.create()
+        address.create()
+
+        # It should Find Addresses by City
+        customer_city = Address.find_by_city(address.city)
+        self.assertEqual(customer_city[0].id, address.customer_id)
+
+        # It should Find Addresses by State
+        customer_state = Address.find_by_state(address.state)
+        self.assertEqual(customer_state[0].id, address.customer_id)
+
+        # It should Find Addresses by Pincode
+        customer_pin_code = Address.find_by_pin_code(address.pin_code)
+        self.assertEqual(customer_pin_code[0].id, address.customer_id)
