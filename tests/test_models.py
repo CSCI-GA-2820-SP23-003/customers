@@ -399,3 +399,7 @@ class TestCustomer(unittest.TestCase):
         # It should Find Addresses by Pincode
         customer_pin_code = Address.find_by_pin_code(address.pin_code)
         self.assertEqual(customer_pin_code[0].id, address.customer_id)
+
+        # It should Find Addresses by Address ID
+        found_address_id = Address.find(address.address_id)
+        self.assertEqual(found_address_id.customer_id, address.customer_id)
