@@ -58,6 +58,7 @@ class TestCustomer(unittest.TestCase):
         self.assertEqual(customer.last_name, "J")
         self.assertEqual(customer.email, "mya6510@nyu.edu")
         self.assertEqual(customer.password, "12344321")
+        self.assertEqual(customer.addresses, [])
 
     def test_add_customer(self):
         """It should Create a Customer and add it to the database"""
@@ -238,6 +239,7 @@ class TestCustomer(unittest.TestCase):
 
         customer = CustomerFactory()
         address = AddressFactory(customer=customer)
+        customer.addresses.append(address)
         customer.create()
 
         # Assert that it was assigned an id and shows up in the database
@@ -267,6 +269,7 @@ class TestCustomer(unittest.TestCase):
 
         customer = CustomerFactory()
         address = AddressFactory(customer=customer)
+        customer.addresses.append(address)
         customer.create()
         # Assert that it was assigned an id and shows up in the database
         self.assertIsNotNone(customer.id)
