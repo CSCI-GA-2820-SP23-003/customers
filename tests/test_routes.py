@@ -62,6 +62,10 @@ class TestCustomersServer(TestCase):
         resp = self.client.get("/")
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
 
+    ######################################################################
+    #  CREATE CUSTOMER
+    ######################################################################
+
     def test_create_customer_valid_id(self):
         """It should check if a Customer has been created with a valid ID"""
         
@@ -351,6 +355,10 @@ class TestCustomersServer(TestCase):
             created_addr = addr_post_req.get_json()
             self.assertEqual(created_addr["pin_code"], addr.pin_code, "Addresss pincodes has not been populated correctly")
 
+##########################################
+# DELETE CUSTOMERS and ADDRESSES
+##########################################
+
     def test_delete_customer_valid_request(self):
         """ It should delete a customer """
         customers = CustomerFactory.create_batch(3)
@@ -420,3 +428,93 @@ class TestCustomersServer(TestCase):
         _ = self.client.delete(f"{BASE_URL}/{customer.id}/addresses/{address.address_id}")    #first time
         resp = self.client.delete(f"{BASE_URL}/{customer.id}/addresses/{address.address_id}") #second time
         self.assertEqual(resp.status_code, status.HTTP_204_NO_CONTENT)
+
+    ##########################################
+    # UPDATE CUSTOMER
+    ##########################################
+    def test_update_customer(self):
+        """It should Update an existing Customer"""
+        # create a Customer to update
+        test_customer = CustomerFactory()
+        response = self.client.post(BASE_URL, json=test_customer.serialize())
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        # update the Customer
+        dummy_email =  "User759@gmail.com";
+        updated_customer = response.get_json()
+        logging.debug(updated_customer)
+        updated_customer["email"] = dummy_email
+        response = self.client.put(f"{BASE_URL}/{updated_customer['id']}", json=updated_customer)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        updated_customer = response.get_json()
+        self.assertEqual(updated_customer["email"], dummy_email)
+
+    def test_update_invalid_customer(self):
+        """It should not Update Non existing Customer"""
+        customer = CustomerFactory()
+        customer.id = 10
+        customer_ser = customer.serialize()
+        logging.debug(customer)
+        response = self.client.put(f"{BASE_URL}/{customer_ser['id']}", json=customer_ser)
+        
+        self.assertEqual(response.status_code,status.HTTP_404_NOT_FOUND)
+    
+    ##########################################
+    # UPDATE ADDRESS
+    ##########################################
+    
+    def test_update_customer_address(self):
+        """It should Update an existing Customer Address"""
+        
+        # create a Customer with 3 addresses to update
+        customer = CustomerFactory()
+        addresses = AddressFactory.create_batch(3)
+        customer.addresses.extend(addresses)
+        customer.create()
+        customer_id = customer.id
+        logging.debug(customer)
+        # Check that customer been created
+        customer = Customer.find(customer_id)
+        self.assertIsNotNone(customer)
+        # check that addresses been created
+        self.assertEqual(len(customer.addresses), 3)
+        
+        # Pick an address randomly
+        address_id_to_update = random.choice(customer.addresses).address_id
+        # update the address
+        address = Address.find(address_id_to_update)
+        self.assertIsNotNone(address)
+        dummy_street =  "Washington Square";
+        logging.debug(address)
+        address = address.serialize()
+        address["street"] = dummy_street
+        
+        response = self.client.put(f"{BASE_URL}/{address['customer_id']}/addresses/{address['address_id']}", json=address)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        updated_address = Address.find(address['address_id'])
+        logging.debug(updated_address)
+        self.assertEqual(updated_address.street, dummy_street)
+    
+    def test_update_customer_address_invalid_customer(self):
+        """It should not update address for an invalid Customer"""
+        # create a Customer with an address to update
+        customer = CustomerFactory()
+        address = AddressFactory()
+        customer.addresses.append(address)
+
+        response = self.client.put(f"{BASE_URL}/{customer.id}/addresses/{address.address_id}", json=address.serialize())
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_update_customer_address_invalid_address(self):
+        """It should not update invalid address for a Customer"""
+        # create a Customer with an address to update
+        customer = CustomerFactory()
+        customer.create()
+        # check customer being created
+        customer = Customer.find(customer.id)
+        self.assertIsNotNone(customer)
+        self.assertEqual(len(customer.addresses),0)
+
+        address = AddressFactory()
+        response = self.client.put(f"{BASE_URL}/{customer.id}/addresses/1", json=address.serialize())
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
