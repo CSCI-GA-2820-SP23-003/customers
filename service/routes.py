@@ -39,7 +39,8 @@ def create_customers():
         methods in Customer class.
     """
     app.logger.info("Request to create a Customer")
-    
+    check_content_type("application/json")
+
     # Create the customer
     customer = Customer()
     customer.deserialize(request.get_json())
@@ -61,6 +62,7 @@ def create_addresses(customer_id):
     """Creates an address linked to a specific customer"""
 
     app.logger.info(f"Request to create an address for a customer with {customer_id}")
+    check_content_type("application/json")
 
     #get the customer information
     customer = Customer.find(customer_id)
@@ -167,3 +169,18 @@ def delete_address(customer_id, address_id):
         address.delete()
 
     return make_response("", status.HTTP_204_NO_CONTENT)
+
+######################################################################
+#  U T I L I T Y   F U N C T I O N S
+######################################################################
+
+def check_content_type(media_type):
+    """Checks that the media type is correct"""
+    content_type = request.headers.get("Content-Type")
+    if content_type and content_type == media_type:
+        return
+    app.logger.error("Invalid Content-Type: %s", content_type)
+    abort(
+        status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,
+        f"Content-Type must be {media_type}",
+    )
