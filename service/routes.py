@@ -114,12 +114,20 @@ def get_addresses(customer_id, address_id):
         "Request to retrieve Address %s for Customer id: %s", (address_id, customer_id)
     )
 
+    # See if the customer exists and abort if it doesn't
+    customer = Customer.find(customer_id)
+    if not customer:
+        abort(
+            status.HTTP_404_NOT_FOUND,
+            f"Customer with id '{customer_id}' could not be found.",
+        )
+        
     # See if the address exists and abort if it doesn't
     address = Address.find(address_id)
     if not address:
         abort(
             status.HTTP_404_NOT_FOUND,
-            f"Customer with id '{address_id}' could not be found.",
+            f"Address with id '{address_id}' could not be found.",
         )
 
     return make_response(jsonify(address.serialize()), status.HTTP_200_OK)
