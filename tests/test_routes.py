@@ -382,7 +382,7 @@ class TestCustomersServer(TestCase):
         self.assertIn("Not Found", data["message"])
 
     def test_get_address(self):
-        """It should Get an address from a customer"""
+        """It should Read an address from a customer"""
         # create a known address
         customer = CustomerFactory()
         logging.debug(customer)
@@ -394,24 +394,24 @@ class TestCustomersServer(TestCase):
             "Could not create test Customer"
         )
         new_customer = resp.get_json()
-        customer_id = new_customer["id"]
+        customer.id = new_customer["id"]
         address = AddressFactory()
-        address.customer_id = customer_id
+        address.customer_id = customer.id
         resp = self.client.post(
-            f"{BASE_URL}/{customer_id}/addresses",
+            f"{BASE_URL}/{customer.id}/addresses",
             json=address.serialize(),
             content_type="application/json",
         )
         self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
         new_address = resp.get_json()
-        address_id = new_address["address_id"]  
+        address.address_id = new_address["address_id"]  
         customer.addresses.append(address)    
         #address_id = address.address_id
         # logging.debug(address_id)
         # logging.debug(customer.id)       
         # retrieve it back
         resp2 = self.client.get(
-            f"{BASE_URL}/{customer_id}/addresses/{address_id}",
+            f"{BASE_URL}/{customer.id}/addresses/{address.address_id}",
             content_type="application/json",
         )
         self.assertEqual(resp2.status_code, status.HTTP_200_OK)
@@ -419,8 +419,8 @@ class TestCustomersServer(TestCase):
         logging.debug(customer.addresses)
         logging.debug(data2)
         logging.debug(address)
-        self.assertEqual(data2["customer_id"], customer_id)
-        self.assertEqual(data2["address_id"], address_id)
+        self.assertEqual(data2["customer_id"], customer.id)
+        self.assertEqual(data2["address_id"], address.address_id)
         self.assertEqual(data2["customer_id"], address.customer_id)
         self.assertEqual(data2["street"], address.street)
         self.assertEqual(data2["city"], address.city)
@@ -451,7 +451,7 @@ class TestCustomersServer(TestCase):
         self.assertIn("Not Found", data["message"])
 
     def test_get_address_not_found_invalid_customer(self):
-        """It should not Read an address for an invalid customer ID"""
+        """It should not Read an address for a customer that is not found"""
         response = self.client.get(f"{BASE_URL}/0/addresses/1")
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
         data = response.get_json()

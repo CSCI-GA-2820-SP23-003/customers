@@ -108,7 +108,7 @@ def get_customers(customer_id):
 def get_addresses(customer_id, address_id):
     """
     Get an Address
-    This endpoint returns just an address
+    This endpoint returns just an address for a particular customer based on its address ID
     """
     app.logger.info(
         "Request to retrieve Address %s for Customer id: %s", (address_id, customer_id)
@@ -121,7 +121,7 @@ def get_addresses(customer_id, address_id):
             status.HTTP_404_NOT_FOUND,
             f"Customer with id '{customer_id}' could not be found.",
         )
-        
+
     # See if the address exists and abort if it doesn't
     address = Address.find(address_id)
     if not address:
