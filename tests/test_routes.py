@@ -16,7 +16,7 @@ from tests.factories import AddressFactory, CustomerFactory
 
 
 DATABASE_URI = os.getenv(
-    "DATABASE_URI", "postgresql://postgres:postgres@localhost:5432/testdb"
+    "DATABASE_URI", "postgresql://postgres:postgres@localhost:5432/postgres"
 )
 
 app.logger.critical(DATABASE_URI)
