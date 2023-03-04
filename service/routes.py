@@ -124,10 +124,10 @@ def get_addresses(customer_id, address_id):
 
     # See if the address exists and abort if it doesn't
     address = Address.find(address_id)
-    if not address:
+    if not address or address.customer_id != customer.id:
         abort(
             status.HTTP_404_NOT_FOUND,
-            f"Address with id '{address_id}' could not be found.",
+            f"Address with id '{address_id}' could not be found for the customer with id {customer.id}.",
         )
 
     return make_response(jsonify(address.serialize()), status.HTTP_200_OK)
