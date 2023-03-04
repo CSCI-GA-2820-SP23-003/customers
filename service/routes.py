@@ -25,15 +25,9 @@ def index():
 
 
 ######################################################################
-#  DELETE A CUSTOMER
+#  R E S T   A P I   E N D P O I N T S
 ######################################################################
-@app.route("/customers/<int:customer_id>", methods=["DELETE"])
-def delete_customer(customer_id):
-    """
-    Deletes a Customer.
 
-<<<<<<< HEAD
-# Place your REST API code here ...
 
 ######################################################################
 # C R E A T E    A    N E W    C U S T O M E R
@@ -71,12 +65,12 @@ def create_addresses(customer_id):
     """Creates an address linked to a specific customer"""
 
     app.logger.info(f"Request to create an address for a customer with {customer_id}")
-    
+
     #get the customer information
     customer = Customer.find(customer_id)
-
+    
     if not customer:
-        abort(status.HTTP_404_NOT_FOUND, f"{customer_id} does not exist")
+        abort(status.HTTP_404_NOT_FOUND, f"Customer with {customer_id} does not exist")
 
     #Create an address instance for the customer = customer_id
     address = Address()
@@ -90,14 +84,12 @@ def create_addresses(customer_id):
 
     return make_response(jsonify(to_send), status.HTTP_201_CREATED)
 
-
-
-
-
-
-=======
+@app.route("/customers/<int:customer_id>", methods=["DELETE"])
+def delete_customer(customer_id):
+    """
+    Deletes a Customer.
     Args:
-        customer_id (int): unique id associated with the specific customer to be deleted.
+    customer_id (int): unique id associated with the specific customer to be deleted.
     """
     app.logger.info("Request to delete customer: %s", customer_id)
 
@@ -126,4 +118,3 @@ def delete_address(customer_id, address_id):
         address.delete()
 
     return make_response("", status.HTTP_204_NO_CONTENT)
->>>>>>> master
