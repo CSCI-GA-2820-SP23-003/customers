@@ -63,7 +63,7 @@ class TestCustomersServer(TestCase):
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
 
     def test_create_customer_valid_id(self):
-        """Test case to check if the Customer ID is populated appropriately; happy paths"""
+        """It should check if a Customer has been created with a valid ID"""
         
         customers = CustomerFactory.create_batch(3)
 
@@ -78,7 +78,7 @@ class TestCustomersServer(TestCase):
             self.assertIsNotNone(created_customer["id"], "IDs haven't been created")
 
     def test_create_customer_valid_first_name(self):
-        """Test case to check if the Customer first name is populated appropriately; happy paths """
+        """It should check if a Customer's first name has been populated correctly"""
 
         customers = CustomerFactory.create_batch(3)
 
@@ -93,7 +93,7 @@ class TestCustomersServer(TestCase):
             self.assertEqual(created_customer["first_name"], cust.first_name, "First names are not matching")
 
     def test_create_customer_valid_last_name(self):
-        """Test case to check if the Customer last name is populated appropriately; happy paths"""
+        """It should check if a Customer's last name has been populated correctly"""
 
         customers = CustomerFactory.create_batch(3)
 
@@ -108,7 +108,7 @@ class TestCustomersServer(TestCase):
             self.assertEqual(created_customer["last_name"], cust.last_name, "Last names are not matching")
     
     def test_create_customer_valid_email(self):
-        """Test case to check if the Customer email is populated appropriately; happy paths"""
+        """It should check if a Customer's email has been populated correctly"""
 
         customers = CustomerFactory.create_batch(3)
 
@@ -123,7 +123,7 @@ class TestCustomersServer(TestCase):
             self.assertEqual(created_customer["email"], cust.email, "Emails are not matching")
 
     def test_create_customer_valid_password(self):
-        """Test case to check if the Customer password is populated appropriately; happy paths"""
+        """It should check if a Customer's password has been populated correctly"""
 
         customers = CustomerFactory.create_batch(3)
 
@@ -138,7 +138,7 @@ class TestCustomersServer(TestCase):
             self.assertEqual(created_customer["password"], cust.password, "Passwords are not matching")
 
     def test_create_invalid_customer_valid_address_id(self):
-        """Test case to check if the address fields are not populated for a random ID"""
+        """It should check if the address fields are not populated for a random ID"""
 
         address = AddressFactory()
         cust_id = 0
@@ -152,7 +152,7 @@ class TestCustomersServer(TestCase):
         self.assertEqual(addr_post_req.status_code, status.HTTP_404_NOT_FOUND, "Address got created, should not have happened")
 
     def test_create_valid_customer_valid_address_id(self):
-        """Test case to check if the address fields (ID) are populated appropriately; happy paths"""
+        """It should check if the Address' ID has been populated correctly"""
 
         customer = CustomerFactory()
         logging.debug(customer)
@@ -185,7 +185,7 @@ class TestCustomersServer(TestCase):
             self.assertIsNotNone(created_addr["address_id"], "Addresss ID has not been populated correctly")
 
     def test_create_valid_customer_valid_address_street(self):
-        """Test case to check if the address fields (street) are populated appropriately; happy paths"""
+        """It should check if the Address' street field has been populated correctly"""
 
         customer = CustomerFactory()
         logging.debug(customer)
@@ -218,7 +218,7 @@ class TestCustomersServer(TestCase):
             self.assertEqual(created_addr["street"], addr.street, "Addresss Streets has not been populated correctly")
 
     def test_create_valid_customer_valid_address_city(self):
-        """Test case to check if the address fields (city) are populated appropriately; happy paths"""
+        """It should check if the Address' city field has been populated correctly"""
 
         customer = CustomerFactory()
         logging.debug(customer)
@@ -252,7 +252,7 @@ class TestCustomersServer(TestCase):
             self.assertEqual(created_addr["city"], addr.city, "Addresss city has not been populated correctly")
 
     def test_create_valid_customer_valid_address_state(self):
-        """Test case to check if the address fields (state) are populated appropriately; happy paths"""
+        """It should check if the Address' state field has been populated correctly"""
 
         customer = CustomerFactory()
         logging.debug(customer)
@@ -285,7 +285,7 @@ class TestCustomersServer(TestCase):
             self.assertEqual(created_addr["state"], addr.state, "Addresss states has not been populated correctly")
 
     def test_create_valid_customer_valid_address_country(self):
-        """Test case to check if the address fields (country) are populated appropriately; happy paths"""
+        """It should check if the Address' country field has been populated correctly"""
 
         customer = CustomerFactory()
         logging.debug(customer)
@@ -318,7 +318,7 @@ class TestCustomersServer(TestCase):
             self.assertEqual(created_addr["country"], addr.country, "Addresss countries has not been populated correctly")
 
     def test_create_valid_customer_valid_address_pincode(self):
-        """Test case to check if the address fields (pincode) are populated appropriately; happy paths"""
+        """It should check if the Address' pincode field has been populated correctly"""
 
         customer = CustomerFactory()
         logging.debug(customer)
