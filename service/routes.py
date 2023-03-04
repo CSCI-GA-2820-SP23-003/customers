@@ -47,18 +47,14 @@ def create_customers():
 
     # Create a message to return
     message = customer.serialize()
-    #location_url = url_for("get_customers", customer_id=customer.id)
-
-    # return make_response(
-    #     jsonify(message), status.HTTP_201_CREATED, {"Location": location_url} 
-    # )
+    location_url = url_for("get_customers", customer_id=customer.id)
 
     return make_response(
-        jsonify(message), status.HTTP_201_CREATED
-    )
+         jsonify(message), status.HTTP_201_CREATED, {"Location": location_url} 
+     )
 
 ######################################################################
-# C R E A T E 
+# C R E A T E    A    N E W    A D D R E S S
 ######################################################################
 @app.route("/customers/<int:customer_id>/addresses", methods=["POST"])
 def create_addresses(customer_id):
@@ -83,6 +79,50 @@ def create_addresses(customer_id):
     to_send = address.serialize()
 
     return make_response(jsonify(to_send), status.HTTP_201_CREATED)
+
+######################################################################
+# G E T    A    C U S T O M E R
+######################################################################
+@app.route("/customers/<int:customer_id>", methods=["GET"])
+def get_customers(customer_id):
+    """
+    Retrieve a single Customer
+    This endpoint will return an Customer based on its id
+    """
+    app.logger.info("Request for Customer with id: %s", customer_id)
+
+    # See if the customer exists and abort if it doesn't
+    customer = Customer.find(customer_id)
+    if not customer:
+        abort(
+            status.HTTP_404_NOT_FOUND,
+            f"Customer with id '{customer_id}' could not be found.",
+        )
+
+    return make_response(jsonify(customer.serialize()), status.HTTP_200_OK)
+
+######################################################################
+# G E T    A N    A D D R E S S     F R O M   C U S T O M E R
+######################################################################
+@app.route("/customers/<int:customer_id>/addresses/<int:address_id>", methods=["GET"])
+def get_addresses(customer_id, address_id):
+    """
+    Get an Address
+    This endpoint returns just an address
+    """
+    app.logger.info(
+        "Request to retrieve Address %s for Customer id: %s", (address_id, customer_id)
+    )
+
+    # See if the address exists and abort if it doesn't
+    address = Address.find(address_id)
+    if not address:
+        abort(
+            status.HTTP_404_NOT_FOUND,
+            f"Customer with id '{address_id}' could not be found.",
+        )
+
+    return make_response(jsonify(address.serialize()), status.HTTP_200_OK)
 
 @app.route("/customers/<int:customer_id>", methods=["DELETE"])
 def delete_customer(customer_id):
