@@ -522,14 +522,13 @@ class TestCustomersServer(TestCase):
         resp = self.client.delete(f"{BASE_URL}/{customer.id}/addresses/{address.address_id}") #second time
         self.assertEqual(resp.status_code, status.HTTP_204_NO_CONTENT)
 
-
     def test_bad_request(self):
         """It should not Create when sending the wrong data"""
         resp = self.client.post(BASE_URL, json={"name": "not enough data"})
         self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_unsupported_media_type(self):
-        """It should not Create when sending wrong/missing media type"""
+        """It should not Create when sending wrong media type"""
         customer = CustomerFactory()
         resp = self.client.post(
             BASE_URL, json=customer.serialize(), content_type="test/html"
