@@ -377,6 +377,9 @@ class TestCustomersServer(TestCase):
         """It should not Read a Customer that is not found"""
         resp = self.client.get(f"{BASE_URL}/0")
         self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
+        data = resp.get_json()
+        logging.debug("Response data = %s", data)
+        self.assertIn("Not Found", data["message"])
 
     def test_get_address(self):
         """It should Get an address from a customer"""
@@ -391,37 +394,69 @@ class TestCustomersServer(TestCase):
             "Could not create test Customer"
         )
         new_customer = resp.get_json()
-        customer.id = new_customer["id"]
+        customer_id = new_customer["id"]
         address = AddressFactory()
+        address.customer_id = customer_id
         resp = self.client.post(
-            f"{BASE_URL}/{customer.id}/addresses",
+            f"{BASE_URL}/{customer_id}/addresses",
             json=address.serialize(),
             content_type="application/json",
         )
         self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
-        address_id = address.address_id
-        logging.debug(address_id)
-        logging.debug(customer.id)       
+        new_address = resp.get_json()
+        address_id = new_address["address_id"]  
+        customer.addresses.append(address)    
+        #address_id = address.address_id
+        # logging.debug(address_id)
+        # logging.debug(customer.id)       
         # retrieve it back
         resp2 = self.client.get(
-            f"{BASE_URL}/{customer.id}/addresses/{address_id}",
+            f"{BASE_URL}/{customer_id}/addresses/{address_id}",
             content_type="application/json",
         )
         self.assertEqual(resp2.status_code, status.HTTP_200_OK)
         data2 = resp2.get_json()
-        #customer.addresses.append(data2)
         logging.debug(customer.addresses)
         logging.debug(data2)
         logging.debug(address)
-        self.assertEqual(data2["customer_id"], customer.id)
-        self.assertEqual(data2["address_id"], address.address_id)
-        # self.assertEqual(data["address_id"], 32)
+        self.assertEqual(data2["customer_id"], customer_id)
+        self.assertEqual(data2["address_id"], address_id)
+        self.assertEqual(data2["customer_id"], address.customer_id)
         self.assertEqual(data2["street"], address.street)
         self.assertEqual(data2["city"], address.city)
         self.assertEqual(data2["state"], address.state)
         self.assertEqual(data2["pin_code"], address.pin_code)
         self.assertEqual(data2["country"], address.country)
 
+    def test_get_address_not_found_valid_customer(self):
+        """It should not Read an address that is not found for a valid customer ID"""
+        customer = CustomerFactory()
+        logging.debug(customer)
+        #create the customer
+        resp= self.client.post(BASE_URL, json=customer.serialize())
+        self.assertEqual(
+            resp.status_code, 
+            status.HTTP_201_CREATED,
+            "Could not create test Customer"
+        )
+        new_customer = resp.get_json()
+        customer_id = new_customer["id"]
+        resp2 = self.client.get(
+            f"{BASE_URL}/{customer_id}/addresses/0",
+            content_type="application/json",
+        )
+        self.assertEqual(resp2.status_code, status.HTTP_404_NOT_FOUND)
+        data = resp2.get_json()
+        logging.debug("Response data = %s", data)
+        self.assertIn("Not Found", data["message"])
+
+    def test_get_address_not_found_invalid_customer(self):
+        """It should not Read an address for an invalid customer ID"""
+        response = self.client.get(f"{BASE_URL}/0/addresses/1")
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        data = response.get_json()
+        logging.debug("Response data = %s", data)
+        self.assertIn("Not Found", data["message"])
 
     def test_delete_customer_valid_request(self):
         """ It should delete a customer """
