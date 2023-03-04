@@ -351,6 +351,78 @@ class TestCustomersServer(TestCase):
             created_addr = addr_post_req.get_json()
             self.assertEqual(created_addr["pin_code"], addr.pin_code, "Addresss pincodes has not been populated correctly")
 
+    def test_get_customer(self):
+        """It should Read a single Customer"""
+        # get the id of an customer
+
+        customer = CustomerFactory()
+        logging.debug(customer)
+        #create the customer
+        resp= self.client.post(BASE_URL, json=customer.serialize())
+        self.assertEqual(
+            resp.status_code, 
+            status.HTTP_201_CREATED,
+            "Could not create test Customer"
+        )
+        new_customer = resp.get_json()
+        customer.id = new_customer["id"]
+        resp2 = self.client.get(
+            f"{BASE_URL}/{customer.id}", content_type="application/json"
+        )
+        self.assertEqual(resp2.status_code, status.HTTP_200_OK)
+        data = resp2.get_json()
+        self.assertEqual(data["first_name"], customer.first_name)
+
+    def test_get_customer_not_found(self):
+        """It should not Read a Customer that is not found"""
+        resp = self.client.get(f"{BASE_URL}/0")
+        self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_get_address(self):
+        """It should Get an address from a customer"""
+        # create a known address
+        customer = CustomerFactory()
+        logging.debug(customer)
+        #create the customer
+        resp= self.client.post(BASE_URL, json=customer.serialize())
+        self.assertEqual(
+            resp.status_code, 
+            status.HTTP_201_CREATED,
+            "Could not create test Customer"
+        )
+        new_customer = resp.get_json()
+        customer.id = new_customer["id"]
+        address = AddressFactory()
+        resp = self.client.post(
+            f"{BASE_URL}/{customer.id}/addresses",
+            json=address.serialize(),
+            content_type="application/json",
+        )
+        self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
+        address_id = address.address_id
+        logging.debug(address_id)
+        logging.debug(customer.id)       
+        # retrieve it back
+        resp2 = self.client.get(
+            f"{BASE_URL}/{customer.id}/addresses/{address_id}",
+            content_type="application/json",
+        )
+        self.assertEqual(resp2.status_code, status.HTTP_200_OK)
+        data2 = resp2.get_json()
+        #customer.addresses.append(data2)
+        logging.debug(customer.addresses)
+        logging.debug(data2)
+        logging.debug(address)
+        self.assertEqual(data2["customer_id"], customer.id)
+        self.assertEqual(data2["address_id"], address.address_id)
+        # self.assertEqual(data["address_id"], 32)
+        self.assertEqual(data2["street"], address.street)
+        self.assertEqual(data2["city"], address.city)
+        self.assertEqual(data2["state"], address.state)
+        self.assertEqual(data2["pin_code"], address.pin_code)
+        self.assertEqual(data2["country"], address.country)
+
+
     def test_delete_customer_valid_request(self):
         """ It should delete a customer """
         customers = CustomerFactory.create_batch(3)
