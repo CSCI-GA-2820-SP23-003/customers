@@ -356,7 +356,6 @@ class TestCustomersServer(TestCase):
         # get the id of an customer
 
         customer = CustomerFactory()
-        logging.debug(customer)
         #create the customer
         resp= self.client.post(BASE_URL, json=customer.serialize())
         self.assertEqual(
