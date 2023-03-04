@@ -76,9 +76,10 @@ def create_addresses(customer_id):
     customer.update()
 
     #Create the final message that is to be sent
-    to_send = address.serialize()
+    message = address.serialize()
+    location_url = url_for("get_addresses", customer_id=customer_id, address_id=address.address_id)
 
-    return make_response(jsonify(to_send), status.HTTP_201_CREATED)
+    return make_response(jsonify(message), status.HTTP_201_CREATED, {"Location": location_url})
 
 ######################################################################
 # G E T    A    C U S T O M E R
