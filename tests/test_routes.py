@@ -54,6 +54,26 @@ class TestCustomersServer(TestCase):
         db.session.remove()
 
     ######################################################################
+    #  H E L P E R   M E T H O D S
+    ######################################################################
+
+    def _create_customers(self, count):
+        """Factory method to create customers in bulk"""
+        customers = []
+        for _ in range(count):
+            customer = CustomerFactory()
+            resp = self.client.post(BASE_URL, json=customer.serialize())
+            self.assertEqual(
+                resp.status_code,
+                status.HTTP_201_CREATED,
+                "Could not create test customer",
+            )
+            new_customer = resp.get_json()
+            customer.id = new_customer["id"]
+            customers.append(customer)
+        return customers
+
+    ######################################################################
     #  C U S T O M E R S   A P I   T E S T   C A S E S
     ######################################################################
 
@@ -61,6 +81,22 @@ class TestCustomersServer(TestCase):
         """ Test case that checks if the home page is getting called"""
         resp = self.client.get("/")
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
+
+    def test_get_customer_list(self):
+        """It should Get a list of Customers"""
+        self._create_customers(5)
+        resp = self.client.get(BASE_URL)
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        data = resp.get_json()
+        self.assertEqual(len(data), 5)
+
+    def test_get_customer_by_first_name(self):
+        """It should Get an Customer by first name"""
+        customers = self._create_customers(3)
+        resp = self.client.get(BASE_URL, query_string=f"name={customers[1].first_name}")
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        data = resp.get_json()
+        self.assertEqual(data[0]["first_name"], customers[0].first_name)
 
     def test_create_customer_valid_id(self):
         """It should check if a Customer has been created with a valid ID"""
@@ -216,6 +252,63 @@ class TestCustomersServer(TestCase):
             self.assertEqual(addr_post_req.status_code, status.HTTP_201_CREATED, "Address did not get created")
             created_addr = addr_post_req.get_json()
             self.assertEqual(created_addr["street"], addr.street, "Addresss Streets has not been populated correctly")
+
+    def test_get_address_list(self):
+        """It should Get a list of Addresses"""
+        # add two addresses to Customer
+        customer = self._create_customers(1)[0]
+        address_list = AddressFactory.create_batch(2)
+
+        # Create address 1
+        resp = self.client.post(
+            f"{BASE_URL}/{customer.id}/addresses", json=address_list[0].serialize()
+        )
+        self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
+
+        # Create address 2
+        resp = self.client.post(
+            f"{BASE_URL}/{customer.id}/addresses", json=address_list[1].serialize()
+        )
+        self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
+
+        # get the list back and make sure there are 2
+        resp = self.client.get(f"{BASE_URL}/{customer.id}/addresses")
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+
+        data = resp.get_json()
+        self.assertEqual(len(data), 2)
+
+    def test_get_address(self):
+        """It should Get an Address from a Customer"""
+        # create a known address
+        customer = self._create_customers(1)[0]
+        address = AddressFactory()
+        resp = self.client.post(
+            f"{BASE_URL}/{customer.id}/addresses",
+            json=address.serialize(),
+            content_type="application/json",
+        )
+        self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
+
+        data = resp.get_json()
+        logging.debug(data)
+        address_id = data["address_id"]
+
+        # retrieve it back
+        resp = self.client.get(
+            f"{BASE_URL}/{customer.id}/addresses/{address_id}",
+            content_type="application/json",
+        )
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+
+        data = resp.get_json()
+        logging.debug(data)
+        self.assertEqual(data["customer_id"], customer.id)
+        self.assertEqual(data["street"], address.street)
+        self.assertEqual(data["city"], address.city)
+        self.assertEqual(data["state"], address.state)
+        self.assertEqual(data["country"], address.country)
+        self.assertEqual(data["pin_code"], address.pin_code)
 
     def test_create_valid_customer_valid_address_city(self):
         """It should check if the Address' city field has been populated correctly"""

@@ -28,6 +28,28 @@ def index():
 #  R E S T   A P I   E N D P O I N T S
 ######################################################################
 
+######################################################################
+# L I S T    A L L    C U S T O M E R S
+######################################################################
+@app.route("/customers", methods=["GET"])
+def list_customers():
+    """Returns all of the Customers"""
+    app.logger.info("Request for Customer list")
+    customers = []
+
+    # Process the query string if any
+    first_name = request.args.get("first_name")
+    if first_name:
+        customers = Customer.find_by_first_name(first_name)
+    else:
+        customers = Customer.all()
+
+    # Return as an array of dictionaries
+    results = [customer.serialize() for customer in customers]
+
+    return make_response(jsonify(results), status.HTTP_200_OK)
+
+
 
 ######################################################################
 # C R E A T E    A    N E W    C U S T O M E R
@@ -57,8 +79,33 @@ def create_customers():
         jsonify(message), status.HTTP_201_CREATED
     )
 
+# ---------------------------------------------------------------------
+#                A D D R E S S   M E T H O D S
+# ---------------------------------------------------------------------
+
 ######################################################################
-# C R E A T E 
+# L I S T    A D D R E S S E S
+######################################################################
+@app.route("/customers/<int:id>/addresses", methods=["GET"])
+def list_addresses(id):
+    """Returns all of the Addresses for a Customer"""
+    app.logger.info("Request for all Addresses for Customer with id: %s", id)
+
+    # See if the customer exists and abort if it doesn't
+    customer = Customer.find(id)
+    if not customer:
+        abort(
+            status.HTTP_404_NOT_FOUND,
+            f"Customer with id '{id}' could not be found.",
+        )
+
+    # Get the addresses for the customer
+    results = [customer.serialize() for customer in customer.addresses]
+
+    return make_response(jsonify(results), status.HTTP_200_OK)
+
+######################################################################
+# C R E A T E    A D D R E S S
 ######################################################################
 @app.route("/customers/<int:customer_id>/addresses", methods=["POST"])
 def create_addresses(customer_id):
@@ -100,7 +147,7 @@ def delete_customer(customer_id):
     return make_response("", status.HTTP_204_NO_CONTENT)
 
 ######################################################################
-#  DELETE AN ADDRESS
+#  D E L E T E    A N    A D D R E S S
 ######################################################################
 @app.route("/customers/<int:customer_id>/addresses/<int:address_id>", methods=["DELETE"])
 def delete_address(customer_id, address_id):
