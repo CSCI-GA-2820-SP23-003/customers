@@ -372,6 +372,9 @@ class TestCustomersServer(TestCase):
         data = resp2.get_json()
         self.assertEqual(data["id"], customer.id)
         self.assertEqual(data["first_name"], customer.first_name)
+        self.assertEqual(data["last_name"], customer.last_name)
+        self.assertEqual(data["email"], customer.email)
+        self.assertEqual(data["password"], customer.password)
 
     def test_get_customer_not_found(self):
         """It should not Read a Customer that is not found"""
