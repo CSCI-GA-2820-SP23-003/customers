@@ -7,14 +7,14 @@ Test cases can be run with the following:
 """
 import os
 import logging
+import random
+
 from unittest import TestCase
 import random
 from service import app
 from service.models import db, init_db, Address, Customer
 from service.common import status  # HTTP Status Codes
 from tests.factories import AddressFactory, CustomerFactory
-
-
 DATABASE_URI = os.getenv(
     "DATABASE_URI", "postgresql://postgres:postgres@localhost:5432/postgres"
 )
@@ -22,12 +22,9 @@ DATABASE_URI = os.getenv(
 app.logger.critical(DATABASE_URI)
 
 BASE_URL = "/customers"
-
 ######################################################################
 #  T E S T   C A S E S
 ######################################################################
-
-
 class TestCustomersServer(TestCase):
     """ Customers REST API Server Tests """
 
@@ -56,15 +53,303 @@ class TestCustomersServer(TestCase):
         """ This runs after each test """
         db.session.remove()
 
-
     ######################################################################
-    #  CUSTOMERS API TEST C A S E S
+    #  C U S T O M E R S   A P I   T E S T   C A S E S
     ######################################################################
 
     def test_index(self):
-        """ It should call the home page """
+        """ Test case that checks if the home page is getting called"""
         resp = self.client.get("/")
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
+
+    def test_create_customer_valid_id(self):
+        """It should check if a Customer has been created with a valid ID"""
+        
+        customers = CustomerFactory.create_batch(3)
+
+        for cust in customers:
+            logging.debug(cust)
+            cust_post_req = self.client.post(BASE_URL, json=cust.serialize())
+
+            #Assert that the customer has been created successfully
+            self.assertEqual(cust_post_req.status_code, status.HTTP_201_CREATED, "Customer did not get created")
+            
+            created_customer = cust_post_req.get_json()
+            self.assertIsNotNone(created_customer["id"], "IDs haven't been created")
+
+    def test_create_customer_valid_first_name(self):
+        """It should check if a Customer's first name has been populated correctly"""
+
+        customers = CustomerFactory.create_batch(3)
+
+        for cust in customers:
+            logging.debug(cust)
+            cust_post_req = self.client.post(BASE_URL, json=cust.serialize())
+
+            #Assert that the customer has been created successfully
+            self.assertEqual(cust_post_req.status_code, status.HTTP_201_CREATED, "Customer did not get created")
+            
+            created_customer = cust_post_req.get_json()
+            self.assertEqual(created_customer["first_name"], cust.first_name, "First names are not matching")
+
+    def test_create_customer_valid_last_name(self):
+        """It should check if a Customer's last name has been populated correctly"""
+
+        customers = CustomerFactory.create_batch(3)
+
+        for cust in customers:
+            logging.debug(cust)
+            cust_post_req = self.client.post(BASE_URL, json=cust.serialize())
+
+            #Assert that the customer has been created successfully
+            self.assertEqual(cust_post_req.status_code, status.HTTP_201_CREATED, "Customer did not get created")
+            
+            created_customer = cust_post_req.get_json()
+            self.assertEqual(created_customer["last_name"], cust.last_name, "Last names are not matching")
+    
+    def test_create_customer_valid_email(self):
+        """It should check if a Customer's email has been populated correctly"""
+
+        customers = CustomerFactory.create_batch(3)
+
+        for cust in customers:
+            logging.debug(cust)
+            cust_post_req = self.client.post(BASE_URL, json=cust.serialize())
+
+            #Assert that the customer has been created successfully
+            self.assertEqual(cust_post_req.status_code, status.HTTP_201_CREATED, "Customer did not get created")
+            
+            created_customer = cust_post_req.get_json()
+            self.assertEqual(created_customer["email"], cust.email, "Emails are not matching")
+
+    def test_create_customer_valid_password(self):
+        """It should check if a Customer's password has been populated correctly"""
+
+        customers = CustomerFactory.create_batch(3)
+
+        for cust in customers:
+            logging.debug(cust)
+            cust_post_req = self.client.post(BASE_URL, json=cust.serialize())
+
+            #Assert that the customer has been created successfully
+            self.assertEqual(cust_post_req.status_code, status.HTTP_201_CREATED, "Customer did not get created")
+            
+            created_customer = cust_post_req.get_json()
+            self.assertEqual(created_customer["password"], cust.password, "Passwords are not matching")
+
+    def test_create_invalid_customer_valid_address_id(self):
+        """It should check if the address fields are not populated for a random ID"""
+
+        address = AddressFactory()
+        cust_id = 0
+
+        logging.debug(address)
+
+        #make a post request to the address database
+        addr_post_req = self.client.post(f"{BASE_URL}/{cust_id}/addresses", json=address.serialize())
+
+        #assert that the address request had been created
+        self.assertEqual(addr_post_req.status_code, status.HTTP_404_NOT_FOUND, "Address got created, should not have happened")
+
+    def test_create_valid_customer_valid_address_id(self):
+        """It should check if the Address' ID has been populated correctly"""
+
+        customer = CustomerFactory()
+        logging.debug(customer)
+
+        #create the customer
+        cust_post_req = self.client.post(BASE_URL, json=customer.serialize())
+
+        #verify that the customer has been created
+        self.assertEqual(cust_post_req.status_code, status.HTTP_201_CREATED, "Customer did not get created")
+        created_customer = cust_post_req.get_json()
+
+        #verify that the id has been created successfully
+        self.assertIsNotNone(created_customer["id"], "IDs haven't been created")
+
+        #retrieve the ID for the customer
+        cust_id = created_customer["id"]
+
+        #create the addresses now
+        addresses = AddressFactory.create_batch(3)
+
+        for addr in addresses:
+            logging.debug(addr)
+
+            #make a post request to the address database
+            addr_post_req = self.client.post(f"{BASE_URL}/{cust_id}/addresses", json=addr.serialize())
+
+            #assert that the address request had been created
+            self.assertEqual(addr_post_req.status_code, status.HTTP_201_CREATED, "Address did not get created")
+            created_addr = addr_post_req.get_json()
+            self.assertIsNotNone(created_addr["address_id"], "Addresss ID has not been populated correctly")
+
+    def test_create_valid_customer_valid_address_street(self):
+        """It should check if the Address' street field has been populated correctly"""
+
+        customer = CustomerFactory()
+        logging.debug(customer)
+
+        #create the customer
+        cust_post_req = self.client.post(BASE_URL, json=customer.serialize())
+
+        #verify that the customer has been created
+        self.assertEqual(cust_post_req.status_code, status.HTTP_201_CREATED, "Customer did not get created")
+        created_customer = cust_post_req.get_json()
+
+        #verify that the id has been created successfully
+        self.assertIsNotNone(created_customer["id"], "IDs haven't been created")
+
+        #retrieve the ID for the customer
+        cust_id = created_customer["id"]
+
+        #create the addresses now
+        addresses = AddressFactory.create_batch(3)
+
+        for addr in addresses:
+            logging.debug(addr)
+
+            #make a post request to the address database
+            addr_post_req = self.client.post(f"{BASE_URL}/{cust_id}/addresses", json=addr.serialize())
+
+            #assert that the address request had been created
+            self.assertEqual(addr_post_req.status_code, status.HTTP_201_CREATED, "Address did not get created")
+            created_addr = addr_post_req.get_json()
+            self.assertEqual(created_addr["street"], addr.street, "Addresss Streets has not been populated correctly")
+
+    def test_create_valid_customer_valid_address_city(self):
+        """It should check if the Address' city field has been populated correctly"""
+
+        customer = CustomerFactory()
+        logging.debug(customer)
+
+        #create the customer
+        cust_post_req = self.client.post(BASE_URL, json=customer.serialize())
+
+        #verify that the customer has been created
+        self.assertEqual(cust_post_req.status_code, status.HTTP_201_CREATED, "Customer did not get created")
+
+        created_customer = cust_post_req.get_json()
+
+        #verify that the id has been created successfully
+        self.assertIsNotNone(created_customer["id"], "IDs haven't been created")
+
+        #retrieve the ID for the customer
+        cust_id = created_customer["id"]
+
+        #create the addresses now
+        addresses = AddressFactory.create_batch(3)
+
+        for addr in addresses:
+            logging.debug(addr)
+
+            #make a post request to the address database
+            addr_post_req = self.client.post(f"{BASE_URL}/{cust_id}/addresses", json=addr.serialize())
+
+            #assert that the address request had been created
+            self.assertEqual(addr_post_req.status_code, status.HTTP_201_CREATED, "Address did not get created")
+            created_addr = addr_post_req.get_json()
+            self.assertEqual(created_addr["city"], addr.city, "Addresss city has not been populated correctly")
+
+    def test_create_valid_customer_valid_address_state(self):
+        """It should check if the Address' state field has been populated correctly"""
+
+        customer = CustomerFactory()
+        logging.debug(customer)
+
+        #create the customer
+        cust_post_req = self.client.post(BASE_URL, json=customer.serialize())
+
+        #verify that the customer has been created
+        self.assertEqual(cust_post_req.status_code, status.HTTP_201_CREATED, "Customer did not get created")
+        created_customer = cust_post_req.get_json()
+
+        #verify that the id has been created successfully
+        self.assertIsNotNone(created_customer["id"], "IDs haven't been created")
+
+        #retrieve the ID for the customer
+        cust_id = created_customer["id"]
+
+        #create the addresses now
+        addresses = AddressFactory.create_batch(3)
+
+        for addr in addresses:
+            logging.debug(addr)
+
+            #make a post request to the address database
+            addr_post_req = self.client.post(f"{BASE_URL}/{cust_id}/addresses", json=addr.serialize())
+
+            #assert that the address request had been created
+            self.assertEqual(addr_post_req.status_code, status.HTTP_201_CREATED, "Address did not get created")
+            created_addr = addr_post_req.get_json()
+            self.assertEqual(created_addr["state"], addr.state, "Addresss states has not been populated correctly")
+
+    def test_create_valid_customer_valid_address_country(self):
+        """It should check if the Address' country field has been populated correctly"""
+
+        customer = CustomerFactory()
+        logging.debug(customer)
+
+        #create the customer
+        cust_post_req = self.client.post(BASE_URL, json=customer.serialize())
+
+        #verify that the customer has been created
+        self.assertEqual(cust_post_req.status_code, status.HTTP_201_CREATED, "Customer did not get created")
+        created_customer = cust_post_req.get_json()
+
+        #verify that the id has been created successfully
+        self.assertIsNotNone(created_customer["id"], "IDs haven't been created")
+
+        #retrieve the ID for the customer
+        cust_id = created_customer["id"]
+
+        #create the addresses now
+        addresses = AddressFactory.create_batch(3)
+
+        for addr in addresses:
+            logging.debug(addr)
+
+            #make a post request to the address database
+            addr_post_req = self.client.post(f"{BASE_URL}/{cust_id}/addresses", json=addr.serialize())
+
+            #assert that the address request had been created
+            self.assertEqual(addr_post_req.status_code, status.HTTP_201_CREATED, "Address did not get created")
+            created_addr = addr_post_req.get_json()
+            self.assertEqual(created_addr["country"], addr.country, "Addresss countries has not been populated correctly")
+
+    def test_create_valid_customer_valid_address_pincode(self):
+        """It should check if the Address' pincode field has been populated correctly"""
+
+        customer = CustomerFactory()
+        logging.debug(customer)
+
+        #create the customer
+        cust_post_req = self.client.post(BASE_URL, json=customer.serialize())
+
+        #verify that the customer has been created
+        self.assertEqual(cust_post_req.status_code, status.HTTP_201_CREATED, "Customer did not get created")
+        created_customer = cust_post_req.get_json()
+
+        #verify that the id has been created successfully
+        self.assertIsNotNone(created_customer["id"], "IDs haven't been created")
+
+        #retrieve the ID for the customer
+        cust_id = created_customer["id"]
+
+        #create the addresses now
+
+        addresses = AddressFactory.create_batch(3)
+
+        for addr in addresses:
+            logging.debug(addr)
+
+            #make a post request to the address database
+            addr_post_req = self.client.post(f"{BASE_URL}/{cust_id}/addresses", json=addr.serialize())
+
+            #assert that the address request had been created
+            self.assertEqual(addr_post_req.status_code, status.HTTP_201_CREATED, "Address did not get created")
+            created_addr = addr_post_req.get_json()
+            self.assertEqual(created_addr["pin_code"], addr.pin_code, "Addresss pincodes has not been populated correctly")
 
     def test_delete_customer_valid_request(self):
         """ It should delete a customer """
