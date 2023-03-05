@@ -89,7 +89,6 @@ class TestCustomersServer(TestCase):
 
     def test_get_customer_by_first_name(self):
         """It should Get an Customer by first name"""
-        # customers = self._create_customers(3)
 
         customers = CustomerFactory.create_batch(3)
 
