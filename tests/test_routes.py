@@ -77,14 +77,14 @@ class TestCustomersServer(TestCase):
         data = cust_get_req.get_json()
         self.assertEqual(len(data), 5)
 
-    def test_cust_not_found_404(self):
-        """ It should not list a customer that doesn't exist"""
+    def test_list_address_invalid_cust_id(self):
+        """ It should not list addresses of a Customer with invalid customer id"""
 
         customer = CustomerFactory()
-        customer.create()
+        address = AddressFactory()
+        customer.addresses.append(address)
 
-        resp = self.client.get('/customers/{}'.format("xyz"),
-                            content_type='application/json')
+        resp = self.client.get(f"{BASE_URL}/{customer.id}/addresses")
         self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_get_customer_by_first_name(self):
