@@ -39,7 +39,8 @@ def create_customers():
         methods in Customer class.
     """
     app.logger.info("Request to create a Customer")
-    
+    check_content_type("application/json")
+
     # Create the customer
     customer = Customer()
     customer.deserialize(request.get_json())
@@ -61,6 +62,7 @@ def create_addresses(customer_id):
     """Creates an address linked to a specific customer"""
 
     app.logger.info(f"Request to create an address for a customer with {customer_id}")
+    check_content_type("application/json")
 
     #get the customer information
     customer = Customer.find(customer_id)
