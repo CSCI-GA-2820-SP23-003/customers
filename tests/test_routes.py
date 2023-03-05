@@ -629,8 +629,6 @@ class TestCustomersServer(TestCase):
         self.assertEqual(updated_address.pin_code, address["pin_code"])
         self.assertEqual(updated_address.street, dummy_street)
         
-        
-
     def test_update_customer_address_invalid_customer(self):
         """It should not update address for an invalid Customer"""
         # create a Customer with an address to update
