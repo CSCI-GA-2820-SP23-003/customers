@@ -109,7 +109,7 @@ def list_addresses(id):
         )
 
     # Get the addresses for the customer
-    results = [customer.serialize() for customer in customer.addresses]
+    results = [address.serialize() for address in customer.addresses]
 
     return make_response(jsonify(results), status.HTTP_200_OK)
 
@@ -230,16 +230,87 @@ def delete_address(customer_id, address_id):
     return make_response("", status.HTTP_204_NO_CONTENT)
 
 ######################################################################
+# UPDATE AN EXISTING CUSTOMER
+######################################################################
+@app.route("/customers/<int:customer_id>", methods=["PUT"])
+def update_customer(customer_id):
+    """
+    Update a Customer
+
+    This endpoint will update a Customer based the body that is posted
+    """
+    app.logger.info("Request to update customer with id: %s", customer_id)
+    check_content_type("application/json")
+
+    customer = Customer.find(customer_id)
+    if not customer:
+        abort(status.HTTP_404_NOT_FOUND, f"Customer with id '{customer_id}' was not found.")
+
+    customer.deserialize(request.get_json())
+    customer.id = customer_id
+    customer.update()
+
+    app.logger.info("Customer with ID [%s] updated.", customer.id)
+    #return jsonify(customer.serialize()), status.HTTP_200_OK
+    return make_response(
+        jsonify(customer.serialize()), status.HTTP_200_OK
+    )
+######################################################################
+# UPDATE AN EXISTING CUSTOMER ADDRESS
+######################################################################
+@app.route("/customers/<int:customer_id>/addresses/<int:address_id>", methods=["PUT"])
+def update_customer_address(customer_id,address_id):
+    """
+    Update a Customer
+
+    This endpoint will update a Customer based the body that is posted
+    """
+    app.logger.info("Request to update address with id %s for customer with id %s", address_id, customer_id)
+    check_content_type("application/json")
+
+    customer = Customer.find(customer_id)
+    if not customer:
+        abort(status.HTTP_404_NOT_FOUND, f"Customer with id '{customer_id}' was not found for Address '{address_id}'.")
+
+    # Find customer address with address_id
+    addr_to_update = None
+    for addr in customer.addresses:
+        if addr.address_id == address_id:
+            addr_to_update = addr
+            break
+
+    # if not found
+    if not addr_to_update:
+        abort(status.HTTP_404_NOT_FOUND, f"Address with id '{address_id}' was not found for customer with '{customer_id}'.")
+
+    addr_to_update.deserialize(request.get_json())
+    addr_to_update.id = address_id
+    addr_to_update.update()
+
+    app.logger.info("Address with ID [%s] for Customer with ID [%s] was updated.", address_id, customer.id)
+    #return jsonify(customer.serialize()), status.HTTP_200_OK
+    return make_response(
+        jsonify(addr_to_update.serialize()), status.HTTP_200_OK
+    )
+
+######################################################################
 #  U T I L I T Y   F U N C T I O N S
 ######################################################################
 
-def check_content_type(media_type):
+def check_content_type(content_type):
     """Checks that the media type is correct"""
-    content_type = request.headers.get("Content-Type")
-    if content_type and content_type == media_type:
+    if "Content-Type" not in request.headers:
+        app.logger.error("No Content-Type specified.")
+        abort(
+            status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,
+            f"Content-Type must be {content_type}",
+        )
+
+    if request.headers["Content-Type"] == content_type:
         return
-    app.logger.error("Invalid Content-Type: %s", content_type)
+
+    app.logger.error("Invalid Content-Type: %s", request.headers["Content-Type"])
     abort(
         status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,
-        f"Content-Type must be {media_type}",
+        f"Content-Type must be {content_type}",
     )
