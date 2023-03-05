@@ -37,7 +37,7 @@ def list_customers():
     app.logger.info("Request for Customer list")
     customers = []
 
-    # Process the query string if any first name matches
+    # Process the query string if any
     first_name = request.args.get("first_name")
     if first_name:
         customers = Customer.find_by_first_name(first_name)
@@ -83,7 +83,7 @@ def create_customers():
 ######################################################################
 @app.route("/customers/<int:id>/addresses", methods=["GET"])
 def list_addresses(id):
-    """Returns all of the Addresses for a Customer id"""
+    """Returns all of the Addresses for a Customer"""
     app.logger.info("Request for all Addresses for Customer with id: %s", id)
 
     # See if the customer exists and abort if it doesn't
@@ -196,7 +196,7 @@ def delete_customer(customer_id):
     return make_response("", status.HTTP_204_NO_CONTENT)
 
 ######################################################################
-#  D E L E T E    A N    A D D R E S S
+#  DELETE AN ADDRESS
 ######################################################################
 @app.route("/customers/<int:customer_id>/addresses/<int:address_id>", methods=["DELETE"])
 def delete_address(customer_id, address_id):
