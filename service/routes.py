@@ -17,9 +17,14 @@ from . import app
 ######################################################################
 @app.route("/")
 def index():
-    """ Root URL response """
+    """Root URL response"""
+    app.logger.info("Request for Root URL")
     return (
-        "Reminder: return some useful information in json format about the service here",
+        jsonify(
+            name="Customer REST API Service",
+            version="1.0",
+            paths=url_for("list_customers", _external=True),
+        ),
         status.HTTP_200_OK,
     )
 
