@@ -37,7 +37,7 @@ def list_customers():
     app.logger.info("Request for Customer list")
     customers = []
 
-    # Process the query string if any
+    # Process the query string if any first name matches
     first_name = request.args.get("first_name")
     if first_name:
         customers = Customer.find_by_first_name(first_name)
@@ -48,8 +48,6 @@ def list_customers():
     results = [customer.serialize() for customer in customers]
 
     return make_response(jsonify(results), status.HTTP_200_OK)
-
-
 
 ######################################################################
 # C R E A T E    A    N E W    C U S T O M E R
@@ -84,7 +82,7 @@ def create_customers():
 ######################################################################
 @app.route("/customers/<int:id>/addresses", methods=["GET"])
 def list_addresses(id):
-    """Returns all of the Addresses for a Customer"""
+    """Returns all of the Addresses for a Customer id"""
     app.logger.info("Request for all Addresses for Customer with id: %s", id)
 
     # See if the customer exists and abort if it doesn't
