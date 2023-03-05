@@ -78,7 +78,7 @@ class TestCustomersServer(TestCase):
         self.assertEqual(len(data), 5)
 
     def test_get_customer_by_first_name(self):
-        """It should Get an Customer by Name"""
+        """It should Get an Customer by First Name"""
 
         customers = CustomerFactory.create_batch(3)
 
@@ -89,6 +89,32 @@ class TestCustomersServer(TestCase):
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
         data = resp.get_json()
         self.assertEqual(data[0]["first_name"], customers[0].first_name)
+
+    def test_get_customer_by_last_name(self):
+        """It should Get an Customer by Last Name"""
+
+        customers = CustomerFactory.create_batch(3)
+
+        for customer in customers:
+            customer.create()
+
+        resp = self.client.get(BASE_URL, query_string=f"last_name={customers[0].last_name}")
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        data = resp.get_json()
+        self.assertEqual(data[0]["last_name"], customers[0].last_name)
+
+    def test_get_customer_by_email(self):
+        """It should Get an Customer by email"""
+
+        customers = CustomerFactory.create_batch(3)
+
+        for customer in customers:
+            customer.create()
+
+        resp = self.client.get(BASE_URL, query_string=f"email={customers[0].email}")
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        data = resp.get_json()
+        self.assertEqual(data[0]["email"], customers[0].email)
 
     def test_list_address_invalid_cust_id(self):
         """ It should not list addresses of a Customer with invalid customer id"""
