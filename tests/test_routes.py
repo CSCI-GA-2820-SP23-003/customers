@@ -54,26 +54,6 @@ class TestCustomersServer(TestCase):
         db.session.remove()
 
     ######################################################################
-    #  H E L P E R   M E T H O D S
-    ######################################################################
-
-    # def _create_customers(self, count):
-    #     """Factory method to create customers in bulk"""
-    #     customers = []
-    #     for _ in range(count):
-    #         customer = CustomerFactory()
-    #         resp = self.client.post(BASE_URL, json=customer.serialize())
-    #         self.assertEqual(
-    #             resp.status_code,
-    #             status.HTTP_201_CREATED,
-    #             "Could not create test customer",
-    #         )
-    #         new_customer = resp.get_json()
-    #         customer.id = new_customer["id"]
-    #         customers.append(customer)
-    #     return customers
-
-    ######################################################################
     #  C U S T O M E R S   A P I   T E S T   C A S E S
     ######################################################################
 
@@ -96,6 +76,16 @@ class TestCustomersServer(TestCase):
         self.assertEqual(cust_get_req.status_code, status.HTTP_200_OK, "Customer list is populated successfully")
         data = cust_get_req.get_json()
         self.assertEqual(len(data), 5)
+
+    def test_cust_not_found_404(self):
+        """ It should not list a customer that doesn't exist"""
+
+        customer = CustomerFactory()
+        customer.create()
+
+        resp = self.client.get('/customers/{}'.format("xyz"),
+                            content_type='application/json')
+        self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_get_customer_by_first_name(self):
         """It should Get an Customer by first name"""
@@ -269,7 +259,6 @@ class TestCustomersServer(TestCase):
     def test_get_address_list(self):
         """It should Get a list of Addresses"""
         # add two addresses to Customer
-        # customer = self._create_customers(1)[0]
 
         customer = CustomerFactory.create_batch(1)[0]
         customer.create()
@@ -288,7 +277,7 @@ class TestCustomersServer(TestCase):
         )
         self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
 
-        # get the list back and make sure there are 2
+        # get the list back and make sure there are 2 addresses
         resp = self.client.get(f"{BASE_URL}/{customer.id}/addresses")
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
 
