@@ -546,13 +546,19 @@ class TestCustomersServer(TestCase):
 
         # update the Customer
         dummy_email =  "User759@gmail.com";
-        updated_customer = response.get_json()
-        logging.debug(updated_customer)
-        updated_customer["email"] = dummy_email
-        response = self.client.put(f"{BASE_URL}/{updated_customer['id']}", json=updated_customer)
+        test_customer = response.get_json()
+        logging.debug(test_customer)
+        test_customer["email"] = dummy_email
+        response = self.client.put(f"{BASE_URL}/{test_customer['id']}", json=test_customer)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         updated_customer = response.get_json()
+
         self.assertEqual(updated_customer["email"], dummy_email)
+        self.assertEqual(updated_customer["id"], test_customer["id"])
+        self.assertEqual(updated_customer["first_name"], test_customer["first_name"])
+        self.assertEqual(updated_customer["last_name"], test_customer["last_name"])
+        self.assertEqual(updated_customer["password"], test_customer["password"])
+        
 
     def test_update_invalid_customer(self):
         """It should not Update Non existing Customer"""
@@ -613,8 +619,17 @@ class TestCustomersServer(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         updated_address = Address.find(address['address_id'])
         logging.debug(updated_address)
+
+        self.assertEqual(updated_address.address_id, address["address_id"])
+        self.assertEqual(updated_address.customer_id, address["customer_id"])
+        self.assertEqual(updated_address.country, address["country"])
+        self.assertEqual(updated_address.state, address["state"])
+        self.assertEqual(updated_address.city, address["city"])
+        self.assertEqual(updated_address.pin_code, address["pin_code"])
         self.assertEqual(updated_address.street, dummy_street)
-    
+        
+        
+
     def test_update_customer_address_invalid_customer(self):
         """It should not update address for an invalid Customer"""
         # create a Customer with an address to update
@@ -636,5 +651,5 @@ class TestCustomersServer(TestCase):
         self.assertEqual(len(customer.addresses),0)
 
         address = AddressFactory()
-        response = self.client.put(f"{BASE_URL}/{customer.id}/addresses/1", json=address.serialize())
+        response = self.client.put(f"{BASE_URL}/{customer.id}/addresses/{address.address_id}", json=address.serialize())
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
