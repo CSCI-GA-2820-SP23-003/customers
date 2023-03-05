@@ -255,7 +255,7 @@ def update_customer(customer_id):
     customer.id = customer_id
     customer.update()
 
-    app.logger.info("Customer with ID [%s] updated.", customer.id)
+    app.logger.info("Customer with ID [%s] updated.", customer_id)
     #return jsonify(customer.serialize()), status.HTTP_200_OK
     return make_response(
         jsonify(customer.serialize()), status.HTTP_200_OK
