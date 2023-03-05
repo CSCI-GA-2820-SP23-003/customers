@@ -28,6 +28,40 @@ def index():
 #  R E S T   A P I   E N D P O I N T S
 ######################################################################
 
+######################################################################
+# L I S T    A L L    C U S T O M E R S
+######################################################################
+@app.route("/customers", methods=["GET"])
+def list_customers():
+    """Returns all of the Customers"""
+    app.logger.info("Request for Customer list")
+    customers = []
+
+    # Process the query string if first name matches
+    first_name = request.args.get("first_name")
+    if first_name:
+        customers = Customer.find_by_first_name(first_name)
+    else:
+        customers = Customer.all()
+
+    # Process the query string if last name matches
+    last_name = request.args.get("last_name")
+    if last_name:
+        customers = Customer.find_by_last_name(last_name)
+    else:
+        customers = Customer.all()
+
+    # Process the query string if email matches
+    email = request.args.get("email")
+    if email:
+        customers = Customer.find_by_email(email)
+    else:
+        customers = Customer.all()
+
+    # Return as an array of dictionaries
+    results = [customer.serialize() for customer in customers]
+
+    return make_response(jsonify(results), status.HTTP_200_OK)
 
 ######################################################################
 # C R E A T E    A    N E W    C U S T O M E R
@@ -53,6 +87,31 @@ def create_customers():
     return make_response(
          jsonify(message), status.HTTP_201_CREATED, {"Location": location_url} 
      )
+
+# ---------------------------------------------------------------------
+#                A D D R E S S   M E T H O D S
+# ---------------------------------------------------------------------
+
+######################################################################
+# L I S T    A D D R E S S E S
+######################################################################
+@app.route("/customers/<int:id>/addresses", methods=["GET"])
+def list_addresses(id):
+    """Returns all of the Addresses for a Customer"""
+    app.logger.info("Request for all Addresses for Customer with id: %s", id)
+
+    # See if the customer exists and abort if it doesn't
+    customer = Customer.find(id)
+    if not customer:
+        abort(
+            status.HTTP_404_NOT_FOUND,
+            f"Customer with id '{id}' could not be found.",
+        )
+
+    # Get the addresses for the customer
+    results = [customer.serialize() for customer in customer.addresses]
+
+    return make_response(jsonify(results), status.HTTP_200_OK)
 
 ######################################################################
 # C R E A T E    A    N E W    A D D R E S S
