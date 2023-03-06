@@ -6,7 +6,6 @@ All of the models are stored in this module
 import logging
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-# from sqlalchemy.sql import func
 
 logger = logging.getLogger("flask.app")
 
