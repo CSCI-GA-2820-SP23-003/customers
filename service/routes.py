@@ -255,7 +255,7 @@ def update_customer(customer_id):
     customer.id = customer_id
     customer.update()
 
-    app.logger.info("Customer with ID [%s] updated.", customer.id)
+    app.logger.info("Customer with ID [%s] updated.", customer_id)
     #return jsonify(customer.serialize()), status.HTTP_200_OK
     return make_response(
         jsonify(customer.serialize()), status.HTTP_200_OK
@@ -290,9 +290,10 @@ def update_customer_address(customer_id,address_id):
 
     addr_to_update.deserialize(request.get_json())
     addr_to_update.id = address_id
+    addr_to_update.customer_id = customer_id # protect against manipulation in body of request
     addr_to_update.update()
 
-    app.logger.info("Address with ID [%s] for Customer with ID [%s] was updated.", address_id, customer.id)
+    app.logger.info("Address with ID [%s] for Customer with ID [%s] was updated.", address_id, customer_id)
     #return jsonify(customer.serialize()), status.HTTP_200_OK
     return make_response(
         jsonify(addr_to_update.serialize()), status.HTTP_200_OK
