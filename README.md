@@ -55,6 +55,8 @@ tests/              - test cases package
 └── test_routes.py  - test suite for service routes
 ```
 
+<img width="543" alt="image" src="https://user-images.githubusercontent.com/23705371/223218803-4b5ce9e9-3bdf-4bab-aa04-c1cb10638614.png">
+
 ## License
 
 Copyright (c) John Rofrano. All rights reserved.
