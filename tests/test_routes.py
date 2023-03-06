@@ -22,6 +22,26 @@ app.logger.critical(DATABASE_URI)
 
 BASE_URL = "/customers"
 FLAG = False
+
+
+######################################################################
+#  M O D U L E   C O D E
+######################################################################
+
+def setUpModule():
+    """ Sets up the database, and other attributes"""
+    app.config["TESTING"] = True
+    app.config["DEBUG"] = False
+    app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE_URI
+    app.logger.setLevel(logging.WARN)
+    init_db(app)
+
+
+def tearDownModule():
+    """ Closes and drops the database"""
+    db.session.close()
+    db.drop_all()
+
 ######################################################################
 #  T E S T   C A S E S
 ######################################################################
@@ -29,23 +49,6 @@ FLAG = False
 
 class TestCustomersServer(TestCase):
     """ Customers REST API Server Tests """
-
-    @classmethod
-    def setUpClass(cls):
-        """ This runs once before the entire test suite """
-        app.config["TESTING"] = True
-        app.config["DEBUG"] = False
-        app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE_URI
-        app.logger.setLevel(logging.WARN)
-        global FLAG
-        if FLAG is False:
-            init_db(app)
-            FLAG = True
-
-    @classmethod
-    def tearDownClass(cls):
-        """ This runs once after the entire test suite """
-        db.session.close()
 
     def setUp(self):
         """ This runs before each test """
@@ -334,23 +337,6 @@ class TestCustomersServer(TestCase):
 
 class TestAddressesServer(TestCase):
     """ Addresses REST API Server Tests """
-
-    @classmethod
-    def setUpClass(cls):
-        """ This runs once before the entire test suite """
-        app.config["TESTING"] = True
-        app.config["DEBUG"] = False
-        app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE_URI
-        app.logger.setLevel(logging.WARN)
-        global FLAG
-        if FLAG is False:
-            init_db(app)
-            FLAG = True
-
-    @classmethod
-    def tearDownClass(cls):
-        """ This runs once after the entire test suite """
-        db.session.close()
 
     def setUp(self):
         """ This runs before each test """
@@ -729,23 +715,6 @@ class TestAddressesServer(TestCase):
 
 class TestBadRequests(TestCase):
     """ Tests for Bad Requests sent to Customers """
-
-    @classmethod
-    def setUpClass(cls):
-        """ This runs once before the entire test suite """
-        app.config["TESTING"] = True
-        app.config["DEBUG"] = False
-        app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE_URI
-        app.logger.setLevel(logging.WARN)
-        global FLAG
-        if FLAG is False:
-            init_db(app)
-            FLAG = True
-
-    @classmethod
-    def tearDownClass(cls):
-        """ This runs once after the entire test suite """
-        db.session.close()
 
     def setUp(self):
         """ This runs before each test """

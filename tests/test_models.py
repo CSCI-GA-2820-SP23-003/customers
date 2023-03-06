@@ -15,7 +15,21 @@ DATABASE_URI = os.getenv(
     "DATABASE_URI", "postgresql://postgres:postgres@localhost:5432/postgres"
 )
 
-FLAG = False
+
+def setUpModule():
+    """ Sets up the database, and other attributes"""
+    app.config["TESTING"] = True
+    app.config["DEBUG"] = False
+    app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE_URI
+    app.logger.setLevel(logging.CRITICAL)
+    Customer.init_db(app)
+
+
+def tearDownModule():
+    """ Closes and drops the database"""
+    db.session.close()
+    db.drop_all()
+
 ############################################################################
 #                   M O D E L   T E S T   C A S E S                        #
 ############################################################################
@@ -23,23 +37,6 @@ FLAG = False
 
 class TestCustomer(unittest.TestCase):
     """ Test Cases for Customer Model """
-
-    @classmethod
-    def setUpClass(cls):
-        """ This runs once before the entire test suite """
-        app.config["TESTING"] = True
-        app.config["DEBUG"] = False
-        app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE_URI
-        app.logger.setLevel(logging.CRITICAL)
-        global FLAG
-        if FLAG is False:
-            Customer.init_db(app)
-            FLAG = True
-
-    @classmethod
-    def tearDownClass(cls):
-        """ This runs once after the entire test suite """
-        db.session.close()
 
     def setUp(self):
         """ This runs before each test """
@@ -297,23 +294,6 @@ class TestCustomer(unittest.TestCase):
 
 class TestAddress(unittest.TestCase):
     """ Test Cases for Address Model """
-
-    @classmethod
-    def setUpClass(cls):
-        """ This runs once before the entire test suite """
-        app.config["TESTING"] = True
-        app.config["DEBUG"] = False
-        app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE_URI
-        app.logger.setLevel(logging.CRITICAL)
-        global FLAG
-        if FLAG is False:
-            Customer.init_db(app)
-            FLAG = True
-
-    @classmethod
-    def tearDownClass(cls):
-        """ This runs once after the entire test suite """
-        db.session.close()
 
     def setUp(self):
         """ This runs before each test """
