@@ -337,7 +337,7 @@ def update_customer_address(customer_id, address_id):
         "Address with ID [%s] for Customer with ID [%s] was updated.",
         address_id,
         customer.id)
-    # return jsonify(customer.serialize()), status.HTTP_200_OK
+
     return make_response(
         jsonify(addr_to_update.serialize()), status.HTTP_200_OK
     )

@@ -192,7 +192,7 @@ class TestCustomersServer(TestCase):
                 "IDs haven't been created")
 
     def test_create_customer_valid(self):
-        """It should check if a Customer's first name has been populated correctly"""
+        """It should check if the Customer's fields have been populated correctly"""
 
         customers = CustomerFactory.create_batch(3)
 
@@ -329,10 +329,6 @@ class TestCustomersServer(TestCase):
         self.assertEqual(
             response.status_code,
             status.HTTP_415_UNSUPPORTED_MEDIA_TYPE)
-
-    ######################################################################
-    #  B A D   R E Q U E S T   C A S E S
-    ######################################################################
 
 
 class TestAddressesServer(TestCase):
@@ -528,7 +524,7 @@ class TestAddressesServer(TestCase):
                 "Addresss ID has not been populated correctly")
 
     def test_create_valid_customer_valid_address(self):
-        """It should check if the Address' street field has been populated correctly"""
+        """It should check if the Address' fields have been populated correctly"""
 
         customer = CustomerFactory()
         logging.debug(customer)
