@@ -5,18 +5,22 @@ Test cases for Customer Model
 import os
 import logging
 import unittest
+from werkzeug.exceptions import NotFound
 from service.models import Customer, Address, DataValidationError, db
 from service import app
 from tests.factories import CustomerFactory, AddressFactory
-from werkzeug.exceptions import NotFound
+
 
 DATABASE_URI = os.getenv(
     "DATABASE_URI", "postgresql://postgres:postgres@localhost:5432/postgres"
 )
 
+FLAG = False
 ############################################################################
 #                   M O D E L   T E S T   C A S E S                        #
 ############################################################################
+
+
 class TestCustomer(unittest.TestCase):
     """ Test Cases for Customer Model """
 
@@ -27,7 +31,10 @@ class TestCustomer(unittest.TestCase):
         app.config["DEBUG"] = False
         app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE_URI
         app.logger.setLevel(logging.CRITICAL)
-        Customer.init_db(app)
+        global FLAG
+        if FLAG is False:
+            Customer.init_db(app)
+            FLAG = True
 
     @classmethod
     def tearDownClass(cls):
@@ -50,11 +57,16 @@ class TestCustomer(unittest.TestCase):
 
     def test_create_customer(self):
         """ It should Create a Customer and assert that it exists """
-        customer = Customer(first_name="Marwan",last_name="J",email="mya6510@nyu.edu",password="12344321", addresses=[])
+        customer = Customer(
+            first_name="Marwan",
+            last_name="J",
+            email="mya6510@nyu.edu",
+            password="12344321",
+            addresses=[])
         self.assertEqual(str(customer), "<Customer J, Marwan id=[None]>")
         self.assertTrue(customer is not None)
         self.assertEqual(customer.id, None)
-        self.assertEqual(customer.first_name,"Marwan")
+        self.assertEqual(customer.first_name, "Marwan")
         self.assertEqual(customer.last_name, "J")
         self.assertEqual(customer.email, "mya6510@nyu.edu")
         self.assertEqual(customer.password, "12344321")
@@ -63,8 +75,13 @@ class TestCustomer(unittest.TestCase):
     def test_add_customer(self):
         """It should Create a Customer and add it to the database"""
         customers = Customer.all()
-        self.assertEqual(customers,[])
-        customer = Customer(first_name="Marwan",last_name="J",email="mya6510@nyu.edu",password="12344321",  addresses=[])
+        self.assertEqual(customers, [])
+        customer = Customer(
+            first_name="Marwan",
+            last_name="J",
+            email="mya6510@nyu.edu",
+            password="12344321",
+            addresses=[])
         self.assertTrue(customer is not None)
         self.assertEqual(customer.id, None)
         customer.create()
@@ -115,13 +132,6 @@ class TestCustomer(unittest.TestCase):
         logging.debug(customer)
         customer.id = None
         self.assertRaises(DataValidationError, customer.update)
-
-    def test_update_no_address_id(self):
-        """It should not Update a Address with no Address id"""
-        address = AddressFactory()
-        logging.debug(address)
-        address.address_id = None
-        self.assertRaises(DataValidationError, address.update)
 
     def test_delete_a_customer(self):
         """It should Delete a Customer"""
@@ -196,6 +206,124 @@ class TestCustomer(unittest.TestCase):
         data = "this is not a dictionary"
         customer = Customer()
         self.assertRaises(DataValidationError, customer.deserialize, data)
+
+    def test_find_customer(self):
+        """It should Find a Customer by ID"""
+        customers = CustomerFactory.create_batch(5)
+        for customer in customers:
+            customer.create()
+        logging.debug(customers)
+        # make sure they got saved
+        self.assertEqual(len(Customer.all()), 5)
+        # find the 2nd customer in the list
+        customer = Customer.find(customers[1].id)
+        self.assertIsNot(customer, None)
+        self.assertEqual(customer.id, customers[1].id)
+        self.assertEqual(customer.first_name, customers[1].first_name)
+        self.assertEqual(customer.last_name, customers[1].last_name)
+        self.assertEqual(customer.email, customers[1].email)
+        self.assertEqual(customer.password, customers[1].password)
+
+    def test_find_by_first_name(self):
+        """It should Find Customer by First Name"""
+        customers = CustomerFactory.create_batch(10)
+        for customer in customers:
+            customer.create()
+        first_name = customers[0].first_name
+        count = len(
+            [customer for customer in customers if customer.first_name == first_name])
+        found = Customer.find_by_first_name(first_name)
+        self.assertEqual(found.count(), count)
+        for customer in found:
+            self.assertEqual(customer.first_name, first_name)
+
+    def test_find_by_last_name(self):
+        """It should Find Customer by Last Name"""
+        customers = CustomerFactory.create_batch(10)
+        for customer in customers:
+            customer.create()
+        last_name = customers[0].last_name
+        count = len(
+            [customer for customer in customers if customer.last_name == last_name])
+        found = Customer.find_by_last_name(last_name)
+        self.assertEqual(found.count(), count)
+        for customer in found:
+            self.assertEqual(customer.last_name, last_name)
+
+    def test_find_by_email(self):
+        """It should Find Customer by Email"""
+        customers = CustomerFactory.create_batch(10)
+        for customer in customers:
+            customer.create()
+        email = customers[0].email
+        count = len(
+            [customer for customer in customers if customer.email == email])
+        found = Customer.find_by_email(email)
+        self.assertEqual(found.count(), count)
+        for customer in found:
+            self.assertEqual(customer.email, email)
+
+    def test_find_or_404_found(self):
+        """It should Find or return 404 not found for Customer"""
+        customers = CustomerFactory.create_batch(3)
+        for customer in customers:
+            customer.create()
+
+        customer = Customer.find_or_404(customers[1].id)
+        self.assertIsNot(customer, None)
+        self.assertEqual(customer.id, customers[1].id)
+        self.assertEqual(customer.first_name, customers[1].first_name)
+        self.assertEqual(customer.last_name, customers[1].last_name)
+        self.assertEqual(customer.email, customers[1].email)
+
+    def test_find_or_404_not_found(self):
+        """It should return 404 not found for Customer"""
+        self.assertRaises(NotFound, Customer.find_or_404, 0)
+
+    # def test_find_or_404_found_address(self):
+    #     """It should Find or return 404 not found for Address"""
+    #     addresses = AddressFactory.create_batch(3)
+    #     for address in addresses:
+    #         address.create()
+
+    #     address = Address.find_or_404_address(addresses[1].address_id)
+    #     self.assertIsNot(address, None)
+    #     self.assertEqual(address.address_id, addresses[1].address_id)
+    #     self.assertEqual(address.street, addresses[1].street)
+    #     self.assertEqual(address.city, addresses[1].city)
+    #     self.assertEqual(address.country, addresses[1].country)
+    #     self.assertEqual(address.pin_code, addresses[1].pin_code)
+
+
+class TestAddress(unittest.TestCase):
+    """ Test Cases for Address Model """
+
+    @classmethod
+    def setUpClass(cls):
+        """ This runs once before the entire test suite """
+        app.config["TESTING"] = True
+        app.config["DEBUG"] = False
+        app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE_URI
+        app.logger.setLevel(logging.CRITICAL)
+        global FLAG
+        if FLAG is False:
+            Customer.init_db(app)
+            FLAG = True
+
+    @classmethod
+    def tearDownClass(cls):
+        """ This runs once after the entire test suite """
+        db.session.close()
+
+    def setUp(self):
+        """ This runs before each test """
+        db.session.query(Customer).delete()  # clean up the last tests
+        db.session.query(Address).delete()
+        db.session.commit()
+
+    def tearDown(self):
+        """ This runs after each test """
+        db.session.remove()
 
     def test_deserialize_address_key_error(self):
         """It should not Deserialize an address with a KeyError"""
@@ -286,89 +414,12 @@ class TestCustomer(unittest.TestCase):
         customer = Customer.find(customer.id)
         self.assertEqual(len(customer.addresses), 0)
 
-    def test_find_customer(self):
-        """It should Find a Customer by ID"""
-        customers = CustomerFactory.create_batch(5)
-        for customer in customers:
-            customer.create()
-        logging.debug(customers)
-        # make sure they got saved
-        self.assertEqual(len(Customer.all()), 5)
-        # find the 2nd customer in the list
-        customer = Customer.find(customers[1].id)
-        self.assertIsNot(customer, None)
-        self.assertEqual(customer.id, customers[1].id)
-        self.assertEqual(customer.first_name, customers[1].first_name)
-        self.assertEqual(customer.last_name, customers[1].last_name)
-        self.assertEqual(customer.email, customers[1].email)
-        self.assertEqual(customer.password, customers[1].password)
-
-    def test_find_by_first_name(self):
-        """It should Find Customer by First Name"""
-        customers = CustomerFactory.create_batch(10)
-        for customer in customers:
-            customer.create()
-        first_name = customers[0].first_name
-        count = len([customer for customer in customers if customer.first_name == first_name])
-        found = Customer.find_by_first_name(first_name)
-        self.assertEqual(found.count(), count)
-        for customer in found:
-            self.assertEqual(customer.first_name, first_name)
-
-    def test_find_by_last_name(self):
-        """It should Find Customer by Last Name"""
-        customers = CustomerFactory.create_batch(10)
-        for customer in customers:
-            customer.create()
-        last_name = customers[0].last_name
-        count = len([customer for customer in customers if customer.last_name == last_name])
-        found = Customer.find_by_last_name(last_name)
-        self.assertEqual(found.count(), count)
-        for customer in found:
-            self.assertEqual(customer.last_name, last_name)
-
-    def test_find_by_email(self):
-        """It should Find Customer by Email"""
-        customers = CustomerFactory.create_batch(10)
-        for customer in customers:
-            customer.create()
-        email = customers[0].email
-        count = len([customer for customer in customers if customer.email == email])
-        found = Customer.find_by_email(email)
-        self.assertEqual(found.count(), count)
-        for customer in found:
-            self.assertEqual(customer.email, email)
-
-    def test_find_or_404_found(self):
-        """It should Find or return 404 not found for Customer"""
-        customers = CustomerFactory.create_batch(3)
-        for customer in customers:
-            customer.create()
-
-        customer = Customer.find_or_404(customers[1].id)
-        self.assertIsNot(customer, None)
-        self.assertEqual(customer.id, customers[1].id)
-        self.assertEqual(customer.first_name, customers[1].first_name)
-        self.assertEqual(customer.last_name, customers[1].last_name)
-        self.assertEqual(customer.email, customers[1].email)
-
-    def test_find_or_404_not_found(self):
-        """It should return 404 not found for Customer"""
-        self.assertRaises(NotFound, Customer.find_or_404, 0)
-
-    # def test_find_or_404_found_address(self):
-    #     """It should Find or return 404 not found for Address"""
-    #     addresses = AddressFactory.create_batch(3)
-    #     for address in addresses:
-    #         address.create()
-
-    #     address = Address.find_or_404_address(addresses[1].address_id)
-    #     self.assertIsNot(address, None)
-    #     self.assertEqual(address.address_id, addresses[1].address_id)
-    #     self.assertEqual(address.street, addresses[1].street)
-    #     self.assertEqual(address.city, addresses[1].city)
-    #     self.assertEqual(address.country, addresses[1].country)
-    #     self.assertEqual(address.pin_code, addresses[1].pin_code)
+    def test_update_no_address_id(self):
+        """It should not Update a Address with no Address id"""
+        address = AddressFactory()
+        logging.debug(address)
+        address.address_id = None
+        self.assertRaises(DataValidationError, address.update)
 
     def test_find_or_404_not_found_address(self):
         """It should return 404 not found for Address"""
@@ -377,7 +428,7 @@ class TestCustomer(unittest.TestCase):
     def test_find_addr(self):
         """It should Find Addresses by Given Search Criteria"""
         customer = CustomerFactory()
-        address = Address (
+        address = Address(
             street="251 Mercer St",
             city="New York",
             state="New York",
