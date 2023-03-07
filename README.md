@@ -250,7 +250,7 @@ Failure Response (When invalid Customer ID is provided in the URL) : `HTTP_404_N
 
 ### Read/Get an Address
 
-URL : `http://127.0.0.1:8000/customers/{int:customer_id}/addresses/{address_id}`
+URL : `http://127.0.0.1:8000/customers/{int:customer_id}/addresses/{int:address_id}`
 
 Method : GET
 
