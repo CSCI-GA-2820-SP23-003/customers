@@ -106,14 +106,14 @@ def create_customers():
 @app.route("/customers/<int:customer_id>/addresses", methods=["GET"])
 def list_addresses(customer_id):
     """Returns all of the Addresses for a Customer"""
-    app.logger.info("Request for all Addresses for Customer with id: %s", id)
+    app.logger.info("Request for all Addresses for Customer with id: %s", customer_id)
 
     # See if the customer exists and abort if it doesn't
     customer = Customer.find(customer_id)
     if not customer:
         abort(
             status.HTTP_404_NOT_FOUND,
-            f"Customer with id '{id}' could not be found.",
+            f"Customer with id '{customer_id}' could not be found.",
         )
 
     # Get the addresses for the customer
