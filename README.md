@@ -74,7 +74,310 @@ GET `/`
 | Read/Get an Address   | GET `/customers/{int:customer_id}/addresses/{int:address_id}`
 | Update an Address| PUT `/customers/{int:customer_id}/addresses/{int:address_id}`  
 | Delete an Address| DELETE `/customers/{int:customer_id}/addresses/{int:address_id}`           
-| List Addresses    | GET `/customers/{int:customer_id}/addresses`                  
+| List Addresses    | GET `/customers/{int:customer_id}/addresses`  
+
+## Customer Service APIs - Usage
+
+### Create a Customer
+
+URL : `http://127.0.0.1:8000/customers`
+
+Method : POST
+
+Auth required : No
+
+Permissions required : None
+
+Create a customer according to the provided first name, last name, email, password.
+
+Example:
+
+Request Body (JSON)
+`{"first_name":"Akshama", "last_name":"AJ", "email": "akshama@gmail.com", "password":"aks", "addresses":{}}`
+
+Success Response : `HTTP_201_CREATED`
+`{
+  "addresses": [],
+  "email": "akshama@gmail.com",
+  "first_name": "Akshama",
+  "id": 1,
+  "last_name": "AJ",
+  "password": "aks"
+}`
+
+### Read/Get a Customer
+
+URL : `http://127.0.0.1:8000/customers/{int:customer_id}`
+
+Method : GET
+
+Auth required : No
+
+Permissions required : None
+
+Gets/Reads a customer with id == customer_id provided in the URL
+
+Example:
+
+Success Response : `HTTP_200_OK`
+`{
+  "addresses": [],
+  "email": "akshama@gmail.com",
+  "first_name": "Akshama",
+  "id": 1,
+  "last_name": "AJ",
+  "password": "aks"
+}`
+
+Failure Response : `HTTP_404_NOT_FOUND`
+`{
+  "error": "Not Found",
+  "message": "404 Not Found: Customer with id '2' could not be found.",
+  "status": 404
+}`
+
+### Update a Customer
+
+URL : `http://127.0.0.1:8000/customers/{int:customer_id}`
+
+Method : PUT
+
+Auth required : No
+
+Permissions required : None
+
+Updates a customer with id == customer_id provided in the URL according to the updated fields provided in the body
+
+Example:
+
+Request Body (JSON)
+`{"first_name":"Akshama", "last_name":"Akshama", "email": "akshama@gmail.com", "password":"aks", "addresses":{}}`
+
+Success Response : `HTTP_200_OK`
+`{
+  "addresses": [],
+  "email": "akshama@gmail.com",
+  "first_name": "Akshama",
+  "id": 1,
+  "last_name": "Akshama",
+  "password": "aks"
+}`
+
+Failure Response : `HTTP_404_NOT_FOUND`
+`{
+  "error": "Not Found",
+  "message": "404 Not Found: Customer with id '2' could not be found.",
+  "status": 404
+}`
+
+### Delete a Customer
+
+URL : `http://127.0.0.1:8000/customers/{int:customer_id}`
+
+Method : DELETE
+
+Auth required : No
+
+Permissions required : None
+
+Deletes a customer with id == customer_id
+
+Example:
+
+Success Response : `204 NO CONTENT`
+
+### List Customers
+
+URL : `http://127.0.0.1:8000/customers`
+
+Method : GET
+
+Auth required : No
+
+Permissions required : None
+
+Lists all the Customers
+
+Example:
+
+Success Response : `HTTP_200_OK`
+
+`[
+  {
+    "addresses": [],
+    "email": "akshama@gmail.com",
+    "first_name": "Akshama",
+    "id": 1,
+    "last_name": "Akshama",
+    "password": "aks"
+  }
+]`
+
+
+### Create an Address
+URL : `http://127.0.0.1:8000/customers/{int:customer_id}/addresses`
+
+Method : POST
+
+Auth required : No
+
+Permissions required : None
+
+Create an address according to the provided street, city, state, country, pin code and customer ID.
+
+Example:
+
+Request Body (JSON)
+`{"street":"40 Pavonia Ave", "city":"Jersey City", "state":"NJ", "country":"USA","pin_code":"07310","customer_id": 2}`
+
+Success Response : `HTTP_201_CREATED`
+`{
+  "address_id": 1,
+  "city": "Jersey City",
+  "country": "USA",
+  "customer_id": 2,
+  "pin_code": "07310",
+  "state": "NJ",
+  "street": "40 Pavonia Ave"
+}`
+
+Failure Response (When invalid Customer ID is provided in the URL) : `HTTP_404_NOT_FOUND`
+`{
+  "error": "Not Found",
+  "message": "404 Not Found: Customer with 1 does not exist",
+  "status": 404
+}`
+
+### Read/Get an Address
+
+URL : `http://127.0.0.1:8000/customers/{int:customer_id}/addresses/{address_id}`
+
+Method : GET
+
+Auth required : No
+
+Permissions required : None
+
+Gets/Reads an address with id == address_id and customer id == customer_id provided in the URL
+
+Example:
+
+Success Response : `HTTP_200_OK`
+`{
+  "address_id": 1,
+  "city": "Jersey City",
+  "country": "USA",
+  "customer_id": 2,
+  "pin_code": "07310",
+  "state": "NJ",
+  "street": "40 Pavonia Ave"
+}`
+
+Failure Response : `HTTP_404_NOT_FOUND`
+`{
+  "error": "Not Found",
+  "message": "404 Not Found: Customer with id '1' could not be found.",
+  "status": 404
+}`
+
+`{
+  "error": "Not Found",
+  "message": "404 Not Found: Address with id '2' could not be found for the customer with id 2.",
+  "status": 404
+}`
+
+### Update an Address
+
+URL : `http://127.0.0.1:8000/customers/{int:customer_id}/addresses/{int:address_id}`
+
+Method : PUT
+
+Auth required : No
+
+Permissions required : None
+
+Updates an address with id == address_id and customer id == customer_id provided in the URL according to the updated fields provided in the body
+
+Example:
+
+Request Body (JSON)
+`{"street":"40 Newport Pkwy", "city":"Jersey City", "state":"NJ", "country":"USA","pin_code":"07310","customer_id": 1}`
+
+Success Response : `HTTP_200_OK`
+`{
+  "address_id": 1,
+  "city": "Jersey City",
+  "country": "USA",
+  "customer_id": 2,
+  "pin_code": "07310",
+  "state": "NJ",
+  "street": "40 Newport Pkwy"
+}`
+
+Failure Response : `HTTP_404_NOT_FOUND`
+`{
+  "error": "Not Found",
+  "message": "404 Not Found: Customer with id '1' could not be found.",
+  "status": 404
+}`
+
+`{
+  "error": "Not Found",
+  "message": "404 Not Found: Address with id '2' could not be found for the customer with id 2.",
+  "status": 404
+}`
+
+### Delete an Address
+
+URL : `http://127.0.0.1:8000/customers/{int:customer_id}/addresses/{int:address_id}`
+
+Method : DELETE
+
+Auth required : No
+
+Permissions required : None
+
+Deletes an address with id == address_id and customer id == customer_id.
+
+Example:
+
+Success Response : `204 NO CONTENT`
+
+### List Addresses
+
+URL : `http://127.0.0.1:8000/customers/{int:customer_id}/addresses`
+
+Method : GET
+
+Auth required : No
+
+Permissions required : None
+
+Lists all the Addresses for a particular customer.
+
+Example:
+
+Success Response : `HTTP_200_OK`
+
+`[
+  {
+    "address_id": 1,
+    "city": "Jersey City",
+    "country": "USA",
+    "customer_id": 2,
+    "pin_code": "07310",
+    "state": "NJ",
+    "street": "40 Newport Pkwy"
+  }
+]`
+
+Failure Response : `HTTP_404_NOT_FOUND`
+`{
+  "error": "Not Found",
+  "message": "404 Not Found: Customer with id '1' could not be found.",
+  "status": 404
+}`
+
 
 ## License
 
