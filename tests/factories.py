@@ -1,7 +1,9 @@
-from datetime import date
+""" Factory code to generate instances to populate the database"""
+
 import factory
-from factory.fuzzy import FuzzyChoice, FuzzyDate
+from factory.fuzzy import FuzzyChoice
 from service.models import Customer, Address
+
 
 class CustomerFactory(factory.Factory):
     """Creates fake customers that you don't need to support :) """
@@ -16,6 +18,7 @@ class CustomerFactory(factory.Factory):
     last_name = factory.Faker("last_name")
     email = factory.Faker("email")
     password = factory.Faker("password")
+
 
 class AddressFactory(factory.Factory):
     """ Creates fake addresses that you don't have to support """

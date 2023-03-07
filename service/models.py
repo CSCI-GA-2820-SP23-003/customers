@@ -6,7 +6,6 @@ All of the models are stored in this module
 import logging
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.sql import func
 
 logger = logging.getLogger("flask.app")
 
@@ -14,12 +13,16 @@ logger = logging.getLogger("flask.app")
 db = SQLAlchemy()
 
 # Function to initialize the database
+
+
 def init_db(app):
     """ Initializes the SQLAlchemy app """
     Customer.init_db(app)
 
+
 class DataValidationError(Exception):
     """ Used for an data validation errors when deserializing """
+
 
 class Address(db.Model):
     """
@@ -37,13 +40,18 @@ class Address(db.Model):
     state = db.Column(db.String(255), nullable=False)
     country = db.Column(db.String(255), nullable=False)
     pin_code = db.Column(db.String(255), nullable=False)
-    customer_id = db.Column(db.Integer, db.ForeignKey('customer.id', ondelete="CASCADE"), nullable=False)
+    customer_id = db.Column(
+        db.Integer,
+        db.ForeignKey(
+            'customer.id',
+            ondelete="CASCADE"),
+        nullable=False)
 
     def __repr__(self):
         return f"<Address {self.street} address_id=[{self.address_id}] customer[{self.customer_id}]>"
 
     def serialize(self):
-        """ 
+        """
         Serializes an Address into a dictionary
         """
         return {"address_id": self.address_id,
@@ -70,9 +78,13 @@ class Address(db.Model):
             self.pin_code = data['pin_code']
             self.customer_id = data['customer_id']
         except KeyError as error:
-            raise DataValidationError("Invalid Address: missing " + error.args[0]) from error
+            raise DataValidationError(
+                "Invalid Address: missing " +
+                error.args[0]) from error
         except TypeError as error:
-            raise DataValidationError("Invalid Address: Body of request contained bad or no data " + str(error)) from error
+            raise DataValidationError(
+                "Invalid Address: Body of request contained bad or no data " +
+                str(error)) from error
         return self
 
     def create(self):
@@ -96,7 +108,7 @@ class Address(db.Model):
 
     def delete(self):
         """ Removes a Address from the database """
-        logger.info("Deleting %s, %s", self.street,self.city)
+        logger.info("Deleting %s, %s", self.street, self.city)
         db.session.delete(self)
         db.session.commit()
 
@@ -157,6 +169,7 @@ class Address(db.Model):
         logger.info("")
         return cls.query.get_or_404(address_id)
 
+
 class Customer(db.Model):
     """
     Class that represents a Customer
@@ -171,8 +184,11 @@ class Customer(db.Model):
     last_name = db.Column(db.String(255), nullable=False)
     email = db.Column(db.String(255), nullable=False)
     password = db.Column(db.String(255), nullable=False)
-    addresses = db.relationship("Address", backref="customer", passive_deletes=True)
-    
+    addresses = db.relationship(
+        "Address",
+        backref="customer",
+        passive_deletes=True)
+
     ###############
     # Instance Methods
     ##############
@@ -184,7 +200,7 @@ class Customer(db.Model):
         """
         Creates a Customer to the database
         """
-        logger.info("Creating %s, %s", self.last_name,self.first_name)
+        logger.info("Creating %s, %s", self.last_name, self.first_name)
         # id must be none to generate next primary key
         self.id = None  # pylint: disable=invalid-name
         db.session.add(self)
@@ -194,14 +210,14 @@ class Customer(db.Model):
         """
         Updates a Customer to the database
         """
-        logger.info("Updating/Saving %s, %s", self.last_name,self.first_name)
+        logger.info("Updating/Saving %s, %s", self.last_name, self.first_name)
         if not self.id:
             raise DataValidationError("Update called with empty ID field")
         db.session.commit()
 
     def delete(self):
         """ Removes a Customer from the data store """
-        logger.info("Deleting %s, %s", self.last_name,self.first_name)
+        logger.info("Deleting %s, %s", self.last_name, self.first_name)
         db.session.delete(self)
         db.session.commit()
 
@@ -238,13 +254,17 @@ class Customer(db.Model):
                 address.deserialize(json_address)
                 self.addresses.append(address)
         except KeyError as error:
-            raise DataValidationError("Invalid Customer: missing " + error.args[0]) from error
+            raise DataValidationError(
+                "Invalid Customer: missing " +
+                error.args[0]) from error
         except TypeError as error:
-            raise DataValidationError("Invalid Customer: body of request contained bad or no data " + str(error)) from error
+            raise DataValidationError(
+                "Invalid Customer: body of request contained bad or no data " +
+                str(error)) from error
         return self
 
     ################
-    ## Class Methods
+    # Class Methods
     ################
 
     @classmethod
