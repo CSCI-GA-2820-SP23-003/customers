@@ -93,17 +93,21 @@ Create a customer according to the provided first name, last name, email, passwo
 Example:
 
 Request Body (JSON)
-`{"first_name":"Akshama", "last_name":"AJ", "email": "akshama@gmail.com", "password":"aks", "addresses":{}}`
+```
+{"first_name":"Akshama", "last_name":"AJ", "email": "akshama@gmail.com", "password":"aks", "addresses":{}}
+```
 
 Success Response : `HTTP_201_CREATED`
-`{
+```
+{
   "addresses": [],
   "email": "akshama@gmail.com",
   "first_name": "Akshama",
   "id": 1,
   "last_name": "AJ",
   "password": "aks"
-}`
+}
+```
 
 ### Read/Get a Customer
 
@@ -120,21 +124,25 @@ Gets/Reads a customer with id == customer_id provided in the URL
 Example:
 
 Success Response : `HTTP_200_OK`
-`{
+```
+{
   "addresses": [],
   "email": "akshama@gmail.com",
   "first_name": "Akshama",
   "id": 1,
   "last_name": "AJ",
   "password": "aks"
-}`
+}
+```
 
 Failure Response : `HTTP_404_NOT_FOUND`
-`{
+```
+{
   "error": "Not Found",
   "message": "404 Not Found: Customer with id '2' could not be found.",
   "status": 404
-}`
+}
+```
 
 ### Update a Customer
 
@@ -151,24 +159,30 @@ Updates a customer with id == customer_id provided in the URL according to the u
 Example:
 
 Request Body (JSON)
-`{"first_name":"Akshama", "last_name":"Akshama", "email": "akshama@gmail.com", "password":"aks", "addresses":{}}`
+```
+{"first_name":"Akshama", "last_name":"Akshama", "email": "akshama@gmail.com", "password":"aks", "addresses":{}}
+```
 
 Success Response : `HTTP_200_OK`
-`{
+```
+{
   "addresses": [],
   "email": "akshama@gmail.com",
   "first_name": "Akshama",
   "id": 1,
   "last_name": "Akshama",
   "password": "aks"
-}`
+}
+```
 
 Failure Response : `HTTP_404_NOT_FOUND`
-`{
+```
+{
   "error": "Not Found",
   "message": "404 Not Found: Customer with id '2' could not be found.",
   "status": 404
-}`
+}
+```
 
 ### Delete a Customer
 
@@ -201,8 +215,8 @@ Lists all the Customers
 Example:
 
 Success Response : `HTTP_200_OK`
-
-`[
+```
+[
   {
     "addresses": [],
     "email": "akshama@gmail.com",
@@ -211,7 +225,8 @@ Success Response : `HTTP_200_OK`
     "last_name": "Akshama",
     "password": "aks"
   }
-]`
+]
+```
 
 
 ### Create an Address
@@ -228,10 +243,13 @@ Create an address according to the provided street, city, state, country, pin co
 Example:
 
 Request Body (JSON)
-`{"street":"40 Pavonia Ave", "city":"Jersey City", "state":"NJ", "country":"USA","pin_code":"07310","customer_id": 2}`
+```
+{"street":"40 Pavonia Ave", "city":"Jersey City", "state":"NJ", "country":"USA","pin_code":"07310","customer_id": 2}
+```
 
 Success Response : `HTTP_201_CREATED`
-`{
+```
+{
   "address_id": 1,
   "city": "Jersey City",
   "country": "USA",
@@ -239,14 +257,17 @@ Success Response : `HTTP_201_CREATED`
   "pin_code": "07310",
   "state": "NJ",
   "street": "40 Pavonia Ave"
-}`
+}
+``
 
 Failure Response (When invalid Customer ID is provided in the URL) : `HTTP_404_NOT_FOUND`
-`{
+```
+{
   "error": "Not Found",
   "message": "404 Not Found: Customer with 1 does not exist",
   "status": 404
-}`
+}
+```
 
 ### Read/Get an Address
 
@@ -263,7 +284,8 @@ Gets/Reads an address with id == address_id and customer id == customer_id provi
 Example:
 
 Success Response : `HTTP_200_OK`
-`{
+```
+{
   "address_id": 1,
   "city": "Jersey City",
   "country": "USA",
@@ -271,20 +293,25 @@ Success Response : `HTTP_200_OK`
   "pin_code": "07310",
   "state": "NJ",
   "street": "40 Pavonia Ave"
-}`
+}
+```
 
 Failure Response : `HTTP_404_NOT_FOUND`
-`{
+```
+{
   "error": "Not Found",
   "message": "404 Not Found: Customer with id '1' could not be found.",
   "status": 404
-}`
+}
+```
 
-`{
+```
+{
   "error": "Not Found",
   "message": "404 Not Found: Address with id '2' could not be found for the customer with id 2.",
   "status": 404
-}`
+}
+```
 
 ### Update an Address
 
@@ -301,10 +328,13 @@ Updates an address with id == address_id and customer id == customer_id provided
 Example:
 
 Request Body (JSON)
-`{"street":"40 Newport Pkwy", "city":"Jersey City", "state":"NJ", "country":"USA","pin_code":"07310","customer_id": 1}`
+```
+{"street":"40 Newport Pkwy", "city":"Jersey City", "state":"NJ", "country":"USA","pin_code":"07310","customer_id": 1}
+```
 
 Success Response : `HTTP_200_OK`
-`{
+```
+{
   "address_id": 1,
   "city": "Jersey City",
   "country": "USA",
@@ -312,20 +342,25 @@ Success Response : `HTTP_200_OK`
   "pin_code": "07310",
   "state": "NJ",
   "street": "40 Newport Pkwy"
-}`
+}
+```
 
 Failure Response : `HTTP_404_NOT_FOUND`
-`{
+```
+{
   "error": "Not Found",
   "message": "404 Not Found: Customer with id '1' could not be found.",
   "status": 404
-}`
+}
+```
 
-`{
+```
+{
   "error": "Not Found",
   "message": "404 Not Found: Address with id '2' could not be found for the customer with id 2.",
   "status": 404
-}`
+}
+```
 
 ### Delete an Address
 
@@ -359,7 +394,8 @@ Example:
 
 Success Response : `HTTP_200_OK`
 
-`[
+```
+[
   {
     "address_id": 1,
     "city": "Jersey City",
@@ -369,14 +405,17 @@ Success Response : `HTTP_200_OK`
     "state": "NJ",
     "street": "40 Newport Pkwy"
   }
-]`
+]
+```
 
 Failure Response : `HTTP_404_NOT_FOUND`
-`{
+```
+{
   "error": "Not Found",
   "message": "404 Not Found: Customer with id '1' could not be found.",
   "status": 404
-}`
+}
+```
 
 
 ## License
