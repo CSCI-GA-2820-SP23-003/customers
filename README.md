@@ -258,7 +258,7 @@ Success Response : `HTTP_201_CREATED`
   "state": "NJ",
   "street": "40 Pavonia Ave"
 }
-``
+```
 
 Failure Response (When invalid Customer ID is provided in the URL) : `HTTP_404_NOT_FOUND`
 ```
