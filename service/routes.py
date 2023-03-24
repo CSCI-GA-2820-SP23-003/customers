@@ -40,24 +40,17 @@ def list_customers():
     """Returns all of the Customers"""
     app.logger.info("Request for Customer list")
     customers = []
-
     # Process the query string if first name matches
     first_name = request.args.get("first_name")
-    if first_name:
-        customers = Customer.find_by_first_name(first_name)
-    else:
-        customers = Customer.all()
-
     # Process the query string if last name matches
     last_name = request.args.get("last_name")
-    if last_name:
-        customers = Customer.find_by_last_name(last_name)
-    else:
-        customers = Customer.all()
-
     # Process the query string if email matches
     email = request.args.get("email")
-    if email:
+    if first_name:
+        customers = Customer.find_by_first_name(first_name)
+    elif last_name:
+        customers = Customer.find_by_last_name(last_name)
+    elif email:
         customers = Customer.find_by_email(email)
     else:
         customers = Customer.all()
