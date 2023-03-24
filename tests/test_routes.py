@@ -100,11 +100,14 @@ class TestCustomersServer(TestCase):
         for customer in customers:
             customer.create()
 
+        customers_list = [customer for customer in customers if customer.first_name == customers[0].first_name]
         resp = self.client.get(
             BASE_URL, query_string=f"first_name={customers[0].first_name}")
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
         data = resp.get_json()
-        self.assertEqual(data[0]["first_name"], customers[0].first_name)
+        self.assertEqual(len(data), len(customers_list))
+        for record in data:
+            self.assertEqual(record["first_name"], customers[0].first_name)
 
     def test_get_customer_by_last_name(self):
         """It should Get an Customer by Last Name"""
@@ -114,11 +117,14 @@ class TestCustomersServer(TestCase):
         for customer in customers:
             customer.create()
 
+        customers_list = [customer for customer in customers if customer.last_name == customers[0].last_name]
         resp = self.client.get(
             BASE_URL, query_string=f"last_name={customers[0].last_name}")
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
         data = resp.get_json()
-        self.assertEqual(data[0]["last_name"], customers[0].last_name)
+        self.assertEqual(len(data), len(customers_list))
+        for record in data:
+            self.assertEqual(record["last_name"], customers[0].last_name)
 
     def test_get_customer_by_email(self):
         """It should Get an Customer by email"""
@@ -128,11 +134,14 @@ class TestCustomersServer(TestCase):
         for customer in customers:
             customer.create()
 
+        customers_list = [customer for customer in customers if customer.email == customers[0].email]
         resp = self.client.get(
             BASE_URL, query_string=f"email={customers[0].email}")
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
         data = resp.get_json()
-        self.assertEqual(data[0]["email"], customers[0].email)
+        self.assertEqual(len(data), len(customers_list))
+        for record in data:
+            self.assertEqual(record["email"], customers[0].email)
 
     def test_get_customer(self):
         """It should Read a single Customer"""
