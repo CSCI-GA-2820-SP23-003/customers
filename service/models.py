@@ -184,6 +184,7 @@ class Customer(db.Model):
     last_name = db.Column(db.String(255), nullable=False)
     email = db.Column(db.String(255), nullable=False)
     password = db.Column(db.String(255), nullable=False)
+    active = db.Column(db.Boolean,nullable=False,default=True)
     addresses = db.relationship(
         "Address",
         backref="customer",
@@ -229,6 +230,7 @@ class Customer(db.Model):
             "last_name": self.last_name,
             "email": self.email,
             "password": self.password,
+            "active":self.active,
             "addresses": [],
         }
         for address in self.addresses:
@@ -247,6 +249,7 @@ class Customer(db.Model):
             self.last_name = data["last_name"]
             self.email = data["email"]
             self.password = data["password"]
+            self.active = data["active"]
             # handle inner list of addresses
             address_list = data.get("addresses")
             for json_address in address_list:
