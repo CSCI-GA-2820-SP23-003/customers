@@ -33,6 +33,29 @@ def index():
 ######################################################################
 
 ######################################################################
+# Activate / Deactivate Customer
+######################################################################
+@app.route("/customers/<int:customer_id>/activate", methods=["PUT"])
+def activate(customer_id):
+    """Activate customer"""
+    app.logger.info("Request to Activate Customer")
+    customer = Customer.find(customer_id)
+    if not customer:
+        abort(
+            status.HTTP_404_NOT_FOUND,
+            f"Customer with id '{customer_id}' was not found.")
+
+    customer.id = customer_id
+    customer.active = True
+    customer.update()
+
+    app.logger.info("Customer with ID [%s] updated.", customer.id)
+
+    return make_response(
+        jsonify(customer.serialize()), status.HTTP_200_OK
+    )
+
+######################################################################
 # L I S T    A L L    C U S T O M E R S
 ######################################################################
 @app.route("/customers", methods=["GET"])

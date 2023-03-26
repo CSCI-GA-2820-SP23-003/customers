@@ -46,7 +46,6 @@ def tearDownModule():
 #  T E S T   C A S E S
 ######################################################################
 
-
 class TestCustomersServer(TestCase):
     """ Customers REST API Server Tests """
 
@@ -64,6 +63,42 @@ class TestCustomersServer(TestCase):
     ######################################################################
     #  C U S T O M E R S   A P I   T E S T   C A S E S
     ######################################################################
+
+    ######################################################################
+    #  A C T I V A T E / D E A C T I V A T E   C A S E S
+    ######################################################################
+
+    def test_activate_customer(self):
+        """ It should activate customer """
+        # Create dummy deactivated customers
+        customers = CustomerFactory.create_batch(3)
+        
+        for customer in customers:
+            customer.active=False
+            customer.create()
+            
+        # choose a customer id randomly to delete
+        all_customers = Customer.all()
+        self.assertEqual(len(all_customers), 3)
+
+        # pick random customer
+        rand_customer = random.choice(all_customers)
+        self.assertFalse(rand_customer.active)
+        rand_customer_id = rand_customer.id
+
+        # api call to activate the chosen customer
+        resp = self.client.put(f"{BASE_URL}/{rand_customer_id}/activate")
+        activated_customer = resp.get_json()
+
+        self.assertEqual(rand_customer_id, activated_customer["id"])
+        self.assertTrue(activated_customer["active"])
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+
+    def test_activate_invalid_customer(self):
+        """ It should not activate invalid customer """
+
+        resp = self.client.put(f"{BASE_URL}/10/activate")
+        self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
 
     ######################################################################
     #  R E A D   C A S E S
