@@ -88,6 +88,10 @@ class TestCustomersServer(TestCase):
 
         # api call to activate the chosen customer
         resp = self.client.put(f"{BASE_URL}/{rand_customer_id}/activate")
+        activated_customer = resp.get_json()
+
+        self.assertEqual(rand_customer_id, activated_customer["id"])
+        self.assertTrue(activated_customer["active"])
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
 
     def test_activate_invalid_customer(self):

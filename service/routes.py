@@ -100,7 +100,6 @@ def create_customers():
     # Create the customer
     customer = Customer()
     customer.deserialize(request.get_json())
-    #customer.active=True
     customer.create()
 
     # Create a message to return
@@ -297,11 +296,8 @@ def update_customer(customer_id):
             status.HTTP_404_NOT_FOUND,
             f"Customer with id '{customer_id}' was not found.")
 
-    # Force activation to be done via activate action when doing deactivation
-    #original_active_statue = customer.active
     customer.deserialize(request.get_json())
     customer.id = customer_id
-    #customer.active = original_active_statue
     customer.update()
 
     app.logger.info("Customer with ID [%s] updated.", customer.id)
