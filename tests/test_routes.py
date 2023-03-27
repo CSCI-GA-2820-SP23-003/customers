@@ -179,7 +179,7 @@ class TestCustomersServer(TestCase):
             self.assertEqual(record["email"], customers[0].email)
 
     def test_get_customer_by_street(self):
-        """It should Get an Customer by street"""
+        """It should Get all the Customers by street"""
 
         customers = CustomerFactory.create_batch(2)
         addresses_to_add = AddressFactory.create_batch(4)
@@ -222,7 +222,7 @@ class TestCustomersServer(TestCase):
         self.assertEqual(len(customers_list), count)
 
     def test_get_customer_by_city(self):
-        """It should Get an Customer by city"""
+        """It should Get all the Customers by city"""
 
         customers = CustomerFactory.create_batch(2)
         addresses_to_add = AddressFactory.create_batch(4)
@@ -264,7 +264,7 @@ class TestCustomersServer(TestCase):
         self.assertEqual(len(customers_list), count)
 
     def test_get_customer_by_state(self):
-        """It should Get an Customer by city"""
+        """It should Get all the Customers by state"""
 
         customers = CustomerFactory.create_batch(2)
         addresses_to_add = AddressFactory.create_batch(4)
@@ -306,7 +306,7 @@ class TestCustomersServer(TestCase):
         self.assertEqual(len(customers_list), count)
     
     def test_get_customer_by_pin_code(self):
-        """It should Get an Customer by pin code"""
+        """It should Get all the Customers by pin code"""
 
         customers = CustomerFactory.create_batch(2)
         addresses_to_add = AddressFactory.create_batch(4)
@@ -348,7 +348,7 @@ class TestCustomersServer(TestCase):
         self.assertEqual(len(customers_list), count)
 
     def test_get_customer_by_country(self):
-        """It should Get an Customer by pin code"""
+        """It should Get all the Customers by country"""
 
         customers = CustomerFactory.create_batch(2)
         addresses_to_add = AddressFactory.create_batch(4)
