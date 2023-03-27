@@ -6,6 +6,7 @@ All the REST API calls to the Customer or the Address Database are housed here.
 from flask import jsonify, request, url_for, make_response, abort
 from service.common import status  # HTTP Status Codes
 from service.models import Customer, Address
+import copy
 
 # Import Flask application
 from . import app
@@ -69,18 +70,37 @@ def list_customers():
     last_name = request.args.get("last_name")
     # Process the query string if email matches
     email = request.args.get("email")
+    #Process the query string if state matches
+    street = request.args.get("street")
+    #Process the query string if state matches
+    city = request.args.get("city")
+    #Process the query string if state matches
+    state = request.args.get("state")
+    #Process the query string if state matches
+    country = request.args.get("country")
+    #Process the query string if state matches
+    pin_code = request.args.get("pin_code")
     if first_name:
         customers = Customer.find_by_first_name(first_name)
     elif last_name:
         customers = Customer.find_by_last_name(last_name)
     elif email:
         customers = Customer.find_by_email(email)
+    elif street:
+        customers = Address.find_by_street(street)
+    elif city:
+        customers = Address.find_by_city(city)
+    elif state:
+        customers = Address.find_by_state(state)
+    elif country:
+        customers = Address.find_by_country(country)
+    elif pin_code:
+        customers = Address.find_by_pin_code(pin_code)
     else:
         customers = Customer.all()
 
     # Return as an array of dictionaries
     results = [customer.serialize() for customer in customers]
-
     return make_response(jsonify(results), status.HTTP_200_OK)
 
 ######################################################################

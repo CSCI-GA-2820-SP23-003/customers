@@ -178,6 +178,217 @@ class TestCustomersServer(TestCase):
         for record in data:
             self.assertEqual(record["email"], customers[0].email)
 
+    def test_get_customer_by_street(self):
+        """It should Get an Customer by street"""
+
+        customers = CustomerFactory.create_batch(2)
+        addresses_to_add = AddressFactory.create_batch(4)
+
+        #Create the addresses corresponding to the customers
+        for idx, customer in enumerate(customers):
+            customer.create()
+            for addr_idx in range(2):
+                addr = addresses_to_add[idx*2 + addr_idx]
+                resp = self.client.post(
+                    f"{BASE_URL}/{customer.id}/addresses",
+                    json=addr.serialize())
+                self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
+        
+        street_to_test = customers[0].addresses[0].street
+        customers_list = []
+
+        #Test if the number of returned customers is okay
+        for customer in customers:
+            for address in customer.addresses:
+                if address.street == street_to_test:
+                    customers_list.append(customer)
+                    break
+
+        resp = self.client.get(
+            BASE_URL, query_string=f"street={street_to_test}")
+        
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        data = resp.get_json()
+
+        self.assertEqual(len(data), len(list(set(customers_list))))
+        count = 0
+        
+        for record in data:
+            for addr in record['addresses']:
+                if(addr['street'] == street_to_test):
+                    count = count + 1
+                    break
+        
+        self.assertEqual(len(customers_list), count)
+
+    def test_get_customer_by_city(self):
+        """It should Get an Customer by city"""
+
+        customers = CustomerFactory.create_batch(2)
+        addresses_to_add = AddressFactory.create_batch(4)
+
+        #Create the addresses corresponding to the customers
+        for idx, customer in enumerate(customers):
+            customer.create()
+            for addr_idx in range(2):
+                addr = addresses_to_add[idx*2 + addr_idx]
+                resp = self.client.post(
+                    f"{BASE_URL}/{customer.id}/addresses",
+                    json=addr.serialize())
+                self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
+        
+        city_to_test = customers[0].addresses[0].city
+        customers_list = []
+
+        #Test if the number of returned customers is okay
+        for customer in customers:
+            for address in customer.addresses:
+                if address.city == city_to_test:
+                    customers_list.append(customer)
+                    break
+
+        resp = self.client.get(
+            BASE_URL, query_string=f"city={city_to_test}")
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        data = resp.get_json()
+
+        self.assertEqual(len(data), len(list(set(customers_list))))
+        count = 0
+        
+        for record in data:
+            for addr in record['addresses']:
+                if(addr['city'] == city_to_test):
+                    count = count + 1
+                    break
+        
+        self.assertEqual(len(customers_list), count)
+
+    def test_get_customer_by_state(self):
+        """It should Get an Customer by city"""
+
+        customers = CustomerFactory.create_batch(2)
+        addresses_to_add = AddressFactory.create_batch(4)
+
+        #Create the addresses corresponding to the customers
+        for idx, customer in enumerate(customers):
+            customer.create()
+            for addr_idx in range(2):
+                addr = addresses_to_add[idx*2 + addr_idx]
+                resp = self.client.post(
+                    f"{BASE_URL}/{customer.id}/addresses",
+                    json=addr.serialize())
+                self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
+        
+        state_to_test = customers[0].addresses[0].state
+        customers_list = []
+
+        #Test if the number of returned customers is okay
+        for customer in customers:
+            for address in customer.addresses:
+                if address.state == state_to_test:
+                    customers_list.append(customer)
+                    break
+
+        resp = self.client.get(
+            BASE_URL, query_string=f"state={state_to_test}")
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        data = resp.get_json()
+
+        self.assertEqual(len(data), len(customers_list))
+        count = 0
+        
+        for record in data:
+            for addr in record['addresses']:
+                if(addr['state'] == state_to_test):
+                    count = count + 1
+                    break
+        
+        self.assertEqual(len(customers_list), count)
+    
+    def test_get_customer_by_pin_code(self):
+        """It should Get an Customer by pin code"""
+
+        customers = CustomerFactory.create_batch(2)
+        addresses_to_add = AddressFactory.create_batch(4)
+
+        #Create the addresses corresponding to the customers
+        for idx, customer in enumerate(customers):
+            customer.create()
+            for addr_idx in range(2):
+                addr = addresses_to_add[idx*2 + addr_idx]
+                resp = self.client.post(
+                    f"{BASE_URL}/{customer.id}/addresses",
+                    json=addr.serialize())
+                self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
+        
+        pin_code_to_test = customers[0].addresses[0].pin_code
+        customers_list = []
+
+        #Test if the number of returned customers is okay
+        for customer in customers:
+            for address in customer.addresses:
+                if address.pin_code == pin_code_to_test:
+                    customers_list.append(customer)
+                    break
+
+        resp = self.client.get(
+            BASE_URL, query_string=f"pin_code={pin_code_to_test}")
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        data = resp.get_json()
+
+        self.assertEqual(len(data), len(customers_list))
+        count = 0
+        
+        for record in data:
+            for addr in record['addresses']:
+                if(addr['pin_code'] == pin_code_to_test):
+                    count = count + 1
+                    break
+        
+        self.assertEqual(len(customers_list), count)
+
+    def test_get_customer_by_country(self):
+        """It should Get an Customer by pin code"""
+
+        customers = CustomerFactory.create_batch(2)
+        addresses_to_add = AddressFactory.create_batch(4)
+
+        #Create the addresses corresponding to the customers
+        for idx, customer in enumerate(customers):
+            customer.create()
+            for addr_idx in range(2):
+                addr = addresses_to_add[idx*2 + addr_idx]
+                resp = self.client.post(
+                    f"{BASE_URL}/{customer.id}/addresses",
+                    json=addr.serialize())
+                self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
+        
+        country_to_test = customers[0].addresses[0].country
+        customers_list = []
+
+        #Test if the number of returned customers is okay
+        for customer in customers:
+            for address in customer.addresses:
+                if address.country == country_to_test:
+                    customers_list.append(customer)
+                    break
+
+        resp = self.client.get(
+            BASE_URL, query_string=f"country={country_to_test}")
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        data = resp.get_json()
+
+        self.assertEqual(len(data), len(customers_list))
+        count = 0
+        
+        for record in data:
+            for addr in record['addresses']:
+                if(addr['country'] == country_to_test):
+                    count = count + 1
+                    break
+        
+        self.assertEqual(len(customers_list), count)
+    
     def test_get_customer(self):
         """It should Read a single Customer"""
         # get the id of an customer
@@ -430,6 +641,7 @@ class TestAddressesServer(TestCase):
 
         data = resp.get_json()
         self.assertEqual(len(data), 2)
+
 
     def test_get_address(self):
         """It should Read an address from a customer"""
