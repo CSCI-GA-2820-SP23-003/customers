@@ -170,7 +170,7 @@ class Address(db.Model):
         """
         logger.info('Country query under progress for: %s ...', country)
         addresses = cls.query.filter(cls.country == country)
-        return [Customer.find(address.customer_id) for address in addresses]
+        return list(set(Customer.find(address.customer_id) for address in addresses))
 
     @classmethod
     def find(cls, address_id):
