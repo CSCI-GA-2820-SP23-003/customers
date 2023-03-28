@@ -16,6 +16,7 @@ DATABASE_URI = os.getenv(
 )
 
 
+# pylint: disable=invalid-name
 def setUpModule():
     """ Sets up the database, and other attributes"""
     app.config["TESTING"] = True

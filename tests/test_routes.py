@@ -9,6 +9,8 @@ import os
 import logging
 import random
 
+# pylint: disable=cyclic-import
+# pylint: disable=too-many-lines
 from unittest import TestCase
 from service import app
 from service.models import db, init_db, Address, Customer
@@ -28,6 +30,8 @@ FLAG = False
 #  M O D U L E   C O D E
 ######################################################################
 
+
+# pylint: disable=invalid-name
 def setUpModule():
     """ Sets up the database, and other attributes"""
     app.config["TESTING"] = True
@@ -48,6 +52,7 @@ def tearDownModule():
 
 
 class TestCustomersServer(TestCase):
+    # pylint: disable=too-many-public-methods
     """ Customers REST API Server Tests """
 
     def setUp(self):
@@ -616,6 +621,7 @@ class TestCustomersServer(TestCase):
 
 
 class TestAddressesServer(TestCase):
+    # pylint: disable=too-many-public-methods
     """ Addresses REST API Server Tests """
 
     def setUp(self):

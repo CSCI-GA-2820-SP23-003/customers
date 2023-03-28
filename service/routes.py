@@ -2,7 +2,7 @@
 The customers resource is a representation of the customer accounts.
 All the REST API calls to the Customer or the Address Database are housed here.
 """
-
+# pylint: disable=cyclic-import
 from flask import jsonify, request, url_for, make_response, abort
 from service.common import status  # HTTP Status Codes
 from service.models import Customer, Address
