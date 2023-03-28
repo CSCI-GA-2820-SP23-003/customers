@@ -106,6 +106,37 @@ class TestCustomersServer(TestCase):
         resp = self.client.put(f"{BASE_URL}/10/activate")
         self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
 
+    def test_deactivate_customer(self):
+        """ It should deactivate customer """
+        # Create dummy activated customers
+        customers = CustomerFactory.create_batch(3)
+
+        for customer in customers:
+            customer.create()
+
+        # choose a customer id randomly to delete
+        all_customers = Customer.all()
+        self.assertEqual(len(all_customers), 3)
+
+        # pick random customer
+        rand_customer = random.choice(all_customers)
+        self.assertTrue(rand_customer.active)
+        rand_customer_id = rand_customer.id
+
+        # api call to activate the chosen customer
+        resp = self.client.put(f"{BASE_URL}/{rand_customer_id}/deactivate")
+        deactivated_customer = resp.get_json()
+
+        self.assertEqual(rand_customer_id, deactivated_customer["id"])
+        self.assertFalse(deactivated_customer["active"])
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+
+    def test_deactivate_invalid_customer(self):
+        """ It should not deactivate invalid customer """
+
+        resp = self.client.put(f"{BASE_URL}/10/deactivate")
+        self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
+
     ######################################################################
     #  R E A D   C A S E S
     ######################################################################

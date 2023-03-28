@@ -36,7 +36,7 @@ def index():
 # Activate / Deactivate Customer
 ######################################################################
 @app.route("/customers/<int:customer_id>/activate", methods=["PUT"])
-def activate(customer_id):
+def activate_customer(customer_id):
     """Activate customer"""
     app.logger.info("Request to Activate Customer")
     customer = Customer.find(customer_id)
@@ -49,7 +49,28 @@ def activate(customer_id):
     customer.active = True
     customer.update()
 
-    app.logger.info("Customer with ID [%s] updated.", customer.id)
+    app.logger.info("Customer with ID [%s] activated.", customer.id)
+
+    return make_response(
+        jsonify(customer.serialize()), status.HTTP_200_OK
+    )
+
+
+@app.route("/customers/<int:customer_id>/deactivate", methods=["PUT"])
+def deactivate_customer(customer_id):
+    """Deactivate customer"""
+    app.logger.info("Request to Deactivate Customer")
+    customer = Customer.find(customer_id)
+    if not customer:
+        abort(
+            status.HTTP_404_NOT_FOUND,
+            f"Customer with id '{customer_id}' was not found.")
+
+    customer.id = customer_id
+    customer.active = False
+    customer.update()
+
+    app.logger.info("Customer with ID [%s] deactivated.", customer.id)
 
     return make_response(
         jsonify(customer.serialize()), status.HTTP_200_OK
