@@ -217,7 +217,11 @@ class TestCustomersServer(TestCase):
         self.assertEqual(len(data), len(list(set(customers_list))))
         count = 0
 
+        # Test if the returned customers have atleast one address satisfying
+        # the constraints
         for record in data:
+            # The loop breaks as soon as we find the eligible address since we
+            # want to avoid counting duplicates
             for addr in record['addresses']:
                 if addr['street'] == street_to_test:
                     count = count + 1
@@ -259,7 +263,11 @@ class TestCustomersServer(TestCase):
         self.assertEqual(len(data), len(list(set(customers_list))))
         count = 0
 
+        # Test if the returned customers have atleast one address satisfying
+        # the constraints
         for record in data:
+            # The loop breaks as soon as we find the eligible address since we
+            # want to avoid counting duplicates
             for addr in record['addresses']:
                 if addr['city'] == city_to_test:
                     count = count + 1
@@ -301,6 +309,8 @@ class TestCustomersServer(TestCase):
         self.assertEqual(len(data), len(customers_list))
         count = 0
 
+        # Test if the returned customers have atleast one address satisfying
+        # the constraints
         for record in data:
             for addr in record['addresses']:
                 if addr['state'] == state_to_test:
@@ -330,6 +340,8 @@ class TestCustomersServer(TestCase):
 
         # Test if the number of returned customers is okay
         for customer in customers:
+            # The loop breaks as soon as we find the eligible address since we
+            # want to avoid counting duplicates
             for address in customer.addresses:
                 if address.pin_code == pin_code_to_test:
                     customers_list.append(customer)
@@ -343,6 +355,8 @@ class TestCustomersServer(TestCase):
         self.assertEqual(len(data), len(customers_list))
         count = 0
 
+        # Test if the returned customers have atleast one address satisfying
+        # the constraints
         for record in data:
             for addr in record['addresses']:
                 if addr['pin_code'] == pin_code_to_test:
@@ -385,7 +399,11 @@ class TestCustomersServer(TestCase):
         self.assertEqual(len(data), len(customers_list))
         count = 0
 
+        # Test if the returned customers have atleast one address satisfying
+        # the constraints
         for record in data:
+            # The loop breaks as soon as we find the eligible address since we
+            # want to avoid counting duplicates
             for addr in record['addresses']:
                 if addr['country'] == country_to_test:
                     count = count + 1

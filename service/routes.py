@@ -71,15 +71,15 @@ def list_customers():
     last_name = request.args.get("last_name")
     # Process the query string if email matches
     email = request.args.get("email")
-    # Process the query string if state matches
+    # Process the query string if street matches
     street = request.args.get("street")
-    # Process the query string if state matches
+    # Process the query string if city matches
     city = request.args.get("city")
     # Process the query string if state matches
     state = request.args.get("state")
-    # Process the query string if state matches
+    # Process the query string if country matches
     country = request.args.get("country")
-    # Process the query string if state matches
+    # Process the query string if pin code matches
     pin_code = request.args.get("pin_code")
     if first_name:
         customers = Customer.find_by_first_name(first_name)
