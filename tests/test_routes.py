@@ -105,6 +105,13 @@ class TestCustomersServer(TestCase):
     #  R E A D   C A S E S
     ######################################################################
 
+    def test_health(self):
+        """Get the health endpoint"""
+        resp = self.client.get("/health")
+        self.assertEqual(resp.status_code, 200)
+        data = resp.get_json()
+        self.assertEqual(data["status"], "OK")
+
     def test_index(self):
         """ Test case that checks if the home page is getting called"""
         resp = self.client.get("/")

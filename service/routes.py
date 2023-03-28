@@ -11,6 +11,15 @@ from service.models import Customer, Address
 from . import app
 
 
+############################################################
+# Health Endpoint
+############################################################
+@app.route("/health")
+def health():
+    """Health Status"""
+    return make_response( jsonify(dict(status="OK")), status.HTTP_200_OK )
+
+
 ######################################################################
 # GET INDEX
 ######################################################################
