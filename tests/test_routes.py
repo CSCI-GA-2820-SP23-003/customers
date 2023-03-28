@@ -46,6 +46,7 @@ def tearDownModule():
 #  T E S T   C A S E S
 ######################################################################
 
+
 class TestCustomersServer(TestCase):
     """ Customers REST API Server Tests """
 
@@ -72,11 +73,11 @@ class TestCustomersServer(TestCase):
         """ It should activate customer """
         # Create dummy deactivated customers
         customers = CustomerFactory.create_batch(3)
-        
+
         for customer in customers:
-            customer.active=False
+            customer.active = False
             customer.create()
-            
+
         # choose a customer id randomly to delete
         all_customers = Customer.all()
         self.assertEqual(len(all_customers), 3)
@@ -135,7 +136,8 @@ class TestCustomersServer(TestCase):
         for customer in customers:
             customer.create()
 
-        customers_list = [customer for customer in customers if customer.first_name == customers[0].first_name]
+        customers_list = [
+            customer for customer in customers if customer.first_name == customers[0].first_name]
         resp = self.client.get(
             BASE_URL, query_string=f"first_name={customers[0].first_name}")
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
@@ -152,7 +154,8 @@ class TestCustomersServer(TestCase):
         for customer in customers:
             customer.create()
 
-        customers_list = [customer for customer in customers if customer.last_name == customers[0].last_name]
+        customers_list = [
+            customer for customer in customers if customer.last_name == customers[0].last_name]
         resp = self.client.get(
             BASE_URL, query_string=f"last_name={customers[0].last_name}")
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
@@ -169,7 +172,8 @@ class TestCustomersServer(TestCase):
         for customer in customers:
             customer.create()
 
-        customers_list = [customer for customer in customers if customer.email == customers[0].email]
+        customers_list = [
+            customer for customer in customers if customer.email == customers[0].email]
         resp = self.client.get(
             BASE_URL, query_string=f"email={customers[0].email}")
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
@@ -177,6 +181,235 @@ class TestCustomersServer(TestCase):
         self.assertEqual(len(data), len(customers_list))
         for record in data:
             self.assertEqual(record["email"], customers[0].email)
+
+    def test_get_customer_by_street(self):
+        """It should Get all the Customers by street"""
+
+        customers = CustomerFactory.create_batch(2)
+        addresses_to_add = AddressFactory.create_batch(4)
+
+        # Create the addresses corresponding to the customers
+        for idx, customer in enumerate(customers):
+            customer.create()
+            for addr_idx in range(2):
+                addr = addresses_to_add[idx * 2 + addr_idx]
+                resp = self.client.post(
+                    f"{BASE_URL}/{customer.id}/addresses",
+                    json=addr.serialize())
+                self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
+
+        street_to_test = customers[0].addresses[0].street
+        customers_list = []
+
+        # Test if the number of returned customers is okay
+        for customer in customers:
+            for address in customer.addresses:
+                if address.street == street_to_test:
+                    customers_list.append(customer)
+                    break
+
+        resp = self.client.get(
+            BASE_URL, query_string=f"street={street_to_test}")
+
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        data = resp.get_json()
+
+        self.assertEqual(len(data), len(list(set(customers_list))))
+        count = 0
+
+        # Test if the returned customers have atleast one address satisfying
+        # the constraints
+        for record in data:
+            # The loop breaks as soon as we find the eligible address since we
+            # want to avoid counting duplicates
+            for addr in record['addresses']:
+                if addr['street'] == street_to_test:
+                    count = count + 1
+                    break
+
+        self.assertEqual(len(customers_list), count)
+
+    def test_get_customer_by_city(self):
+        """It should Get all the Customers by city"""
+
+        customers = CustomerFactory.create_batch(2)
+        addresses_to_add = AddressFactory.create_batch(4)
+
+        # Create the addresses corresponding to the customers
+        for idx, customer in enumerate(customers):
+            customer.create()
+            for addr_idx in range(2):
+                addr = addresses_to_add[idx * 2 + addr_idx]
+                resp = self.client.post(
+                    f"{BASE_URL}/{customer.id}/addresses",
+                    json=addr.serialize())
+                self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
+
+        city_to_test = customers[0].addresses[0].city
+        customers_list = []
+
+        # Test if the number of returned customers is okay
+        for customer in customers:
+            for address in customer.addresses:
+                if address.city == city_to_test:
+                    customers_list.append(customer)
+                    break
+
+        resp = self.client.get(
+            BASE_URL, query_string=f"city={city_to_test}")
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        data = resp.get_json()
+
+        self.assertEqual(len(data), len(list(set(customers_list))))
+        count = 0
+
+        # Test if the returned customers have atleast one address satisfying
+        # the constraints
+        for record in data:
+            # The loop breaks as soon as we find the eligible address since we
+            # want to avoid counting duplicates
+            for addr in record['addresses']:
+                if addr['city'] == city_to_test:
+                    count = count + 1
+                    break
+
+        self.assertEqual(len(customers_list), count)
+
+    def test_get_customer_by_state(self):
+        """It should Get all the Customers by state"""
+
+        customers = CustomerFactory.create_batch(2)
+        addresses_to_add = AddressFactory.create_batch(4)
+
+        # Create the addresses corresponding to the customers
+        for idx, customer in enumerate(customers):
+            customer.create()
+            for addr_idx in range(2):
+                addr = addresses_to_add[idx * 2 + addr_idx]
+                resp = self.client.post(
+                    f"{BASE_URL}/{customer.id}/addresses",
+                    json=addr.serialize())
+                self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
+
+        state_to_test = customers[0].addresses[0].state
+        customers_list = []
+
+        # Test if the number of returned customers is okay
+        for customer in customers:
+            for address in customer.addresses:
+                if address.state == state_to_test:
+                    customers_list.append(customer)
+                    break
+
+        resp = self.client.get(
+            BASE_URL, query_string=f"state={state_to_test}")
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        data = resp.get_json()
+
+        self.assertEqual(len(data), len(customers_list))
+        count = 0
+
+        # Test if the returned customers have atleast one address satisfying
+        # the constraints
+        for record in data:
+            for addr in record['addresses']:
+                if addr['state'] == state_to_test:
+                    count = count + 1
+                    break
+
+        self.assertEqual(len(customers_list), count)
+
+    def test_get_customer_by_pin_code(self):
+        """It should Get all the Customers by pin code"""
+
+        customers = CustomerFactory.create_batch(2)
+        addresses_to_add = AddressFactory.create_batch(4)
+
+        # Create the addresses corresponding to the customers
+        for idx, customer in enumerate(customers):
+            customer.create()
+            for addr_idx in range(2):
+                addr = addresses_to_add[idx * 2 + addr_idx]
+                resp = self.client.post(
+                    f"{BASE_URL}/{customer.id}/addresses",
+                    json=addr.serialize())
+                self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
+
+        pin_code_to_test = customers[0].addresses[0].pin_code
+        customers_list = []
+
+        # Test if the number of returned customers is okay
+        for customer in customers:
+            # The loop breaks as soon as we find the eligible address since we
+            # want to avoid counting duplicates
+            for address in customer.addresses:
+                if address.pin_code == pin_code_to_test:
+                    customers_list.append(customer)
+                    break
+
+        resp = self.client.get(
+            BASE_URL, query_string=f"pin_code={pin_code_to_test}")
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        data = resp.get_json()
+
+        self.assertEqual(len(data), len(customers_list))
+        count = 0
+
+        # Test if the returned customers have atleast one address satisfying
+        # the constraints
+        for record in data:
+            for addr in record['addresses']:
+                if addr['pin_code'] == pin_code_to_test:
+                    count = count + 1
+                    break
+
+        self.assertEqual(len(customers_list), count)
+
+    def test_get_customer_by_country(self):
+        """It should Get all the Customers by country"""
+
+        customers = CustomerFactory.create_batch(2)
+        addresses_to_add = AddressFactory.create_batch(4)
+
+        # Create the addresses corresponding to the customers
+        for idx, customer in enumerate(customers):
+            customer.create()
+            for addr_idx in range(2):
+                addr = addresses_to_add[idx * 2 + addr_idx]
+                resp = self.client.post(
+                    f"{BASE_URL}/{customer.id}/addresses",
+                    json=addr.serialize())
+                self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
+
+        country_to_test = customers[0].addresses[0].country
+        customers_list = []
+
+        # Test if the number of returned customers is okay
+        for customer in customers:
+            for address in customer.addresses:
+                if address.country == country_to_test:
+                    customers_list.append(customer)
+                    break
+
+        resp = self.client.get(
+            BASE_URL, query_string=f"country={country_to_test}")
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        data = resp.get_json()
+
+        self.assertEqual(len(data), len(customers_list))
+        count = 0
+
+        # Test if the returned customers have atleast one address satisfying
+        # the constraints
+        for record in data:
+            # The loop breaks as soon as we find the eligible address since we
+            # want to avoid counting duplicates
+            for addr in record['addresses']:
+                if addr['country'] == country_to_test:
+                    count = count + 1
+                    break
+
+        self.assertEqual(len(customers_list), count)
 
     def test_get_customer(self):
         """It should Read a single Customer"""
