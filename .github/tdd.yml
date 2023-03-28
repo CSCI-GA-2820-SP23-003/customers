@@ -39,7 +39,7 @@ jobs:
       - name: Install libraries for PostgreSQL
         run: |
           apt-get update
-          apt-get install -y gcc libpq-dev
+          apt-get install -y gcc libpq-dev make sudo
 
       - name: Install dependencies
         run: |
