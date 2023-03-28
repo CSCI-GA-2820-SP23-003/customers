@@ -122,8 +122,8 @@ class Address(db.Model):
         """
         logger.info('Street query under progress for: %s ...', street)
         addresses = cls.query.filter(cls.street == street)
-        return list(set([Customer.find(address.customer_id)
-                    for address in addresses]))
+        return list({Customer.find(address.customer_id)
+                    for address in addresses})
 
     @classmethod
     def find_by_city(cls, city):
@@ -135,8 +135,8 @@ class Address(db.Model):
         """
         logger.info('City query under progress for: %s ...', city)
         addresses = cls.query.filter(cls.city == city)
-        return list(set([Customer.find(address.customer_id)
-                    for address in addresses]))
+        return list({Customer.find(address.customer_id)
+                    for address in addresses})
 
     @classmethod
     def find_by_state(cls, state):
@@ -148,8 +148,8 @@ class Address(db.Model):
         """
         logger.info('State query under progress for: %s ...', state)
         addresses = cls.query.filter(cls.state == state)
-        return list(set(Customer.find(address.customer_id)
-                    for address in addresses))
+        return list({Customer.find(address.customer_id)
+                    for address in addresses})
 
     @classmethod
     def find_by_pin_code(cls, pin_code):
@@ -161,8 +161,8 @@ class Address(db.Model):
         """
         logger.info('Pincode query under progress for: %s ...', pin_code)
         addresses = cls.query.filter(cls.pin_code == pin_code)
-        return list(set(Customer.find(address.customer_id)
-                    for address in addresses))
+        return list({Customer.find(address.customer_id)
+                    for address in addresses})
 
     @classmethod
     def find_by_country(cls, country):
@@ -174,8 +174,8 @@ class Address(db.Model):
         """
         logger.info('Country query under progress for: %s ...', country)
         addresses = cls.query.filter(cls.country == country)
-        return list(set(Customer.find(address.customer_id)
-                    for address in addresses))
+        return list({Customer.find(address.customer_id)
+                    for address in addresses})
 
     @classmethod
     def find(cls, address_id):

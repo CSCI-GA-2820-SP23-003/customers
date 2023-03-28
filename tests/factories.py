@@ -22,7 +22,7 @@ class CustomerFactory(factory.Factory):
 
 class AddressFactory(factory.Factory):
     """ Creates fake addresses that you don't have to support """
-    class Meta:
+    class Meta:  # pylint: disable=too-few-public-methods
         """Maps factory to data model"""
 
         model = Address
