@@ -6,7 +6,6 @@ All the REST API calls to the Customer or the Address Database are housed here.
 from flask import jsonify, request, url_for, make_response, abort
 from service.common import status  # HTTP Status Codes
 from service.models import Customer, Address
-import copy
 
 # Import Flask application
 from . import app
@@ -59,6 +58,8 @@ def activate(customer_id):
 ######################################################################
 # L I S T    A L L    C U S T O M E R S
 ######################################################################
+
+
 @app.route("/customers", methods=["GET"])
 def list_customers():
     """Returns all of the Customers"""
@@ -70,15 +71,15 @@ def list_customers():
     last_name = request.args.get("last_name")
     # Process the query string if email matches
     email = request.args.get("email")
-    #Process the query string if state matches
+    # Process the query string if state matches
     street = request.args.get("street")
-    #Process the query string if state matches
+    # Process the query string if state matches
     city = request.args.get("city")
-    #Process the query string if state matches
+    # Process the query string if state matches
     state = request.args.get("state")
-    #Process the query string if state matches
+    # Process the query string if state matches
     country = request.args.get("country")
-    #Process the query string if state matches
+    # Process the query string if state matches
     pin_code = request.args.get("pin_code")
     if first_name:
         customers = Customer.find_by_first_name(first_name)
@@ -142,7 +143,9 @@ def create_customers():
 @app.route("/customers/<int:customer_id>/addresses", methods=["GET"])
 def list_addresses(customer_id):
     """Returns all of the Addresses for a Customer"""
-    app.logger.info("Request for all Addresses for Customer with id: %s", customer_id)
+    app.logger.info(
+        "Request for all Addresses for Customer with id: %s",
+        customer_id)
 
     # See if the customer exists and abort if it doesn't
     customer = Customer.find(customer_id)
