@@ -113,40 +113,69 @@ class Address(db.Model):
         db.session.commit()
 
     @classmethod
+    def find_by_street(cls, street):
+        """
+       Returns customers whose addresses are in the street
+
+        Args:
+            street (string): the street of the Addresses you want to match
+        """
+        logger.info('Street query under progress for: %s ...', street)
+        addresses = cls.query.filter(cls.street == street)
+        return list({Customer.find(address.customer_id)
+                    for address in addresses})
+
+    @classmethod
     def find_by_city(cls, city):
         """
-        Returns all addresses with the given city name
+        Returns customers whose addresses are in the given city
 
         Args:
             city (string): The addressess corresponding to the city you want to list
         """
         logger.info('City query under progress for: %s ...', city)
         addresses = cls.query.filter(cls.city == city)
-        return [Customer.find(address.customer_id) for address in addresses]
+        return list({Customer.find(address.customer_id)
+                    for address in addresses})
 
     @classmethod
     def find_by_state(cls, state):
         """
-        Returns all addresses with the given state name
+        Returns customers whose addresses are in the given state
 
         Args:
             state (string): The addresses corresponding to the state you want to list
         """
         logger.info('State query under progress for: %s ...', state)
         addresses = cls.query.filter(cls.state == state)
-        return [Customer.find(address.customer_id) for address in addresses]
+        return list({Customer.find(address.customer_id)
+                    for address in addresses})
 
     @classmethod
     def find_by_pin_code(cls, pin_code):
         """
-        Returns all addresses in the given pin code
+        Returns customers whose addresses have the given pin code
 
         Args:
             pin_code (string): the pin_code of the Addresses you want to match
         """
         logger.info('Pincode query under progress for: %s ...', pin_code)
         addresses = cls.query.filter(cls.pin_code == pin_code)
-        return [Customer.find(address.customer_id) for address in addresses]
+        return list({Customer.find(address.customer_id)
+                    for address in addresses})
+
+    @classmethod
+    def find_by_country(cls, country):
+        """
+        Returns customers whose addresses are in the given country
+
+        Args:
+            country (string): the country of the Addresses you want to match
+        """
+        logger.info('Country query under progress for: %s ...', country)
+        addresses = cls.query.filter(cls.country == country)
+        return list({Customer.find(address.customer_id)
+                    for address in addresses})
 
     @classmethod
     def find(cls, address_id):
@@ -184,7 +213,7 @@ class Customer(db.Model):
     last_name = db.Column(db.String(255), nullable=False)
     email = db.Column(db.String(255), nullable=False)
     password = db.Column(db.String(255), nullable=False)
-    active = db.Column(db.Boolean,nullable=False,default=True)
+    active = db.Column(db.Boolean, nullable=False, default=True)
     addresses = db.relationship(
         "Address",
         backref="customer",
@@ -230,7 +259,7 @@ class Customer(db.Model):
             "last_name": self.last_name,
             "email": self.email,
             "password": self.password,
-            "active":self.active,
+            "active": self.active,
             "addresses": [],
         }
         for address in self.addresses:

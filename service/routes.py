@@ -2,7 +2,7 @@
 The customers resource is a representation of the customer accounts.
 All the REST API calls to the Customer or the Address Database are housed here.
 """
-
+# pylint: disable=cyclic-import
 from flask import jsonify, request, url_for, make_response, abort
 from service.common import status  # HTTP Status Codes
 from service.models import Customer, Address
@@ -78,6 +78,8 @@ def deactivate_customer(customer_id):
 ######################################################################
 # L I S T    A L L    C U S T O M E R S
 ######################################################################
+
+
 @app.route("/customers", methods=["GET"])
 def list_customers():
     """Returns all of the Customers"""
@@ -89,18 +91,37 @@ def list_customers():
     last_name = request.args.get("last_name")
     # Process the query string if email matches
     email = request.args.get("email")
+    # Process the query string if street matches
+    street = request.args.get("street")
+    # Process the query string if city matches
+    city = request.args.get("city")
+    # Process the query string if state matches
+    state = request.args.get("state")
+    # Process the query string if country matches
+    country = request.args.get("country")
+    # Process the query string if pin code matches
+    pin_code = request.args.get("pin_code")
     if first_name:
         customers = Customer.find_by_first_name(first_name)
     elif last_name:
         customers = Customer.find_by_last_name(last_name)
     elif email:
         customers = Customer.find_by_email(email)
+    elif street:
+        customers = Address.find_by_street(street)
+    elif city:
+        customers = Address.find_by_city(city)
+    elif state:
+        customers = Address.find_by_state(state)
+    elif country:
+        customers = Address.find_by_country(country)
+    elif pin_code:
+        customers = Address.find_by_pin_code(pin_code)
     else:
         customers = Customer.all()
 
     # Return as an array of dictionaries
     results = [customer.serialize() for customer in customers]
-
     return make_response(jsonify(results), status.HTTP_200_OK)
 
 ######################################################################
@@ -142,7 +163,9 @@ def create_customers():
 @app.route("/customers/<int:customer_id>/addresses", methods=["GET"])
 def list_addresses(customer_id):
     """Returns all of the Addresses for a Customer"""
-    app.logger.info("Request for all Addresses for Customer with id: %s", customer_id)
+    app.logger.info(
+        "Request for all Addresses for Customer with id: %s",
+        customer_id)
 
     # See if the customer exists and abort if it doesn't
     customer = Customer.find(customer_id)
