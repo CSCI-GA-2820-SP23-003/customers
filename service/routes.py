@@ -55,6 +55,7 @@ def activate_customer(customer_id):
         jsonify(customer.serialize()), status.HTTP_200_OK
     )
 
+
 @app.route("/customers/<int:customer_id>/deactivate", methods=["PUT"])
 def deactivate_customer(customer_id):
     """Deactivate customer"""

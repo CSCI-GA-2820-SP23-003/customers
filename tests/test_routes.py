@@ -110,10 +110,10 @@ class TestCustomersServer(TestCase):
         """ It should deactivate customer """
         # Create dummy activated customers
         customers = CustomerFactory.create_batch(3)
-        
+
         for customer in customers:
             customer.create()
-            
+
         # choose a customer id randomly to delete
         all_customers = Customer.all()
         self.assertEqual(len(all_customers), 3)
