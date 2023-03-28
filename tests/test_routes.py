@@ -111,7 +111,7 @@ class TestCustomersServer(TestCase):
     ######################################################################
 
     def test_health(self):
-        """Get the health endpoint"""
+        """It should get the health endpoint"""
         resp = self.client.get("/health")
         self.assertEqual(resp.status_code, 200)
         data = resp.get_json()
