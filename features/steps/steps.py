@@ -22,14 +22,19 @@ def step_impl(context):
 
     # load the database with new data
     for row in context.table:
-        addrData = row['addresses'].split(',')
-        address = {}
-        address['street'] = addrData[0]
-        address['city'] = addrData[1]
-        address['state'] = addrData[2]
-        address['country'] = addrData[3]
-        address['pin_code'] = addrData[4]
-        address['customer_id'] = 0
+        addresses = []
+        for adrs_data in row['addresses'].split(' '):
+            if not adrs_data:
+                continue
+            adrs_data = adrs_data.split(',')
+            address = {}
+            address['street'] = adrs_data[0]
+            address['city'] = adrs_data[1]
+            address['state'] = adrs_data[2]
+            address['country'] = adrs_data[3]
+            address['pin_code'] = adrs_data[4]
+            address['customer_id'] = 0
+            addresses.append(address)
 
         payload = {
             'first_name': row['first_name'],
@@ -37,7 +42,7 @@ def step_impl(context):
             'email': row['email'],
             'password': row['password'],
             'active': row['active'] in ['True', 'true', '1'],
-            'addresses': [address]
+            'addresses': addresses
         }
 
         context.resp = requests.post(rest_endpoint, json=payload)
