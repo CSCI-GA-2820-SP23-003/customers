@@ -1,12 +1,13 @@
 """
 Steps for implementation of BDD Features/Scenarios
 """
-from behave import given, then, when
+from behave import given
 from compare import expect
 import logging
 import requests
 
 logger = logging.getLogger(__name__)
+
 
 @given('the following customers')
 def step_impl(context):
@@ -18,7 +19,7 @@ def step_impl(context):
     for customer in context.resp.json():
         resp = requests.delete(f"{rest_endpoint}/{customer['id']}")
         expect(resp.status_code).to_equal(204)
-    
+
     # load the database with new data
     for row in context.table:
         addrData = row['addresses'].split(',')
