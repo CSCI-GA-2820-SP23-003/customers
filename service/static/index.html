@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="static/css/cerulean_bootstrap.min.css">
-    <link rel="stylesheet" href="static/css/custom.css">
+    <link rel="icon" type="image/x-icon" href="static/images/newapp-icon.png">
   </head>
   <body>
     <div class="container">
@@ -27,7 +27,7 @@
         <div class="well">
           <div class="form-horizontal">
             <div class="form-group">
-              <label class="control-label col-sm-2" for="customer_id">ID:</label>
+              <label class="control-label col-sm-2" for="customer_id">Customer ID:</label>
               <div class="col-sm-6">
                 <input type="text" class="form-control" id="customer_id" placeholder="Enter ID of Customer">
               </div>
@@ -67,7 +67,7 @@
               </div>
             </div>
 
-            <!-- PHONE -->
+            <!-- PASSWORD -->
             <div class="form-group">
               <label class="control-label col-sm-2" for="customer_password">Password:</label>
               <div class="col-sm-10">
@@ -80,7 +80,7 @@
             <div class="form-group">
               <label class="control-label col-sm-2" for="customer_street">Street:</label>
               <div class="col-sm-10">
-                <input type="text" class="form-control" id="customer_street" placeholder="Enter Street or Customer">
+                <input type="text" class="form-control" id="customer_street" placeholder="Enter Street for Customer">
                 <span class = "error" id="customer_street_err"><p></p></span>
               </div>
             </div>
@@ -150,16 +150,17 @@
         <table class="table table-striped">
           <thead>
           <tr>
-            <th class="col-md-1">ID</th>
+            <th class="col-md-1">Cust ID</th>
             <th class="col-md-2">Firstname</th>
             <th class="col-md-2">Lastname</th>
             <th class="col-md-2">Email</th>
-            <th class="col-md-2">Phone</th>
+            <th class="col-md-2">Password</th>
             <th class="col-md-2">Street</th>
             <th class="col-md-2">City</th>
             <th class="col-md-2">State</th>
             <th class="col-md-2">Country</th>
             <th class="col-md-2">Pincode </th>
+            <th class="col-md-2">Active</th>
           </tr>
           </thead>
         </table>
@@ -167,7 +168,7 @@
 
       <footer>
         <br><br>
-        <p>&copy; NYU DevOps Company 2022</p>
+        <p>&copy; NYU DevOps Company 2023</p>
       </footer>
 
     </div> <!-- container -->

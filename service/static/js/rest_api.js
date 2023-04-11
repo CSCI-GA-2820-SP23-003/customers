@@ -340,21 +340,6 @@ $(function () {
     // ****************************************
     // Search for a Customer
     // ****************************************
-    // first_name = request.args.get("first_name")
-    // # Process the query string if last name matches
-    // last_name = request.args.get("last_name")
-    // # Process the query string if email matches
-    // email = request.args.get("email")
-    // # Process the query string if street matches
-    // street = request.args.get("street")
-    // # Process the query string if city matches
-    // city = request.args.get("city")
-    // # Process the query string if state matches
-    // state = request.args.get("state")
-    // # Process the query string if country matches
-    // country = request.args.get("country")
-    // # Process the query string if pin code matches
-    // pin_code = request.args.get("pin_code")
 
     $("#search-btn").click(function () {
         let first_name = $("#customer_firstname").val();
@@ -365,6 +350,7 @@ $(function () {
         let state = $("#customer_state").val();
         let country = $("#customer_country").val();
         let pin_code = $("#customer_pincode").val();
+        let active = ($("#customer_active").val().toLowerCase() === 'true');
        
         let queryString = ""
 
@@ -413,7 +399,7 @@ $(function () {
             $("#search_results").empty();
             let table = '<table class="table table-striped" cellpadding="10">'
             table += '<thead><tr>'
-            table += '<th class="col-md-1">ID</th>'
+            table += '<th class="col-md-1">Cust_ID</th>'
             table += '<th class="col-md-2">First Name</th>'
             table += '<th class="col-md-2">Last Name</th>'
             table += '<th class="col-md-2">Email</th>'
@@ -423,6 +409,7 @@ $(function () {
             table += '<th class="col-md-2">State</th>'
             table += '<th class="col-md-2">Country</th>'
             table += '<th class="col-md-2">Pincode</th>'
+            table += '<th class="col-md-2">Active</th>'
             table += '</tr></thead><tbody>'
             let firstCustomer = "";
             
@@ -442,7 +429,8 @@ $(function () {
                     <td>${customer.addresses[j].city}</td>
                     <td>${customer.addresses[j].state}</td>
                     <td>${customer.addresses[j].country}</td>
-                    <td>${customer.addresses[j].pin_code}</td></tr>`;
+                    <td>${customer.addresses[j].pin_code}</td>
+                    <td>${customer.active}</td></tr>`;
                     counter++;
                 }
 
@@ -469,4 +457,4 @@ $(function () {
 
     });
 
-})
+});
