@@ -11,12 +11,12 @@ $(function () {
         $("#customer_lastname").val(res.last_name);
         $("#customer_email").val(res.email);
         $("#customer_password").val(res.password);
-        $("#customer_street").val(res.street);
-        $("#customer_city").val(res.city);
-        $("#customer_state").val(res.state);
-        $("#customer_country").val(res.country);
-        $("#customer_pincode").val(res.pin_code);
-        if (res.acc_active == true) {
+        $("#customer_street").val(res.addresses[0].street);
+        $("#customer_city").val(res.addresses[0].city);
+        $("#customer_state").val(res.addresses[0].state);
+        $("#customer_country").val(res.addresses[0].country);
+        $("#customer_pincode").val(res.addresses[0].pin_code);
+        if (res.active == true) {
             $("#customer_active").val("true");
         } else {
             $("#customer_active").val("false");

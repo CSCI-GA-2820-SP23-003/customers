@@ -1,13 +1,59 @@
 Feature: The customers service back-end
     As a Customer Service Manager/ System Admin
-    I need the ability to do CRUD operations on customers
+    I need the ability to do CRUD operations on customers and addresses
     So that I can maintain customer's records
 
 Background:
     Given the following customers
-        |    first_name    |   last_name   |         email         |   password   |   active   |                            addresses                             |
-        | FNU              | Akshama       | akshama@gmail.com     | 123456       | True       | FAstr,FActy,FAst,FAcntry,FApc                                    |
-        | Ayush            | Jain          | ayush@gmail.com       | 234567       | True       | AJstr,AJcty,AJst,AJcntry,AJpc                                    |
-        | Marwan           | Aljumiah      | marwan@gmail.com      | 345678       | True       | MAstr,MActy,MAst,MAcntry,MApc                                    |
-        | Sai Himal        | Allu          | saihimal@gmail.com    | 456789       | True       | SAstr,SActy,SAst,SAcntry,SApc                                    |
-        | FNU              | Sreevishnu    | sreevishnu@gmail.com  | 549871       | True       | FSstr,FScty,FSst,FScntry,FSpc FS1str,FS1cty,FS1st,FS1cntry,FS1pc |
+        |    firstname     |   lastname    |         email         |   password   |   active   |     street         |   city        |  state        |   country         | pincode   |
+        | FNU              | Akshama       | akshama@gmail.com     | 123456       | True       |    Casselberry Way |   Monroe      |   New Jersey  |   United States   |   07310   |
+        | Ayush            | Jain          | ayush@gmail.com       | 234567       | True       |    Tonnelle Ave    |   Journal Sq  |   New Jersey  |   United States   |   07311   |
+        | Marwan           | Aljumiah      | marwan@gmail.com      | 345678       | True       |    Washington Blvd |   Newport     |   New Jersey  |   United States   |   07312   |
+        | Sai Himal        | Allu          | saihimal@gmail.com    | 456789       | True       |    Broadway        |   Manhattan   |   New York    |   United States   |   07313   |
+        | FNU              | Sreevishnu    | sreevishnu@gmail.com  | 549871       | True       |    Jackson Heights |   Queens      |   New York    |   United States   |   07314   |
+
+Scenario: The server is running
+    When I visit the "Home Page"
+    Then I should see "Customers RESTful Service" in the title
+    And I should not see "404 Not Found"
+
+Scenario: Retrieve a Customer and corresponding Address
+    When I visit the "Home Page"
+    And I set the "firstname" to "Bob"
+    And I set the "lastname" to "Alice"
+    And I set the "email" to "bob@gmail.com"
+    And I set the "password" to "test"
+    And I set the "street" to "Newport Pkwy"
+    And I set the "city" to "Jersey City"
+    And I set the "state" to "New Jersey"
+    And I set the "country" to "United States"
+    And I set the "pincode" to " 07310"
+    And I select "True" in the "active" dropdown
+    And I press the "Create" button
+    Then I should see the message "Success"
+    When I copy the "Id" field
+    And I press the "Clear" button
+    Then the "Id" field should be empty
+    And the "firstname" field should be empty
+    And the "lastname" field should be empty
+    And the "email" field should be empty
+    And the "password" field should be empty
+    And the "street" field should be empty
+    And the "city" field should be empty
+    And the "state" field should be empty
+    And the "country" field should be empty
+    And the "pincode" field should be empty
+    And I should see "True" in the "Active" dropdown
+    When I paste the "Id" field
+    And I press the "Retrieve" button
+    Then I should see the message "Success"
+    And I should see "Bob" in the "firstname" field
+    And I should see "Alice" in the "lastname" field
+    And I should see "bob@gmail.com" in the "email" field
+    And I should see "test" in the "password" field
+    And I should see "True" in the "Active" dropdown
+    And I should see "Newport Pkwy" in the "street" field
+    And I should see "Jersey City" in the "city" field
+    And I should see "New Jersey" in the "state" field
+    And I should see "United States" in the "country" field
+    And I should see "07310" in the "pincode" field
