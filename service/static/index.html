@@ -42,7 +42,7 @@
 
             <!-- Firstname -->
             <div class="form-group">
-              <label class="control-label col-sm-2" for="customer_first_name">Firstname:</label>
+              <label class="control-label col-sm-2" for="customer_first_name">First Name:</label>
               <div class="col-sm-10">
                 <input type="text" class="form-control" id="customer_first_name" placeholder="Enter First Name for Customer">
                 <span class = "error" id="customer_first_name_err"><p></p></span>
@@ -51,7 +51,7 @@
 
             <!-- Lastname -->
             <div class="form-group">
-              <label class="control-label col-sm-2" for="customer_last_name">Lastname:</label>
+              <label class="control-label col-sm-2" for="customer_last_name">Last Name:</label>
               <div class="col-sm-10">
                 <input type="text" class="form-control" id="customer_last_name" placeholder="Enter Last Name for Customer">
                 <span class = "error" id="customer_last_name_err"><p></p></span>
@@ -73,6 +73,15 @@
               <div class="col-sm-10">
                 <input type="text" class="form-control" id="customer_password" placeholder="Enter Password for Customer">
                 <span class="error" id="customer_password_err"><p></p></span>
+              </div>
+            </div>
+
+            <!-- ADDRESS ID -->
+            <div class="form-group">
+              <label class="control-label col-sm-2" for="customer_address_id">Address ID:</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" id="customer_address_id" placeholder="Enter ID for Address">
+                <span class = "error" id="customer_address_id_err"><p></p></span>
               </div>
             </div>
 
@@ -114,7 +123,7 @@
 
             <!-- Pin Code -->
             <div class="form-group">
-              <label class="control-label col-sm-2" for="customer_pin_code">Pincode:</label>
+              <label class="control-label col-sm-2" for="customer_pin_code">Pin Code:</label>
               <div class="col-sm-10">
                 <input type="text" class="form-control" id="customer_pin_code" placeholder="Enter Pincode for Customer">
                 <span class = "error" id="customer_pincode_err"><p></p></span>
@@ -151,15 +160,16 @@
           <thead>
           <tr>
             <th class="col-md-1">Cust ID</th>
-            <th class="col-md-2">Firstname</th>
-            <th class="col-md-2">Lastname</th>
+            <th class="col-md-2">First Name</th>
+            <th class="col-md-2">Last Name</th>
             <th class="col-md-2">Email</th>
             <th class="col-md-2">Password</th>
+            <th class="col-md-2">Address Id</th>
             <th class="col-md-2">Street</th>
             <th class="col-md-2">City</th>
             <th class="col-md-2">State</th>
             <th class="col-md-2">Country</th>
-            <th class="col-md-2">Pincode </th>
+            <th class="col-md-2">Pin Code </th>
             <th class="col-md-2">Active</th>
           </tr>
           </thead>

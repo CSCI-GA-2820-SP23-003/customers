@@ -11,6 +11,7 @@ $(function () {
         $("#customer_last_name").val(res.last_name);
         $("#customer_email").val(res.email);
         $("#customer_password").val(res.password);
+        $("#customer_address_id").val(res.addresses[0].address_id);
         $("#customer_street").val(res.addresses[0].street);
         $("#customer_city").val(res.addresses[0].city);
         $("#customer_state").val(res.addresses[0].state);
@@ -345,6 +346,7 @@ $(function () {
         let first_name = $("#customer_firstname").val();
         let last_name = $("#customer_lastname").val();
         let email = $("#customer_email").val();
+        let address_id = $("#customer_address_id").val();
         let street = $("#customer_street").val();
         let city = $("#customer_city").val();
         let state = $("#customer_state").val();
@@ -364,6 +366,10 @@ $(function () {
 
         else if (email) {
             queryString += 'email=' + email
+        }
+
+        else if (address_id) {
+            queryString += 'address_id=' + address_id
         }
 
         else if (street) {
@@ -404,6 +410,7 @@ $(function () {
             table += '<th class="col-md-2">Last Name</th>'
             table += '<th class="col-md-2">Email</th>'
             table += '<th class="col-md-2">Password</th>'
+            table += '<th class="col-md-2">Add_Id</th>'
             table += '<th class="col-md-2">Street</th>'
             table += '<th class="col-md-2">City</th>'
             table += '<th class="col-md-2">State</th>'
@@ -425,6 +432,7 @@ $(function () {
                     <td>${customer.last_name}</td>
                     <td>${customer.email}</td>
                     <td>${customer.password}</td>
+                    <td>${customer.addresses[j].address_id}</td>
                     <td>${customer.addresses[j].street}</td>
                     <td>${customer.addresses[j].city}</td>
                     <td>${customer.addresses[j].state}</td>
