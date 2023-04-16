@@ -77,7 +77,7 @@ Scenario: Create a Customer with Bad Email format
     When I visit the "Home Page"
     And I set the "First Name" to "John"
     And I set the "Last Name" to "Doe"
-    And I set the "Email" to "BAD_Email_FORMAT"
+    And I set the "Email" to "BAD_EMAIL_FORMAT"
     And I set the "Password" to "test"
     And I set the "Street" to "Newport Pkwy"
     And I set the "City" to "Jersey City"
