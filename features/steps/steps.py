@@ -42,11 +42,11 @@ def step_impl(context):
     # load the database with new data
     for row in context.table:
         payload = {
-            'first_name': row['firstname'],
-            'last_name': row['lastname'],
-            'email': row['email'],
-            'password': row['password'],
-            'active': row['active'] in ['True', 'true', '1'],
+            'first_name': row['First Name'],
+            'last_name': row['Last Name'],
+            'email': row['Email'],
+            'password': row['Password'],
+            'active': row['Active'] in ['True', 'true', '1'],
             'addresses': {}
         }
 
@@ -60,11 +60,11 @@ def step_impl(context):
     for row in context.table:
         payload = {
             "customer_id": customers[index]['id'],
-            'street': row['street'],
-            'city': row['city'],
-            'state': row['state'],
-            'country': row['country'],
-            'pin_code': row['pincode']
+            'street': row['Street'],
+            'city': row['City'],
+            'state': row['State'],
+            'country': row['Country'],
+            'pin_code': row['Pin Code']
         }
         index += 1
         context.resp = requests.post(f"{rest_endpoint}/{payload['customer_id']}/addresses", json=payload)
