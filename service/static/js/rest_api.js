@@ -7,15 +7,15 @@ $(function () {
     // Updates the form with data from the response
     function update_form_data(res) {
         $("#customer_id").val(res.id);
-        $("#customer_firstname").val(res.first_name);
-        $("#customer_lastname").val(res.last_name);
+        $("#customer_first_name").val(res.first_name);
+        $("#customer_last_name").val(res.last_name);
         $("#customer_email").val(res.email);
         $("#customer_password").val(res.password);
         $("#customer_street").val(res.addresses[0].street);
         $("#customer_city").val(res.addresses[0].city);
         $("#customer_state").val(res.addresses[0].state);
         $("#customer_country").val(res.addresses[0].country);
-        $("#customer_pincode").val(res.addresses[0].pin_code);
+        $("#customer_pin_code").val(res.addresses[0].pin_code);
         if (res.active == true) {
             $("#customer_active").val("true");
         } else {
@@ -27,29 +27,29 @@ $(function () {
     /// Clears all form fields
     function clear_form_data() {
         $("#customer_id").val("");
-        $("#customer_firstname").val("");
-        $("#customer_lastname").val("");
+        $("#customer_first_name").val("");
+        $("#customer_last_name").val("");
         $("#customer_email").val("");
         $("#customer_password").val("");
         $("#customer_street").val("");
         $("#customer_city").val("");
         $("#customer_state").val("");
         $("#customer_country").val("");
-        $("#customer_pincode").val("");
+        $("#customer_pin_code").val("");
         $("#customer_active").val("true");
     }
 
     function removeAllNotifications() {
         const fields = [
-            "firstname",
-            "lastname",
+            "first_name",
+            "last_name",
             "email",
             "password",
             "street",
             "city",
             "state",
             "country",
-            "pincode",
+            "pin_code",
         ];
 
         fields.forEach(function(field) {
@@ -102,15 +102,15 @@ $(function () {
 
     $("#create-btn").click(function () {
 
-        let first_name = $("#customer_firstname").val().trim();
-        let last_name = $("#customer_lastname").val().trim();
+        let first_name = $("#customer_first_name").val().trim();
+        let last_name = $("#customer_last_name").val().trim();
         let email = $("#customer_email").val().trim();
         let password = $("#customer_password").val().trim();
         let street = $("#customer_street").val().trim();
         let city = $("#customer_city").val().trim();
         let state = $("#customer_state").val().trim();
         let country = $("#customer_country").val().trim();
-        let pin_code = $("#customer_pincode").val().trim();
+        let pin_code = $("#customer_pin_code").val().trim();
         let active = ($("#customer_active").val().toLowerCase() === 'true');
 
         let addr_data = {
@@ -190,15 +190,15 @@ $(function () {
     $("#update-btn").click(function () {
 
         let customer_id = $("#customer_id").val();
-        let first_name = $("#customer_firstname").val().trim();
-        let last_name = $("#customer_lastname").val().trim();
+        let first_name = $("#customer_first_name").val().trim();
+        let last_name = $("#customer_last_name").val().trim();
         let email = $("#customer_email").val().trim();
         let password = $("#customer_password").val().trim();
         let street = $("#customer_street").val().trim();
         let city = $("#customer_city").val().trim();
         let state = $("#customer_state").val().trim();
         let country = $("#customer_country").val().trim();
-        let pin_code = $("#customer_pincode").val().trim();
+        let pin_code = $("#customer_pin_code").val().trim();
         let active = ($("#customer_active").val().toLowerCase() === 'true');
         
         let addr_data = {

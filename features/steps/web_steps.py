@@ -166,7 +166,7 @@ def step_impl(context, element_name, text_string):
 
 @then('I should see "{text_string}" in the "{element_name}" error string')
 def step_impl(context, text_string, element_name):
-    element_id = ID_PREFIX + element_name.lower().replace(' ', '_') + '_err' 
+    element_id = ID_PREFIX + element_name.lower().replace(' ', '_') + '_err'
     found = WebDriverWait(context.driver, context.WAIT_SECONDS).until(
         expected_conditions.text_to_be_present_in_element(
             (By.ID, element_id),
