@@ -91,9 +91,8 @@ Scenario: Create a Customer with Bad Email format
 
 Scenario: Create a Customer with Missing First Name
     When I visit the "Home Page"
-    And I set the "first_name" to "John"
     And I set the "last_name" to "Doe"
-    And I set the "email" to "BAD_EMAIL_FORMAT"
+    And I set the "email" to "jd@gmail.com"
     And I set the "password" to "test"
     And I set the "street" to "Newport Pkwy"
     And I set the "city" to "Jersey City"
@@ -103,4 +102,61 @@ Scenario: Create a Customer with Missing First Name
     And I select "True" in the "active" dropdown
     And I press the "Create" button
     Then I should see the message "Form Error(s)"
-    And I should see "Requuuuired field" in the "first_name" error string
+    And I should see "Required field" in the "first_name" error string
+    When I set the "first_name" to "John"
+    And I press the "Create" button
+    Then The "first_name" error string should be gone
+
+Scenario: Create a Customer with Missing Last Name
+    When I visit the "Home Page"
+    And I set the "first_name" to "John"
+    And I set the "email" to "jd@gmail.com"
+    And I set the "password" to "test"
+    And I set the "street" to "Newport Pkwy"
+    And I set the "city" to "Jersey City"
+    And I set the "state" to "New Jersey"
+    And I set the "country" to "United States"
+    And I set the "pin_code" to " 07310"
+    And I select "True" in the "active" dropdown
+    And I press the "Create" button
+    Then I should see the message "Form Error(s)"
+    And I should see "Required field" in the "last_name" error string
+    When I set the "last_name" to "Doe"
+    And I press the "Create" button
+    Then The "last_name" error string should be gone
+
+Scenario: Create a Customer with Missing Email
+    When I visit the "Home Page"
+    And I set the "first_name" to "John"
+    And I set the "last_name" to "Doe"
+    And I set the "password" to "test"
+    And I set the "street" to "Newport Pkwy"
+    And I set the "city" to "Jersey City"
+    And I set the "state" to "New Jersey"
+    And I set the "country" to "United States"
+    And I set the "pin_code" to " 07310"
+    And I select "True" in the "active" dropdown
+    And I press the "Create" button
+    Then I should see the message "Form Error(s)"
+    And I should see "Required field" in the "email" error string
+    When I set the "email" to "jd_@gmail.com"
+    And I press the "Create" button
+    Then The "email" error string should be gone
+
+Scenario: Create a Customer with Missing Password
+    When I visit the "Home Page"
+    And I set the "first_name" to "John"
+    And I set the "last_name" to "Doe"
+    And I set the "email" to "jd@gmail.com"
+    And I set the "street" to "Newport Pkwy"
+    And I set the "city" to "Jersey City"
+    And I set the "state" to "New Jersey"
+    And I set the "country" to "United States"
+    And I set the "pin_code" to " 07310"
+    And I select "True" in the "active" dropdown
+    And I press the "Create" button
+    Then I should see the message "Form Error(s)"
+    And I should see "Required field" in the "password" error string
+    When I set the "password" to "test"
+    And I press the "Create" button
+    Then The "password" error string should be gone
