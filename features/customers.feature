@@ -160,3 +160,33 @@ Scenario: Create a Customer with Missing Password
     When I set the "password" to "test"
     And I press the "Create" button
     Then The "password" error string should be gone
+
+Scenario: Update a Customer
+    When I visit the "Home Page"
+    And I press the "Search" button
+    Then I should see the message "Success"
+    When I copy the "Id" field
+    And I set the "first_name" to "Akshama FN"
+    And I set the "last_name" to "Akshama LN"
+    And I set the "email" to "ak@gmail.com"
+    And I set the "password" to "ak_pass"
+    And I select "False" in the "active" dropdown
+    And I set the "street" to "10th Casselberry Way"
+    And I set the "city" to "monroe"
+    And I set the "state" to "NJ"
+    And I set the "country" to "USA"
+    And I press the "update" button
+    Then I should see the message "Success"
+    When I press the "clear" button
+    And I paste the "Id" field
+    And I press the "retrieve" button
+    Then I should see the message "Success"
+    And I should see "Akshama FN" in the "first_name" field
+    And I should see "Akshama LN" in the "last_name" field
+    And I should see "Akshama FN" in the "email" field
+    And I should see "Akshama FN" in the "password" field
+    And I should see "False" in the "active" dropdown
+    And I should see "10th Casselberry Way" in the "street" field
+    And I should see "monroe" in the "city" field
+    And I should see "NJ" in the "state" field
+    And I should see "USA" in the "country" field

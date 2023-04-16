@@ -219,7 +219,7 @@ $(function () {
             "email": email,
             "password": password,
             "active": active,
-            "addresses": to_pass,
+            "addresses": [],
         };
 
         // Check for missing required data in form
