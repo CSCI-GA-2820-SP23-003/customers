@@ -17,7 +17,29 @@ $(function () {
         $("#customer_state").val(res.addresses[0].state);
         $("#customer_country").val(res.addresses[0].country);
         $("#customer_pin_code").val(res.addresses[0].pin_code);
+       
         if (res.active == true) {
+            $("#customer_active").val("true");
+        } else {
+            $("#customer_active").val("false");
+        }
+    }
+
+    // Updates the form with data from two responses
+    function update_form_data_two_responses(res1,res2) {
+        $("#customer_id").val(res1.id);
+        $("#customer_first_name").val(res1.first_name);
+        $("#customer_last_name").val(res1.last_name);
+        $("#customer_email").val(res1.email);
+        $("#customer_password").val(res1.password);
+        $("#customer_address_id").val(res2.address_id);
+        $("#customer_street").val(res2.street);
+        $("#customer_city").val(res2.city);
+        $("#customer_state").val(res2.state);
+        $("#customer_country").val(res2.country);
+        $("#customer_pin_code").val(res2.pin_code);
+       
+        if (res1.active == true) {
             $("#customer_active").val("true");
         } else {
             $("#customer_active").val("false");
@@ -256,21 +278,18 @@ $(function () {
         // Add active status to payload after user input validation
         cust_data.acc_active = convertActiveDropdownToInt(active);
 
+        // Update Customer Data
         let ajax = $.ajax({
                 type: "PUT",
                 url: `/customers/${customer_id}`,
                 contentType: "application/json",
                 data: JSON.stringify(cust_data)
             })
+        
+        // Success Customer Data Update
+        ajax.done(function(res1){
 
-        ajax.done(function(res){
-
-            cid = res.id
-            first_name = res.first_name
-            last_name = res.last_name
-            email = res.email
-            password = res.password
-
+            // Update Address
             let ajax2 = $.ajax({
                 type: "PUT",
                 url: `/customers/${customer_id}/addresses/${address_id}`,
@@ -278,20 +297,18 @@ $(function () {
                 data: JSON.stringify(addr_data)
             })
 
-            ajax2.done(function(res){
-                res.id = cid
-                res.first_name = first_name
-                res.last_name = last_name
-                res.email = email
-                res.password = password
-                update_form_data(res)
+            // Success Customer + Address Data Update
+            ajax2.done(function(res2){
+                // Append customer result to address result
+                update_form_data_two_responses(res1,res2)
                 flash_message("Success")
             });
+            // Fail Updating Address
             ajax2.fail(function(res){
                 flash_message(res.responseJSON.message)
             });
         });
-
+        // Fail Updating customer
         ajax.fail(function(res){
             flash_message(res.responseJSON.message)
         });
