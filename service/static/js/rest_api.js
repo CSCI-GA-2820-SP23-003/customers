@@ -32,6 +32,7 @@ $(function () {
         $("#customer_last_name").val("");
         $("#customer_email").val("");
         $("#customer_password").val("");
+        $("#customer_address_id").val("");
         $("#customer_street").val("");
         $("#customer_city").val("");
         $("#customer_state").val("");
@@ -195,6 +196,7 @@ $(function () {
         let last_name = $("#customer_last_name").val().trim();
         let email = $("#customer_email").val().trim();
         let password = $("#customer_password").val().trim();
+        let address_id = $("#customer_address_id").val().trim();
         let street = $("#customer_street").val().trim();
         let city = $("#customer_city").val().trim();
         let state = $("#customer_state").val().trim();
@@ -203,6 +205,7 @@ $(function () {
         let active = ($("#customer_active").val().toLowerCase() === 'true');
         
         let addr_data = {
+            "address_id":address_id,
             "street": street,
             "city": city,
             "state": state,
@@ -261,8 +264,32 @@ $(function () {
             })
 
         ajax.done(function(res){
-            update_form_data(res)
-            flash_message("Success")
+
+            cid = res.id
+            first_name = res.first_name
+            last_name = res.last_name
+            email = res.email
+            password = res.password
+
+            let ajax2 = $.ajax({
+                type: "PUT",
+                url: `/customers/${customer_id}/addresses/${address_id}`,
+                contentType: "application/json",
+                data: JSON.stringify(addr_data)
+            })
+
+            ajax2.done(function(res){
+                res.id = cid
+                res.first_name = first_name
+                res.last_name = last_name
+                res.email = email
+                res.password = password
+                update_form_data(res)
+                flash_message("Success")
+            });
+            ajax2.fail(function(res){
+                flash_message(res.responseJSON.message)
+            });
         });
 
         ajax.fail(function(res){

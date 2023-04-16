@@ -170,11 +170,12 @@ Scenario: Update a Customer
     And I set the "Last Name" to "Test LN"
     And I set the "Email" to "test@gmail.com"
     And I set the "Password" to "test788pass"
-    And I select "False" in the "active" dropdown
+    And I select "True" in the "Active" dropdown
     And I set the "street" to "10th Casselberry Way"
-    And I set the "city" to "monroe"
-    And I set the "state" to "NJ"
-    And I set the "country" to "USA"
+    And I set the "City" to "monroe"
+    And I set the "Pin Code" to " 07319"
+    And I set the "State" to "NJ"
+    And I set the "Country" to "USA"
     And I press the "update" button
     Then I should see the message "Success"
     When I press the "clear" button
@@ -184,8 +185,8 @@ Scenario: Update a Customer
     And I should see "Test FN" in the "first_name" field
     And I should see "Test LN" in the "last_name" field
     And I should see "test@gmail.com" in the "email" field
-    And I should see "test_pass" in the "password" field
-    And I should see "False" in the "active" dropdown
+    And I should see "test788pass" in the "password" field
+    And I should see "True" in the "Active" dropdown
     And I should see "10th Casselberry Way" in the "street" field
     And I should see "monroe" in the "city" field
     And I should see "NJ" in the "state" field
