@@ -11,12 +11,35 @@ $(function () {
         $("#customer_last_name").val(res.last_name);
         $("#customer_email").val(res.email);
         $("#customer_password").val(res.password);
+        $("#customer_address_id").val(res.addresses[0].address_id);
         $("#customer_street").val(res.addresses[0].street);
         $("#customer_city").val(res.addresses[0].city);
         $("#customer_state").val(res.addresses[0].state);
         $("#customer_country").val(res.addresses[0].country);
         $("#customer_pin_code").val(res.addresses[0].pin_code);
+       
         if (res.active == true) {
+            $("#customer_active").val("true");
+        } else {
+            $("#customer_active").val("false");
+        }
+    }
+
+    // Updates the form with data from two responses
+    function update_form_data_two_responses(res1,res2) {
+        $("#customer_id").val(res1.id);
+        $("#customer_first_name").val(res1.first_name);
+        $("#customer_last_name").val(res1.last_name);
+        $("#customer_email").val(res1.email);
+        $("#customer_password").val(res1.password);
+        $("#customer_address_id").val(res2.address_id);
+        $("#customer_street").val(res2.street);
+        $("#customer_city").val(res2.city);
+        $("#customer_state").val(res2.state);
+        $("#customer_country").val(res2.country);
+        $("#customer_pin_code").val(res2.pin_code);
+       
+        if (res1.active == true) {
             $("#customer_active").val("true");
         } else {
             $("#customer_active").val("false");
@@ -31,6 +54,7 @@ $(function () {
         $("#customer_last_name").val("");
         $("#customer_email").val("");
         $("#customer_password").val("");
+        $("#customer_address_id").val("");
         $("#customer_street").val("");
         $("#customer_city").val("");
         $("#customer_state").val("");
@@ -194,6 +218,7 @@ $(function () {
         let last_name = $("#customer_last_name").val().trim();
         let email = $("#customer_email").val().trim();
         let password = $("#customer_password").val().trim();
+        let address_id = $("#customer_address_id").val().trim();
         let street = $("#customer_street").val().trim();
         let city = $("#customer_city").val().trim();
         let state = $("#customer_state").val().trim();
@@ -201,7 +226,24 @@ $(function () {
         let pin_code = $("#customer_pin_code").val().trim();
         let active = ($("#customer_active").val().toLowerCase() === 'true');
         
+        if(!customer_id){
+            displayFieldRequiredNotification("#customer_id")
+            $("#flash_message").html("Form Error(s)")
+            return false
+        }else{
+            removeFieldRequiredNotification("#customer_id")
+        };
+
+        if(!address_id){
+            displayFieldRequiredNotification("#customer_address_id")
+            $("#flash_message").html("Form Error(s)")
+            return false
+        }else{
+            removeFieldRequiredNotification("#customer_address_id")
+        };
+
         let addr_data = {
+            "address_id":address_id,
             "street": street,
             "city": city,
             "state": state,
@@ -219,7 +261,7 @@ $(function () {
             "email": email,
             "password": password,
             "active": active,
-            "addresses": to_pass,
+            "addresses": [],
         };
 
         // Check for missing required data in form
@@ -252,22 +294,41 @@ $(function () {
         // Add active status to payload after user input validation
         cust_data.acc_active = convertActiveDropdownToInt(active);
 
+        // Update Customer Data
         let ajax = $.ajax({
                 type: "PUT",
                 url: `/customers/${customer_id}`,
                 contentType: "application/json",
                 data: JSON.stringify(cust_data)
             })
+        
+        // Success Customer Data Update
+        ajax.done(function(res1){
 
-        ajax.done(function(res){
-            update_form_data(res)
-            flash_message("Success")
+            // Update Address
+            let ajax2 = $.ajax({
+                type: "PUT",
+                url: `/customers/${customer_id}/addresses/${address_id}`,
+                contentType: "application/json",
+                data: JSON.stringify(addr_data)
+            })
+
+            // Success Customer + Address Data Update
+            ajax2.done(function(res2){
+                // Append customer result to address result
+                update_form_data_two_responses(res1,res2)
+                flash_message("Success")
+            });
+            // Fail Updating Address
+            ajax2.fail(function(res){
+                flash_message(res.responseJSON.message)
+            });
         });
-
+        // Fail Updating customer
         ajax.fail(function(res){
             flash_message(res.responseJSON.message)
         });
-
+        
     });
 
     // ****************************************
@@ -411,6 +472,7 @@ $(function () {
         let first_name = $("#customer_firstname").val();
         let last_name = $("#customer_lastname").val();
         let email = $("#customer_email").val();
+        let address_id = $("#customer_address_id").val();
         let street = $("#customer_street").val();
         let city = $("#customer_city").val();
         let state = $("#customer_state").val();
@@ -430,6 +492,10 @@ $(function () {
 
         else if (email) {
             queryString += 'email=' + email
+        }
+
+        else if (address_id) {
+            queryString += 'address_id=' + address_id
         }
 
         else if (street) {
@@ -470,6 +536,7 @@ $(function () {
             table += '<th class="col-md-2">Last Name</th>'
             table += '<th class="col-md-2">Email</th>'
             table += '<th class="col-md-2">Password</th>'
+            table += '<th class="col-md-2">Add_Id</th>'
             table += '<th class="col-md-2">Street</th>'
             table += '<th class="col-md-2">City</th>'
             table += '<th class="col-md-2">State</th>'
@@ -491,6 +558,7 @@ $(function () {
                     <td>${customer.last_name}</td>
                     <td>${customer.email}</td>
                     <td>${customer.password}</td>
+                    <td>${customer.addresses[j].address_id}</td>
                     <td>${customer.addresses[j].street}</td>
                     <td>${customer.addresses[j].city}</td>
                     <td>${customer.addresses[j].state}</td>

@@ -220,3 +220,133 @@ Scenario: Deactivate and Activate a Customer
     And I press the "Retrieve" button
     Then I should see the message "Success"
     And I should see "True" in the "Active" dropdown
+
+Scenario: Update a Customer
+    When I visit the "Home Page"
+    And I press the "Search" button
+    Then I should see the message "Success"
+    When I copy the "Id" field
+    And I set the "First Name" to "Test FN"
+    And I set the "Last Name" to "Test LN"
+    And I set the "Email" to "test@gmail.com"
+    And I set the "Password" to "test788pass"
+    And I select "True" in the "Active" dropdown
+    And I set the "Street" to "10th Casselberry Way"
+    And I set the "City" to "monroe"
+    And I set the "Pin Code" to " 07319"
+    And I set the "State" to "NJ"
+    And I set the "Country" to "USA"
+    And I press the "update" button
+    Then I should see the message "Success"
+    When I press the "clear" button
+    And I paste the "Id" field
+    And I press the "retrieve" button
+    Then I should see the message "Success"
+    And I should see "Test FN" in the "First Name" field
+    And I should see "Test LN" in the "Last Name" field
+    And I should see "test@gmail.com" in the "email" field
+    And I should see "test788pass" in the "password" field
+    And I should see "True" in the "Active" dropdown
+    And I should see "10th Casselberry Way" in the "street" field
+    And I should see "monroe" in the "city" field
+    And I should see "NJ" in the "state" field
+    And I should see "USA" in the "country" field
+
+Scenario: Update a Customer with Bad Email format
+    When I visit the "Home Page"
+    And I press the "Search" button
+    Then I should see the message "Success"
+    When I set the "First Name" to "Test FN"
+    And I set the "Last Name" to "Test LN"
+    And I set the "Email" to "BAD_EMAIL_FORMAT"
+    And I set the "Password" to "test788pass"
+    And I select "True" in the "Active" dropdown
+    And I set the "Street" to "10th Casselberry Way"
+    And I set the "City" to "monroe"
+    And I set the "Pin Code" to " 07319"
+    And I set the "State" to "NJ"
+    And I set the "Country" to "USA"
+    And I press the "update" button
+    Then I should see the message "Form Error(s)"
+    And I should see "This doesn't appear to be a valid email address" in the "Email" error string
+
+Scenario: Update a Customer with Missing First Name
+    When I visit the "Home Page"
+    And I press the "Search" button
+    Then I should see the message "Success"
+    When I set the "First Name" to " "
+    And I set the "Last Name" to "Test LN"
+    And I set the "Email" to "test_ff@domain.com"
+    And I select "True" in the "Active" dropdown
+    And I set the "Street" to "10th Casselberry Way"
+    And I set the "City" to "monroe"
+    And I set the "Pin Code" to " 07319"
+    And I set the "State" to "NJ"
+    And I set the "Country" to "USA"
+    And I press the "update" button
+    Then I should see the message "Form Error(s)"
+    And I should see "Required field" in the "First Name" error string
+    When I set the "First Name" to "test"
+    And I press the "Update" button
+    Then The "First Name" error string should be gone
+
+Scenario: Update a Customer with Missing Last Name
+    When I visit the "Home Page"
+    And I press the "Search" button
+    Then I should see the message "Success"
+    When I set the "First Name" to "Test FN"
+    And I set the "Last Name" to " "
+    And I set the "Email" to "test_ff@domain.com"
+    And I select "True" in the "Active" dropdown
+    And I set the "Street" to "10th Casselberry Way"
+    And I set the "City" to "monroe"
+    And I set the "Pin Code" to " 07319"
+    And I set the "State" to "NJ"
+    And I set the "Country" to "USA"
+    And I press the "update" button
+    Then I should see the message "Form Error(s)"
+    And I should see "Required field" in the "Last Name" error string
+    When I set the "Last Name" to "test"
+    And I press the "Update" button
+    Then The "Last Name" error string should be gone
+
+Scenario: Update a Customer with Missing Email
+    When I visit the "Home Page"
+    And I press the "Search" button
+    Then I should see the message "Success"
+    When I set the "First Name" to "Test FN"
+    And I set the "Last Name" to "Test LN"
+    And I set the "Email" to " "
+    And I select "True" in the "Active" dropdown
+    And I set the "Street" to "10th Casselberry Way"
+    And I set the "City" to "monroe"
+    And I set the "Pin Code" to " 07319"
+    And I set the "State" to "NJ"
+    And I set the "Country" to "USA"
+    And I press the "update" button
+    Then I should see the message "Form Error(s)"
+    And I should see "Required field" in the "Email" error string
+    When I set the "Email" to "test@gmail.com"
+    And I press the "Update" button
+    Then The "Email" error string should be gone
+
+Scenario: Update a Customer with Missing Password
+    When I visit the "Home Page"
+    And I press the "Search" button
+    Then I should see the message "Success"
+    When I set the "First Name" to "Test FN"
+    And I set the "Last Name" to "Test LN"
+    And I set the "Email" to "test_ff@domain.com"
+    And I set the "Password" to " "
+    And I select "True" in the "Active" dropdown
+    And I set the "Street" to "10th Casselberry Way"
+    And I set the "City" to "monroe"
+    And I set the "Pin Code" to " 07319"
+    And I set the "State" to "NJ"
+    And I set the "Country" to "USA"
+    And I press the "update" button
+    Then I should see the message "Form Error(s)"
+    And I should see "Required field" in the "Password" error string
+    When I set the "Password" to "test"
+    And I press the "Update" button
+    Then The "Password" error string should be gone 
