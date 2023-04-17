@@ -230,12 +230,16 @@ $(function () {
             displayFieldRequiredNotification("#customer_id")
             $("#flash_message").html("Form Error(s)")
             return false
+        }else{
+            removeFieldRequiredNotification("#customer_id")
         };
 
         if(!address_id){
             displayFieldRequiredNotification("#customer_address_id")
             $("#flash_message").html("Form Error(s)")
             return false
+        }else{
+            removeFieldRequiredNotification("#customer_address_id")
         };
 
         let addr_data = {
