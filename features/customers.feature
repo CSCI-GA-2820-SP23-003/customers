@@ -227,7 +227,9 @@ Scenario: Update a Customer with Bad Email format
 
 Scenario: Update a Customer with Missing First Name
     When I visit the "Home Page"
-    And I set the "First Name" to " "
+    And I press the "Search" button
+    Then I should see the message "Success"
+    When I set the "First Name" to " "
     And I set the "Last Name" to "Test LN"
     And I set the "Email" to "test_ff@domain.com"
     And I select "True" in the "Active" dropdown
@@ -245,7 +247,9 @@ Scenario: Update a Customer with Missing First Name
 
 Scenario: Update a Customer with Missing Last Name
     When I visit the "Home Page"
-    And I set the "First Name" to "Test FN"
+    And I press the "Search" button
+    Then I should see the message "Success"
+    When I set the "First Name" to "Test FN"
     And I set the "Last Name" to " "
     And I set the "Email" to "test_ff@domain.com"
     And I select "True" in the "Active" dropdown
@@ -256,16 +260,19 @@ Scenario: Update a Customer with Missing Last Name
     And I set the "Country" to "USA"
     And I press the "update" button
     Then I should see the message "Form Error(s)"
-    And I should see "Required field" in the "Password" error string
+    And I should see "Required field" in the "Last Name" error string
     When I set the "Last Name" to "test"
     And I press the "Update" button
     Then The "Last Name" error string should be gone
 
 Scenario: Update a Customer with Missing Password
     When I visit the "Home Page"
-    And I set the "First Name" to "Test FN"
+    And I press the "Search" button
+    Then I should see the message "Success"
+    When I set the "First Name" to "Test FN"
     And I set the "Last Name" to "Test LN"
     And I set the "Email" to "test_ff@domain.com"
+    And I set the "Password" to " "
     And I select "True" in the "Active" dropdown
     And I set the "Street" to "10th Casselberry Way"
     And I set the "City" to "monroe"
@@ -277,4 +284,4 @@ Scenario: Update a Customer with Missing Password
     And I should see "Required field" in the "Password" error string
     When I set the "Password" to "test"
     And I press the "Update" button
-    Then The "Password" error string should be gonegit 
+    Then The "Password" error string should be gone 
