@@ -226,6 +226,18 @@ $(function () {
         let pin_code = $("#customer_pin_code").val().trim();
         let active = ($("#customer_active").val().toLowerCase() === 'true');
         
+        if(!customer_id){
+            displayFieldRequiredNotification("#customer_id")
+            $("#flash_message").html("Form Error(s)")
+            return false
+        };
+
+        if(!address_id){
+            displayFieldRequiredNotification("#customer_address_id")
+            $("#flash_message").html("Form Error(s)")
+            return false
+        };
+
         let addr_data = {
             "address_id":address_id,
             "street": street,
@@ -312,7 +324,7 @@ $(function () {
         ajax.fail(function(res){
             flash_message(res.responseJSON.message)
         });
-
+        
     });
 
     // ****************************************
@@ -370,6 +382,72 @@ $(function () {
             flash_message("Server error!")
         });
     });
+
+    // ****************************************
+    // Activate the customer
+    // ****************************************
+    $("#activate-btn").click(function () {
+
+        let customer_id = $("#customer_id").val();
+
+        if(!customer_id){
+            displayFieldRequiredNotification("#customer_id")
+            $("#flash_message").html("Form Error(s)")
+            return false
+        };
+
+        $("#flash_message").empty();
+
+        let ajax = $.ajax({
+            type: "PUT",
+            url: `/customers/${customer_id}/activate`,
+            contentType: "application/json",
+            data: '',
+        })
+
+        ajax.done(function(res){
+            update_form_data(res)
+            flash_message("Customer has been Activated!")
+        });
+
+        ajax.fail(function(res){
+            flash_message(res.responseJSON.message)
+        });
+    });
+
+    // ****************************************
+    // De-activate the customer
+    // ****************************************
+    $("#deactivate-btn").click(function () {
+
+        let customer_id = $("#customer_id").val();
+        
+        if(!customer_id){
+            displayFieldRequiredNotification("#customer_id")
+            $("#flash_message").html("Form Error(s)")
+            return false
+        };
+
+        $("#flash_message").empty();
+
+        let ajax = $.ajax({
+            type: "PUT",
+            url: `/customers/${customer_id}/deactivate`,
+            contentType: "application/json",
+            data: '',
+        })
+
+        ajax.done(function(res){
+            update_form_data(res)
+            flash_message("Customer has been Deactivated!")
+        });
+
+        ajax.fail(function(res){
+            flash_message(res.responseJSON.message)
+        });
+    });
+
+
 
     // ****************************************
     // Clear the form

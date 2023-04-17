@@ -165,13 +165,13 @@ Scenario: Update a Customer
     When I visit the "Home Page"
     And I press the "Search" button
     Then I should see the message "Success"
-    When I copy the "id" field
+    When I copy the "Id" field
     And I set the "First Name" to "Test FN"
     And I set the "Last Name" to "Test LN"
     And I set the "Email" to "test@gmail.com"
     And I set the "Password" to "test788pass"
     And I select "True" in the "Active" dropdown
-    And I set the "street" to "10th Casselberry Way"
+    And I set the "Street" to "10th Casselberry Way"
     And I set the "City" to "monroe"
     And I set the "Pin Code" to " 07319"
     And I set the "State" to "NJ"
@@ -201,7 +201,7 @@ Scenario: Update a Customer with Bad Email format
     And I set the "Email" to "BAD_EMAIL_FORMAT"
     And I set the "Password" to "test788pass"
     And I select "True" in the "Active" dropdown
-    And I set the "street" to "10th Casselberry Way"
+    And I set the "Street" to "10th Casselberry Way"
     And I set the "City" to "monroe"
     And I set the "Pin Code" to " 07319"
     And I set the "State" to "NJ"
@@ -234,7 +234,7 @@ Scenario: Update a Customer with Missing Last Name
     And I set the "Last Name" to " "
     And I set the "Email" to "test_ff@domain.com"
     And I select "True" in the "Active" dropdown
-    And I set the "street" to "10th Casselberry Way"
+    And I set the "Street" to "10th Casselberry Way"
     And I set the "City" to "monroe"
     And I set the "Pin Code" to " 07319"
     And I set the "State" to "NJ"
@@ -252,7 +252,7 @@ Scenario: Update a Customer with Missing Password
     And I set the "Last Name" to "Test LN"
     And I set the "Email" to "test_ff@domain.com"
     And I select "True" in the "Active" dropdown
-    And I set the "street" to "10th Casselberry Way"
+    And I set the "Street" to "10th Casselberry Way"
     And I set the "City" to "monroe"
     And I set the "Pin Code" to " 07319"
     And I set the "State" to "NJ"
@@ -262,4 +262,4 @@ Scenario: Update a Customer with Missing Password
     And I should see "Required field" in the "Password" error string
     When I set the "Password" to "test"
     And I press the "Update" button
-    Then The "Password" error string should be gone
+    Then The "Password" error string should be gonegit 
