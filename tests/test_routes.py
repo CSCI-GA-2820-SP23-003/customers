@@ -231,6 +231,8 @@ class TestCustomersServer(TestCase):
         customers = CustomerFactory.create_batch(3)
 
         customers[0].active = False
+        customers[1].active = True
+        customers[2].active = True
         for customer in customers:
             customer.create()
 
