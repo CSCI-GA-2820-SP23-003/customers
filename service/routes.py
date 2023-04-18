@@ -104,6 +104,8 @@ def list_customers():
     country = request.args.get("country")
     # Process the query string if pin code matches
     pin_code = request.args.get("pin_code")
+    # Process the query string if active matches
+    active = request.args.get("active")
     if first_name:
         customers = Customer.find_by_first_name(first_name)
     elif last_name:
@@ -120,6 +122,8 @@ def list_customers():
         customers = Address.find_by_country(country)
     elif pin_code:
         customers = Address.find_by_pin_code(pin_code)
+    elif active:
+        customers = Customer.find_by_active(active)
     else:
         customers = Customer.all()
 

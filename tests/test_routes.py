@@ -225,6 +225,26 @@ class TestCustomersServer(TestCase):
         for record in data:
             self.assertEqual(record["email"], customers[0].email)
 
+    def test_get_customer_by_active(self):
+        """It should Get an Customer by active status"""
+
+        customers = CustomerFactory.create_batch(3)
+
+        customers[0].active = False
+        for customer in customers:
+            customer.create()
+
+        active_found = self.client.get(
+            BASE_URL, query_string=f"active={True}")
+        active_found = active_found.get_json()
+
+        not_active_found = self.client.get(
+            BASE_URL, query_string=f"active={False}")
+        not_active_found = not_active_found.get_json()
+
+        self.assertEqual(len(active_found), 2)
+        self.assertEqual(len(not_active_found), 1)
+
     def test_get_customer_by_street(self):
         """It should Get all the Customers by street"""
 
