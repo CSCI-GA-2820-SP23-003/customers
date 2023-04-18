@@ -368,19 +368,9 @@ Scenario: Update a Customer with Missing Password
 
 Scenario: Delete a Customer that Exists
     When I visit the "Home Page"
-    And I set the "First Name" to "Bob"
-    And I set the "Last Name" to "Alice"
-    And I set the "Email" to "bob@gmail.com"
-    And I set the "Password" to "test"
-    And I set the "Street" to "Newport Pkwy"
-    And I set the "City" to "Jersey City"
-    And I set the "State" to "New Jersey"
-    And I set the "Country" to "United States"
-    And I set the "Pin Code" to " 07310"
-    And I select "True" in the "Active" dropdown
-    And I press the "Create" button
-    Then I should see the message "Success"
-    When I copy the "Id" field
+    When I visit the "Home Page"
+    And I press the "Search" button
+    And I copy the "Id" field
     And I press the "Clear" button
     Then the "Id" field should be empty
     And the "First Name" field should be empty
@@ -399,22 +389,21 @@ Scenario: Delete a Customer that Exists
     When I paste the "Id" field
     And I press the "Retrieve" button
     Then I should not see "Success"
+    And the "First Name" field should be empty
+    And the "Last Name" field should be empty
+    And the "Email" field should be empty
+    And the "Password" field should be empty
+    And the "Street" field should be empty
+    And the "City" field should be empty
+    And the "State" field should be empty
+    And the "Country" field should be empty
+    And the "Pin Code" field should be empty
+
 
 Scenario: Delete a Customer that Does Not Exist
     When I visit the "Home Page"
-    And I set the "First Name" to "Bob"
-    And I set the "Last Name" to "Alice"
-    And I set the "Email" to "bob@gmail.com"
-    And I set the "Password" to "test"
-    And I set the "Street" to "Newport Pkwy"
-    And I set the "City" to "Jersey City"
-    And I set the "State" to "New Jersey"
-    And I set the "Country" to "United States"
-    And I set the "Pin Code" to " 07310"
-    And I select "True" in the "Active" dropdown
-    And I press the "Create" button
-    Then I should see the message "Success"
-    When I copy the "Id" field
+    And I press the "Search" button
+    And I copy the "Id" field
     And I press the "Clear" button
     Then the "Id" field should be empty
     And the "First Name" field should be empty
@@ -433,9 +422,32 @@ Scenario: Delete a Customer that Does Not Exist
     When I paste the "Id" field
     And I press the "Retrieve" button
     Then I should not see "Success"
+    And the "First Name" field should be empty
+    And the "Last Name" field should be empty
+    And the "Email" field should be empty
+    And the "Password" field should be empty
+    And the "Street" field should be empty
+    And the "City" field should be empty
+    And the "State" field should be empty
+    And the "Country" field should be empty
+    And the "Pin Code" field should be empty
     When I paste the "Id" field
     And I press the "Delete" button
     Then I should see the message "Customer has been Deleted!"
     When I paste the "Id" field
     And I press the "Retrieve" button
     Then I should not see "Success"
+    And the "First Name" field should be empty
+    And the "Last Name" field should be empty
+    And the "Email" field should be empty
+    And the "Password" field should be empty
+    And the "Street" field should be empty
+    And the "City" field should be empty
+    And the "State" field should be empty
+    And the "Country" field should be empty
+    And the "Pin Code" field should be empty
+
+
+
+
+    
