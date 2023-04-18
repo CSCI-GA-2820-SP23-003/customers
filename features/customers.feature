@@ -19,8 +19,19 @@ Scenario: The server is running
 
 Scenario: Retrieve a Customer and corresponding Address
     When I visit the "Home Page"
-    And I press the "Search" button
-    And I copy the "Id" field
+    And I set the "First Name" to "Bob"
+    And I set the "Last Name" to "Alice"
+    And I set the "Email" to "bob@gmail.com"
+    And I set the "Password" to "test"
+    And I set the "Street" to "Newport Pkwy"
+    And I set the "City" to "Jersey City"
+    And I set the "State" to "New Jersey"
+    And I set the "Country" to "United States"
+    And I set the "Pin Code" to " 07310"
+    And I select "True" in the "active" dropdown
+    And I press the "Create" button
+    Then I should see the message "Success"
+    When I copy the "Id" field
     And I press the "Clear" button
     Then I should see the message "Cleared"
     And the "Id" field should be empty
@@ -37,13 +48,13 @@ Scenario: Retrieve a Customer and corresponding Address
     When I paste the "Id" field
     And I press the "Retrieve" button
     Then I should see the message "Success"
-    And I should see "FNU" in the "First Name" field
-    And I should see "Akshama" in the "Last Name" field
-    And I should see "akshama@gmail.com" in the "Email" field
-    And I should see "123456" in the "Password" field
+    And I should see "Bob" in the "First Name" field
+    And I should see "Alice" in the "Last Name" field
+    And I should see "bob@gmail.com" in the "Email" field
+    And I should see "test" in the "Password" field
     And I should see "True" in the "Active" dropdown
-    And I should see "Casselberry Way" in the "Street" field
-    And I should see "Monroe" in the "City" field
+    And I should see "Newport Pkwy" in the "Street" field
+    And I should see "Jersey City" in the "City" field
     And I should see "New Jersey" in the "State" field
     And I should see "United States" in the "Country" field
     And I should see "07310" in the "Pin Code" field
