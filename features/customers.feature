@@ -365,3 +365,90 @@ Scenario: Update a Customer with Missing Password
     When I set the "Password" to "test"
     And I press the "Update" button
     Then The "Password" error string should be gone 
+
+Scenario: Delete a Customer that Exists
+    When I visit the "Home Page"
+    And I press the "Search" button
+    And I copy the "Id" field
+    And I press the "Clear" button
+    Then I should see the message "Cleared"
+    And the "Id" field should be empty
+    And the "First Name" field should be empty
+    And the "Last Name" field should be empty
+    And the "Email" field should be empty
+    And the "Password" field should be empty
+    And the "Street" field should be empty
+    And the "City" field should be empty
+    And the "State" field should be empty
+    And the "Country" field should be empty
+    And the "Pin Code" field should be empty
+    And I should see "True" in the "Active" dropdown
+    When I paste the "Id" field
+    And I press the "Delete" button
+    Then I should see the message "Customer has been Deleted!"
+    When I paste the "Id" field
+    And I press the "Retrieve" button
+    Then I should not see "Success"
+    And the "First Name" field should be empty
+    And the "Last Name" field should be empty
+    And the "Email" field should be empty
+    And the "Password" field should be empty
+    And the "Street" field should be empty
+    And the "City" field should be empty
+    And the "State" field should be empty
+    And the "Country" field should be empty
+    And the "Pin Code" field should be empty
+
+
+Scenario: Delete a Customer that Does Not Exist
+    When I visit the "Home Page"
+    And I press the "Search" button
+    And I copy the "Id" field
+    And I press the "Clear" button
+    Then I should see the message "Cleared"
+    And the "Id" field should be empty
+    And the "First Name" field should be empty
+    And the "Last Name" field should be empty
+    And the "Email" field should be empty
+    And the "Password" field should be empty
+    And the "Street" field should be empty
+    And the "City" field should be empty
+    And the "State" field should be empty
+    And the "Country" field should be empty
+    And the "Pin Code" field should be empty
+    And I should see "True" in the "Active" dropdown
+    When I paste the "Id" field
+    And I press the "Delete" button
+    Then I should see the message "Customer has been Deleted!"
+    When I paste the "Id" field
+    And I press the "Retrieve" button
+    Then I should not see "Success"
+    And the "First Name" field should be empty
+    And the "Last Name" field should be empty
+    And the "Email" field should be empty
+    And the "Password" field should be empty
+    And the "Street" field should be empty
+    And the "City" field should be empty
+    And the "State" field should be empty
+    And the "Country" field should be empty
+    And the "Pin Code" field should be empty
+    When I paste the "Id" field
+    And I press the "Delete" button
+    Then I should see the message "Customer has been Deleted!"
+    When I paste the "Id" field
+    And I press the "Retrieve" button
+    Then I should not see "Success"
+    And the "First Name" field should be empty
+    And the "Last Name" field should be empty
+    And the "Email" field should be empty
+    And the "Password" field should be empty
+    And the "Street" field should be empty
+    And the "City" field should be empty
+    And the "State" field should be empty
+    And the "Country" field should be empty
+    And the "Pin Code" field should be empty
+
+
+
+
+    
