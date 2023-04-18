@@ -271,8 +271,8 @@ class TestCustomer(unittest.TestCase):
         active_found = Customer.find_by_active(True)
         not_active_found = Customer.find_by_active(False)
 
-        self.assertEqual(active_found, 9)
-        self.assertEqual(not_active_found, 1)
+        self.assertEqual(active_found.count(), 9)
+        self.assertEqual(not_active_found.count(), 1)
 
     def test_find_or_404_found(self):
         """It should Find or return 404 not found for Customer"""
