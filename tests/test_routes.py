@@ -244,10 +244,6 @@ class TestCustomersServer(TestCase):
             BASE_URL, query_string="active=False")
         not_active_found = not_active_found.get_json()
 
-        logging.info(active_found)
-        logging.info(not_active_found)
-        logging.info(Customer.all())
-
         self.assertEqual(len(active_found), 2)
         self.assertEqual(len(not_active_found), 1)
 
