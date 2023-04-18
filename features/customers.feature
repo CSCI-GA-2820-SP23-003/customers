@@ -247,7 +247,7 @@ Scenario: List all Customers
     And I should not see "Sreevishnu" in the results
     And I should not see "Chris" in the results
 
-Scenario: Search with first name
+Scenario: Search with First Name
     When I visit the "Home Page"
     And I set the "First Name" to "Ayush"
     And I press the "Search" button
@@ -258,7 +258,7 @@ Scenario: Search with first name
     And I should not see "Sai Himal" in the results
     And I should not see "Sreevishnu" in the results
 
-Scenario: Search with last name
+Scenario: Search with Last Name
     When I visit the "Home Page"
     And I set the "Last Name" to "Sreevishnu"
     And I press the "Search" button
@@ -269,7 +269,7 @@ Scenario: Search with last name
     And I should not see "Sai Himal" in the results
     And I should see "Sreevishnu" in the results
 
-Scenario: Search with email
+Scenario: Search with Email
     When I visit the "Home Page"
     And I set the "Email" to "sreevishnu@gmail.com"
     And I press the "Search" button
@@ -280,7 +280,7 @@ Scenario: Search with email
     And I should not see "Sai Himal" in the results
     And I should see "Sreevishnu" in the results
 
-Scenario: Search with street
+Scenario: Search with Street
     When I visit the "Home Page"
     And I set the "Street" to "Washington Blvd"
     And I press the "Search" button
@@ -291,7 +291,7 @@ Scenario: Search with street
     And I should not see "Sai Himal" in the results
     And I should not see "Sreevishnu" in the results
 
-Scenario: Search with city
+Scenario: Search with City
     When I visit the "Home Page"
     And I set the "City" to "Manhattan"
     And I press the "Search" button
@@ -302,7 +302,7 @@ Scenario: Search with city
     And I should not see "Marwan" in the results
     And I should not see "Sreevishnu" in the results
 
-Scenario: Search with state
+Scenario: Search with State
     When I visit the "Home Page"
     And I set the "State" to "New Jersey"
     And I press the "Search" button
@@ -313,7 +313,7 @@ Scenario: Search with state
     And I should not see "Sai Himal" in the results
     And I should not see "Sreevishnu" in the results
 
-Scenario: Search with country
+Scenario: Search with Country
     When I visit the "Home Page"
     And I set the "Country" to "United States"
     And I press the "Search" button
@@ -324,7 +324,7 @@ Scenario: Search with country
     And I should see "Sai Himal" in the results
     And I should see "Sreevishnu" in the results
 
-Scenario: Search with pin code
+Scenario: Search with Pin Code
     When I visit the "Home Page"
     And I set the "Pin Code" to "07310"
     And I press the "Search" button
@@ -335,7 +335,7 @@ Scenario: Search with pin code
     And I should not see "Sai Himal" in the results
     And I should not see "Sreevishnu" in the results
 
-Scenario: Search for active
+Scenario: Search for Active
     When I visit the "Home Page"
     And I select "True" in the "Active" dropdown
     And I press the "Search" button
@@ -346,7 +346,7 @@ Scenario: Search for active
     And I should see "Sai Himal" in the results
     And I should not see "Sreevishnu" in the results
 
-Scenario: Search for not active
+Scenario: Search for not Active
     When I visit the "Home Page"
     And I select "False" in the "Active" dropdown
     And I press the "Search" button
@@ -356,6 +356,7 @@ Scenario: Search for not active
     And I should not see "Marwan" in the results
     And I should not see "Sai Himal" in the results
     And I should see "Sreevishnu" in the results
+    
 Scenario: Update a Customer
     When I visit the "Home Page"
     And I press the "Search" button
@@ -567,8 +568,3 @@ Scenario: Delete a Customer that Does Not Exist
     And the "State" field should be empty
     And the "Country" field should be empty
     And the "Pin Code" field should be empty
-
-
-
-
-    
