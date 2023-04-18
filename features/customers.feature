@@ -368,8 +368,19 @@ Scenario: Update a Customer with Missing Password
 
 Scenario: Delete a Customer that Exists
     When I visit the "Home Page"
-    And I press the "Search" button
-    And I copy the "Id" field
+    And I set the "First Name" to "John"
+    And I set the "Last Name" to "Doe"
+    And I set the "Email" to "johndoe@gmail.com"
+    And I set the "Password" to "test"
+    And I set the "Street" to "Newport Pkwy"
+    And I set the "City" to "Jersey City"
+    And I set the "State" to "New Jersey"
+    And I set the "Country" to "United States"
+    And I set the "Pin Code" to " 07310"
+    And I select "True" in the "Active" dropdown
+    And I press the "Create" button
+    Then I should see the message "Success"
+    When I copy the "Id" field
     And I press the "Clear" button
     Then I should see the message "Cleared"
     And the "Id" field should be empty
@@ -402,11 +413,22 @@ Scenario: Delete a Customer that Exists
 
 Scenario: Delete a Customer that Does Not Exist
     When I visit the "Home Page"
-    And I press the "Search" button
-    And I copy the "Id" field
+    And I set the "First Name" to "John"
+    And I set the "Last Name" to "Doe"
+    And I set the "Email" to "johndoe@gmail.com"
+    And I set the "Password" to "test"
+    And I set the "Street" to "Newport Pkwy"
+    And I set the "City" to "Jersey City"
+    And I set the "State" to "New Jersey"
+    And I set the "Country" to "United States"
+    And I set the "Pin Code" to " 07310"
+    And I select "True" in the "Active" dropdown
+    And I press the "Create" button
+    Then I should see the message "Success"
+    When I copy the "Id" field
     And I press the "Clear" button
     Then I should see the message "Cleared"
-    Then the "Id" field should be empty
+    And the "Id" field should be empty
     And the "First Name" field should be empty
     And the "Last Name" field should be empty
     And the "Email" field should be empty
@@ -447,6 +469,7 @@ Scenario: Delete a Customer that Does Not Exist
     And the "State" field should be empty
     And the "Country" field should be empty
     And the "Pin Code" field should be empty
+
 
 
 
