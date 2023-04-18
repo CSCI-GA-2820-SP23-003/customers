@@ -236,6 +236,17 @@ Scenario: Deactivate and Activate a Customer
     Then I should see the message "Success"
     And I should see "True" in the "Active" dropdown
 
+Scenario: List all Customers
+    When I visit the "Home Page"
+    And I press the "Search" button
+    Then I should see the message "Success"
+    And I should see "Ayush" in the results
+    And I should see "Akshama" in the results
+    And I should see "Marwan" in the results
+    And I should see "Sai Himal" in the results
+    And I should not see "Sreevishnu" in the results
+    And I should not see "Chris" in the results
+
 Scenario: Search with first name
     When I visit the "Home Page"
     And I set the "First Name" to "Ayush"
