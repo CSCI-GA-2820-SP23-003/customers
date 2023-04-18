@@ -22,7 +22,8 @@ Scenario: Retrieve a Customer and corresponding Address
     And I press the "Search" button
     And I copy the "Id" field
     And I press the "Clear" button
-    Then the "Id" field should be empty
+    Then I should see the message "Cleared"
+    And the "Id" field should be empty
     And the "First Name" field should be empty
     And the "Last Name" field should be empty
     And the "Email" field should be empty
@@ -63,7 +64,8 @@ Scenario: Create a Customer
     Then I should see the message "Success"
     When I copy the "Id" field
     And I press the "Clear" button
-    Then the "Id" field should be empty
+    Then I should see the message "Cleared"
+    And the "Id" field should be empty
     And the "First Name" field should be empty
     And the "Last Name" field should be empty
     And the "Email" field should be empty
@@ -185,7 +187,8 @@ Scenario: Deactivate and Activate a Customer
     And I should see "False" in the "Active" dropdown
     When I copy the "Id" field
     And I press the "Clear" button
-    Then the "Id" field should be empty
+    Then I should see the message "Cleared"
+    And the "Id" field should be empty
     And the "First Name" field should be empty
     And the "Last Name" field should be empty
     And the "Email" field should be empty
@@ -205,7 +208,8 @@ Scenario: Deactivate and Activate a Customer
     And I should see "True" in the "Active" dropdown
     When I copy the "Id" field
     And I press the "Clear" button
-    Then the "Id" field should be empty
+    Then I should see the message "Cleared"
+    And the "Id" field should be empty
     And the "First Name" field should be empty
     And the "Last Name" field should be empty
     And the "Email" field should be empty

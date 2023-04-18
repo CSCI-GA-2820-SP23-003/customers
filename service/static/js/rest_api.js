@@ -46,9 +46,10 @@ $(function () {
         }
     }
 
-
     /// Clears all form fields
     function clear_form_data() {
+        $("#flash_message").empty();
+
         $("#customer_id").val("");
         $("#customer_first_name").val("");
         $("#customer_last_name").val("");
@@ -61,6 +62,8 @@ $(function () {
         $("#customer_country").val("");
         $("#customer_pin_code").val("");
         $("#customer_active").val("true");
+
+        flash_message("Cleared")
     }
 
     function removeAllNotifications() {
