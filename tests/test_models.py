@@ -261,6 +261,19 @@ class TestCustomer(unittest.TestCase):
         for customer in found:
             self.assertEqual(customer.email, email)
 
+    def test_find_by_active(self):
+        """It should Find Customer by Active Status"""
+        customers = CustomerFactory.create_batch(10)
+        customers[0].active = False
+        for customer in customers:
+            customer.create()
+
+        active_found = Customer.find_by_active(True)
+        not_active_found = Customer.find_by_active(False)
+
+        self.assertEqual(active_found, 9)
+        self.assertEqual(not_active_found, 1)
+
     def test_find_or_404_found(self):
         """It should Find or return 404 not found for Customer"""
         customers = CustomerFactory.create_batch(3)

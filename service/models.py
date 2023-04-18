@@ -354,10 +354,20 @@ class Customer(db.Model):
         """Returns the Customer with the given email
 
         Args:
-            email (string): the name of the Customer you want to match
+            email (string): the email of the Customer you want to match
         """
-        logger.info("Processing name query for %s ...", email)
+        logger.info("Processing email query for %s ...", email)
         return cls.query.filter(cls.email == email)
+
+    @classmethod
+    def find_by_active(cls, active):
+        """Returns the Customers with the given active status
+
+        Args:
+            active (string): the active status of the Customers you want to match
+        """
+        logger.info("Processing active query for %s ...", active)
+        return cls.query.filter(cls.active == active)
 
     @classmethod
     def find_or_404(cls, customer_id: int):
