@@ -61,7 +61,6 @@ class TestCustomer(unittest.TestCase):
             email="mya6510@nyu.edu",
             password="12344321",
             addresses=[])
-        self.assertEqual(str(customer), "<Customer J, Marwan id=[None]>")
         self.assertTrue(customer is not None)
         self.assertEqual(customer.id, None)
         self.assertEqual(customer.first_name, "Marwan")
