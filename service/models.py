@@ -367,6 +367,8 @@ class Customer(db.Model):
             active (string): the active status of the Customers you want to match
         """
         logger.info("Processing active query for %s ...", active)
+        if isinstance(active, str):
+            active = active.lower() in ["true", "True"]
         return cls.query.filter(cls.active == active)
 
     @classmethod

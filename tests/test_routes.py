@@ -237,11 +237,11 @@ class TestCustomersServer(TestCase):
             customer.create()
 
         active_found = self.client.get(
-            BASE_URL, query_string=f"active={True}")
+            BASE_URL, query_string="active=True")
         active_found = active_found.get_json()
 
         not_active_found = self.client.get(
-            BASE_URL, query_string=f"active={False}")
+            BASE_URL, query_string="active=False")
         not_active_found = not_active_found.get_json()
 
         logging.info(active_found)
