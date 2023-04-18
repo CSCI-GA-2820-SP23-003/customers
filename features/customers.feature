@@ -368,11 +368,11 @@ Scenario: Update a Customer with Missing Password
 
 Scenario: Delete a Customer that Exists
     When I visit the "Home Page"
-    When I visit the "Home Page"
     And I press the "Search" button
     And I copy the "Id" field
     And I press the "Clear" button
-    Then the "Id" field should be empty
+    Then I should see the message "Cleared"
+    And the "Id" field should be empty
     And the "First Name" field should be empty
     And the "Last Name" field should be empty
     And the "Email" field should be empty
@@ -405,6 +405,7 @@ Scenario: Delete a Customer that Does Not Exist
     And I press the "Search" button
     And I copy the "Id" field
     And I press the "Clear" button
+    Then I should see the message "Cleared"
     Then the "Id" field should be empty
     And the "First Name" field should be empty
     And the "Last Name" field should be empty
