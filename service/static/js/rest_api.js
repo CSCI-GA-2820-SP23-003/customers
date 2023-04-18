@@ -472,15 +472,15 @@ $(function () {
     // ****************************************
 
     $("#search-btn").click(function () {
-        let first_name = $("#customer_firstname").val();
-        let last_name = $("#customer_lastname").val();
+        let first_name = $("#customer_first_name").val();
+        let last_name = $("#customer_last_name").val();
         let email = $("#customer_email").val();
         let address_id = $("#customer_address_id").val();
         let street = $("#customer_street").val();
         let city = $("#customer_city").val();
         let state = $("#customer_state").val();
         let country = $("#customer_country").val();
-        let pin_code = $("#customer_pincode").val();
+        let pin_code = $("#customer_pin_code").val();
         let active = ($("#customer_active").val().toLowerCase() === 'true');
        
         let queryString = ""
@@ -519,6 +519,10 @@ $(function () {
 
         else if (pin_code) {
             queryString += 'pin_code=' + pin_code
+        }
+
+        else if (active == true || active == false) {
+            queryString += 'active=' + active
         }
         
         $("#flash_message").empty();

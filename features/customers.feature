@@ -10,7 +10,7 @@ Background:
         | Ayush            | Jain          | ayush@gmail.com       | 234567       | True       |    Tonnelle Ave    |   Journal Sq  |   New Jersey  |   United States   |   07311   |
         | Marwan           | Aljumiah      | marwan@gmail.com      | 345678       | True       |    Washington Blvd |   Newport     |   New Jersey  |   United States   |   07312   |
         | Sai Himal        | Allu          | saihimal@gmail.com    | 456789       | True       |    Broadway        |   Manhattan   |   New York    |   United States   |   07313   |
-        | FNU              | Sreevishnu    | sreevishnu@gmail.com  | 549871       | True       |    Jackson Heights |   Queens      |   New York    |   United States   |   07314   |
+        | FNU              | Sreevishnu    | sreevishnu@gmail.com  | 549871       | False       |    Jackson Heights |   Queens      |   New York    |   United States   |   07314   |
 
 Scenario: The server is running
     When I visit the "Home Page"
@@ -236,6 +236,115 @@ Scenario: Deactivate and Activate a Customer
     Then I should see the message "Success"
     And I should see "True" in the "Active" dropdown
 
+Scenario: Search with first name
+    When I visit the "Home Page"
+    And I set the "First Name" to "Ayush"
+    And I press the "Search" button
+    Then I should see the message "Success"
+    And I should see "Ayush" in the results
+    And I should not see "Akshama" in the results
+    And I should not see "Marwan" in the results
+    And I should not see "Sai Himal" in the results
+    And I should not see "Sreevishnu" in the results
+
+Scenario: Search with last name
+    When I visit the "Home Page"
+    And I set the "Last Name" to "Sreevishnu"
+    And I press the "Search" button
+    Then I should see the message "Success"
+    And I should not see "Akshama" in the results
+    And I should not see "Ayush" in the results
+    And I should not see "Marwan" in the results
+    And I should not see "Sai Himal" in the results
+    And I should see "Sreevishnu" in the results
+
+Scenario: Search with email
+    When I visit the "Home Page"
+    And I set the "Email" to "sreevishnu@gmail.com"
+    And I press the "Search" button
+    Then I should see the message "Success"
+    And I should not see "Akshama" in the results
+    And I should not see "Ayush" in the results
+    And I should not see "Marwan" in the results
+    And I should not see "Sai Himal" in the results
+    And I should see "Sreevishnu" in the results
+
+Scenario: Search with street
+    When I visit the "Home Page"
+    And I set the "Street" to "Washington Blvd"
+    And I press the "Search" button
+    Then I should see the message "Success"
+    And I should see "Marwan" in the results
+    And I should not see "Akshama" in the results
+    And I should not see "Ayush" in the results
+    And I should not see "Sai Himal" in the results
+    And I should not see "Sreevishnu" in the results
+
+Scenario: Search with city
+    When I visit the "Home Page"
+    And I set the "City" to "Manhattan"
+    And I press the "Search" button
+    Then I should see the message "Success"
+    And I should see "Sai Himal" in the results
+    And I should not see "Akshama" in the results
+    And I should not see "Ayush" in the results
+    And I should not see "Marwan" in the results
+    And I should not see "Sreevishnu" in the results
+
+Scenario: Search with state
+    When I visit the "Home Page"
+    And I set the "State" to "New Jersey"
+    And I press the "Search" button
+    Then I should see the message "Success"
+    And I should see "Akshama" in the results
+    And I should see "Ayush" in the results
+    And I should see "Marwan" in the results
+    And I should not see "Sai Himal" in the results
+    And I should not see "Sreevishnu" in the results
+
+Scenario: Search with country
+    When I visit the "Home Page"
+    And I set the "Country" to "United States"
+    And I press the "Search" button
+    Then I should see the message "Success"
+    And I should see "Akshama" in the results
+    And I should see "Ayush" in the results
+    And I should see "Marwan" in the results
+    And I should see "Sai Himal" in the results
+    And I should see "Sreevishnu" in the results
+
+Scenario: Search with pin code
+    When I visit the "Home Page"
+    And I set the "Pin Code" to "07310"
+    And I press the "Search" button
+    Then I should see the message "Success"
+    And I should see "Akshama" in the results
+    And I should not see "Ayush" in the results
+    And I should not see "Marwan" in the results
+    And I should not see "Sai Himal" in the results
+    And I should not see "Sreevishnu" in the results
+
+Scenario: Search for active
+    When I visit the "Home Page"
+    And I select "True" in the "Active" dropdown
+    And I press the "Search" button
+    Then I should see the message "Success"
+    And I should see "Akshama" in the results
+    And I should see "Ayush" in the results
+    And I should see "Marwan" in the results
+    And I should see "Sai Himal" in the results
+    And I should not see "Sreevishnu" in the results
+
+Scenario: Search for not active
+    When I visit the "Home Page"
+    And I select "False" in the "Active" dropdown
+    And I press the "Search" button
+    Then I should see the message "Success"
+    And I should not see "Akshama" in the results
+    And I should not see "Ayush" in the results
+    And I should not see "Marwan" in the results
+    And I should not see "Sai Himal" in the results
+    And I should see "Sreevishnu" in the results
 Scenario: Update a Customer
     When I visit the "Home Page"
     And I press the "Search" button
@@ -429,6 +538,7 @@ Scenario: Delete a Customer that Does Not Exist
     And I press the "Clear" button
     Then I should see the message "Cleared"
     And the "Id" field should be empty
+    And the "Id" field should be empty
     And the "First Name" field should be empty
     And the "Last Name" field should be empty
     And the "Email" field should be empty
@@ -469,8 +579,6 @@ Scenario: Delete a Customer that Does Not Exist
     And the "State" field should be empty
     And the "Country" field should be empty
     And the "Pin Code" field should be empty
-
-
 
 
 
