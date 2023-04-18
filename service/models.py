@@ -224,7 +224,7 @@ class Customer(db.Model):
     ##############
 
     def __repr__(self):
-        return f"<Customer {self.last_name}, {self.first_name} id=[{self.id}]>"
+        return f"<Customer {self.last_name}, {self.first_name}, {self.active}, id=[{self.id}]>"
 
     def create(self):
         """
