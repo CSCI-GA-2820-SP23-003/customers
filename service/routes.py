@@ -4,16 +4,66 @@ All the REST API calls to the Customer or the Address Database are housed here.
 """
 # pylint: disable=cyclic-import
 from flask import jsonify, request, url_for, make_response, abort
+# from flask_restx import Api, Resource
+from flask_restx import fields, reqparse, inputs
 from service.common import status  # HTTP Status Codes
 from service.models import Customer, Address
 
 # Import Flask application
-from . import app
+from . import app, api
 
+create_address_model = api.model('Address', {
+    'street': fields.String(required=True, description='The address street'),
+    'city': fields.String(required=True, description='The address city'),
+    'state': fields.String(required=True, description='The address state'),
+    'country': fields.String(description='The address country'),
+    'pin_code': fields.String(required=True, description='The address pin code'),
+    'customer_id': fields.Integer(required=True, description='The customer ID corresponding to the Address')
+})
+
+address_model = api.inherit(
+    'AddressModel',
+    create_address_model,
+    {
+        'id': fields.Integer(readOnly=True, description='The unique id assigned internally by service'),
+    }
+)
+
+create_customer_model = api.model('Customer', {
+    'first_name': fields.String(required=True, description='The First Name of the customer'),
+    'last_name': fields.String(required=True, description='The Last Name of the customer'),
+    'password': fields.String(required=True, description='The password of the customer'),
+    'email': fields.String(required=True, description='The email of the customer'),
+    'active': fields.Boolean(required=True, description='The active/inactive state of the customer'),
+    'addresses': fields.List(fields.Nested(address_model, description='List of addresses that the customer has'))
+})
+
+customer_model = api.inherit(
+    'CustomerModel',
+    create_customer_model,
+    {
+        'id': fields.Integer(readOnly=True, description='The unique id assigned internally by service'),
+    }
+)
+
+
+# query string arguments
+customer_args = reqparse.RequestParser()
+customer_args.add_argument('first_name', type=str, location='args', required=False, help='Find Customers by First Name')
+customer_args.add_argument('last_name', type=str, location='args', required=False, help='Find Customers by Last Name')
+customer_args.add_argument('email', type=str, location='args', required=False, help='Find Customers by Email')
+customer_args.add_argument('active', type=inputs.boolean, location='args', required=False, help='Is the Customer active?')
+customer_args.add_argument('street', type=str, location='args', required=False, help='Find Customers by Address street')
+customer_args.add_argument('city', type=str, location='args', required=False, help='Find Customers by Address city')
+customer_args.add_argument('state', type=str, location='args', required=False, help='Find Customers by Address state')
+customer_args.add_argument('country', type=str, location='args', required=False, help='Find Customers by Address country')
+customer_args.add_argument('pin_code', type=str, location='args', required=False, help='Find Customers by Address Pin Code')
 
 ############################################################
 # Health Endpoint
 ############################################################
+
+
 @app.route("/health")
 def health():
     """Health Status"""
