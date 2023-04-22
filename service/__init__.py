@@ -12,6 +12,7 @@ from service.common import log_handlers
 
 # Create Flask application
 app = Flask(__name__)
+app.url_map.strict_slashes = False
 app.config.from_object(config)
 
 ######################################################################
@@ -21,7 +22,7 @@ api = Api(
         app,
         version='1.0.0',
         title='Customers REST API Service',
-        description='This is a sample Customers service server.',
+        description='This is a sample Customers microservice server.',
         default='customers',
         default_label='Customer operations',
         doc='/apidocs',  # default also could use doc='/apidocs/'
