@@ -194,7 +194,7 @@ $(function () {
         // Send the form data to the API
         let ajax = $.ajax({
             type: "POST",
-            url: "/customers",
+            url: "/api/customers",
             contentType: "application/json",
             data: JSON.stringify(cust_data),
         });
@@ -300,7 +300,7 @@ $(function () {
         // Update Customer Data
         let ajax = $.ajax({
                 type: "PUT",
-                url: `/customers/${customer_id}`,
+                url: `/api/customers/${customer_id}`,
                 contentType: "application/json",
                 data: JSON.stringify(cust_data)
             })
@@ -311,7 +311,7 @@ $(function () {
             // Update Address
             let ajax2 = $.ajax({
                 type: "PUT",
-                url: `/customers/${customer_id}/addresses/${address_id}`,
+                url: `/api/customers/${customer_id}/addresses/${address_id}`,
                 contentType: "application/json",
                 data: JSON.stringify(addr_data)
             })
@@ -346,7 +346,7 @@ $(function () {
 
         let ajax = $.ajax({
             type: "GET",
-            url: `/customers/${customer_id}`,
+            url: `/api/customers/${customer_id}`,
             contentType: "application/json",
             data: ''
         })
@@ -375,7 +375,7 @@ $(function () {
 
         let ajax = $.ajax({
             type: "DELETE",
-            url: `/customers/${customer_id}`,
+            url: `/api/customers/${customer_id}`,
             contentType: "application/json",
             data: '',
         })
@@ -407,7 +407,7 @@ $(function () {
 
         let ajax = $.ajax({
             type: "PUT",
-            url: `/customers/${customer_id}/activate`,
+            url: `/api/customers/${customer_id}/activate`,
             contentType: "application/json",
             data: '',
         })
@@ -439,7 +439,7 @@ $(function () {
 
         let ajax = $.ajax({
             type: "PUT",
-            url: `/customers/${customer_id}/deactivate`,
+            url: `/api/customers/${customer_id}/deactivate`,
             contentType: "application/json",
             data: '',
         })
@@ -529,7 +529,7 @@ $(function () {
 
         let ajax = $.ajax({
             type: "GET",
-            url: `/customers?${queryString}`,
+            url: `/api/customers?${queryString}`,
             contentType: "application/json",
             data: ''
         })
