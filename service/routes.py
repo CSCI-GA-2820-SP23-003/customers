@@ -382,10 +382,6 @@ class AddressResource(Resource):
         """
         app.logger.info('Request to delete address with address_id [%s] and customer_id [%s] ...', address_id, customer_id)
 
-        customer = Customer.find(customer_id)
-        if not customer:
-            abort(status.HTTP_404_NOT_FOUND, f"Customer with id '{customer_id}' was not found.")
-
         address = Address.find(address_id)
         if address and address.customer_id == customer_id:
             address.delete()

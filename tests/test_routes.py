@@ -22,7 +22,7 @@ DATABASE_URI = os.getenv(
 
 app.logger.critical(DATABASE_URI)
 
-BASE_URL = "/customers"
+BASE_URL = "/api/customers"
 FLAG = False
 
 
@@ -507,7 +507,7 @@ class TestCustomersServer(TestCase):
         self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
         data = resp.get_json()
         logging.debug("Response data = %s", data)
-        self.assertIn("Not Found", data["message"])
+        self.assertIn("not found", data["message"])
 
     ######################################################################
     #  C R E A T E  C A S E S
@@ -668,9 +668,7 @@ class TestCustomersServer(TestCase):
             f"{BASE_URL}/{updated_customer['id']}",
             json=updated_customer,
             content_type="custom_content_type_v100")
-        self.assertEqual(
-            response.status_code,
-            status.HTTP_415_UNSUPPORTED_MEDIA_TYPE)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
 
 class TestAddressesServer(TestCase):
@@ -788,7 +786,7 @@ class TestAddressesServer(TestCase):
         self.assertEqual(resp2.status_code, status.HTTP_404_NOT_FOUND)
         data = resp2.get_json()
         logging.debug("Response data = %s", data)
-        self.assertIn("Not Found", data["message"])
+        self.assertIn("not be found", data["message"])
 
     def test_get_address_not_found_invalid_customer(self):
         """It should not Read an address for a customer that is not found"""
@@ -796,7 +794,7 @@ class TestAddressesServer(TestCase):
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
         data = response.get_json()
         logging.debug("Response data = %s", data)
-        self.assertIn("Not Found", data["message"])
+        self.assertIn("not found", data["message"])
 
     ######################################################################
     #  C R E A T E   C A S E S
@@ -1077,9 +1075,7 @@ class TestBadRequests(TestCase):
         resp = self.client.post(
             BASE_URL, json=customer.serialize(), content_type="test/html"
         )
-        self.assertEqual(
-            resp.status_code,
-            status.HTTP_415_UNSUPPORTED_MEDIA_TYPE)
+        self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_method_not_allowed(self):
         """It should not allow an illegal method call"""
@@ -1094,6 +1090,4 @@ class TestBadRequests(TestCase):
     def test_no_content_type(self):
         """It should not Create with no content type"""
         response = self.client.post(BASE_URL)
-        self.assertEqual(
-            response.status_code,
-            status.HTTP_415_UNSUPPORTED_MEDIA_TYPE)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
