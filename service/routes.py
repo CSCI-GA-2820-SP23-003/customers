@@ -35,6 +35,9 @@ create_customer_model = api.model('Customer', {
     'password': fields.String(required=True, description='The password of the customer'),
     'email': fields.String(required=True, description='The email of the customer'),
     'active': fields.Boolean(required=True, description='The active/inactive state of the customer'),
+    'addresses': fields.List(fields.Nested(address_model,
+                                           required=False,
+                                           description='List of addresses that the customer has'))
 })
 
 
@@ -43,9 +46,6 @@ customer_model = api.inherit(
     create_customer_model,
     {
         'id': fields.Integer(readOnly=True, description='The unique id assigned internally by service'),
-        'addresses': fields.List(fields.Nested(address_model,
-                                               required=False,
-                                               description='List of addresses that the customer has'))
     }
 )
 
@@ -104,7 +104,6 @@ class CustomerResource(Resource):
     #  RETRIEVE A CUSTOMER
     # ------------------------------------------------------------------
 
-    @api.doc('get_customers')
     @api.response(404, 'Customer not found')
     @api.marshal_with(customer_model)
     def get(self, customer_id):
@@ -122,7 +121,7 @@ class CustomerResource(Resource):
     # ------------------------------------------------------------------
     # UPDATE AN EXISTING CUSTOMER
     # ------------------------------------------------------------------
-    @api.doc('update_customers')
+
     @api.response(404, 'Customer not found')
     @api.response(400, 'The posted Customer data was not valid')
     @api.expect(customer_model)
@@ -147,7 +146,7 @@ class CustomerResource(Resource):
     # ------------------------------------------------------------------
     # DELETE A CUSTOMER
     # ------------------------------------------------------------------
-    @api.doc('delete_customers')
+
     @api.response(204, 'Customer deleted')
     def delete(self, customer_id):
         """
@@ -172,7 +171,7 @@ class CustomerCollection(Resource):
     # ------------------------------------------------------------------
     # LIST ALL CUSTOMERS
     # ------------------------------------------------------------------
-    @api.doc('list_customers')
+
     @api.expect(customer_args, validate=True)
     @api.marshal_list_with(customer_model)
     def get(self):
@@ -218,7 +217,7 @@ class CustomerCollection(Resource):
     # ------------------------------------------------------------------
     # ADD A NEW CUSTOMER
     # ------------------------------------------------------------------
-    @api.doc('create_customers')
+
     @api.response(400, 'The posted data was not valid')
     @api.expect(create_customer_model)
     @api.marshal_with(customer_model, code=201)
@@ -249,7 +248,7 @@ class CustomerCollection(Resource):
 @api.param('customer_id', 'The Customer identifier')
 class ActivateResource(Resource):
     """ Activate actions on a Customer """
-    @api.doc('activate_customers')
+
     @api.response(404, 'Customer not found')
     def put(self, customer_id):
         """
@@ -275,7 +274,7 @@ class ActivateResource(Resource):
 @api.param('customer_id', 'The Customer identifier')
 class DeactivateResource(Resource):
     """ Deactivate actions on a Customer """
-    @api.doc('deactivate_customers')
+
     @api.response(404, 'Customer not found')
     def put(self, customer_id):
         """
@@ -312,6 +311,7 @@ class AddressResource(Resource):
     # ------------------------------------------------------------------
     # RETRIEVE AN ADDRESS
     # ------------------------------------------------------------------
+
     @api.marshal_with(address_model)
     @api.response(404, 'Address not found')
     def get(self, address_id, customer_id):
