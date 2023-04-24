@@ -1,6 +1,24 @@
 """
 The customers resource is a representation of the customer accounts.
 All the REST API calls to the Customer or the Address Database are housed here.
+
+Customers Service with Swagger and Flask RESTX
+Paths:
+------
+GET / - Displays a UI for Selenium testing
+GET /customers - Lists a list all of Customers
+GET /customers/{customer_id} - Reads the Customer with given Customer ID
+POST /customers - Creates a new Customer in the database
+PUT /customers/{customer_id} - Updates a Customer with given customer ID
+DELETE /customers/{customer_id} - Deletes a Customer with given ID
+GET /customers/{customer_id}/addresses - Lists all the addresses of the customer with given ID
+GET /customers/{customer_id}/addresses/{address_id} - Reads the Address with given ID of the customer with given ID
+POST /customers/{customer_id}/addresses - Creates a new address of the customer with given Customer ID
+PUT /customers/{customer_id}/addresses/{address_id} - Updates the address with given address ID of customer with given ID
+DELETE /customers/{customer_id}/addresses/{address_id} - Deletes the address with given address ID of customer with given ID
+PUT /customers/{customer_id}/activate - Activates a Customer with given Customer ID
+PUT /customers/{customer_id}/deactivate - Deactivates a Customer with given Customer ID
+
 """
 # pylint: disable=cyclic-import
 from flask import jsonify
@@ -18,14 +36,14 @@ create_address_model = api.model('Address', {
     'state': fields.String(required=True, description='The address state'),
     'country': fields.String(description='The address country'),
     'pin_code': fields.String(required=True, description='The address pin code'),
+    'customer_id': fields.Integer(required=True, description='The customer ID corresponding to the Address')
 })
 
 address_model = api.inherit(
     'AddressModel',
     create_address_model,
     {
-        'address_id': fields.Integer(readOnly=True, description='The unique id assigned internally by service'),
-        'customer_id': fields.Integer(required=True, description='The customer ID corresponding to the Address')
+        'address_id': fields.Integer(readOnly=True, description='The unique id assigned internally by service')
     }
 )
 
@@ -104,6 +122,7 @@ class CustomerResource(Resource):
     #  RETRIEVE A CUSTOMER
     # ------------------------------------------------------------------
 
+    @api.doc('get_customers')
     @api.response(404, 'Customer not found')
     @api.marshal_with(customer_model)
     def get(self, customer_id):
@@ -122,6 +141,7 @@ class CustomerResource(Resource):
     # UPDATE AN EXISTING CUSTOMER
     # ------------------------------------------------------------------
 
+    @api.doc('update_customers')
     @api.response(404, 'Customer not found')
     @api.response(400, 'The posted Customer data was not valid')
     @api.expect(customer_model)
@@ -147,6 +167,7 @@ class CustomerResource(Resource):
     # DELETE A CUSTOMER
     # ------------------------------------------------------------------
 
+    @api.doc('delete_customers')
     @api.response(204, 'Customer deleted')
     def delete(self, customer_id):
         """
@@ -172,10 +193,11 @@ class CustomerCollection(Resource):
     # LIST ALL CUSTOMERS
     # ------------------------------------------------------------------
 
+    @api.doc('list_customers')
     @api.expect(customer_args, validate=True)
     @api.marshal_list_with(customer_model)
     def get(self):
-        """ Returns all of the Customers """
+        """ Lists all of the Customers """
         app.logger.info('Request to list customers...')
         customers = []
         args = customer_args.parse_args()
@@ -218,6 +240,7 @@ class CustomerCollection(Resource):
     # ADD A NEW CUSTOMER
     # ------------------------------------------------------------------
 
+    @api.doc('create_customers')
     @api.response(400, 'The posted data was not valid')
     @api.expect(create_customer_model)
     @api.marshal_with(customer_model, code=201)
@@ -249,6 +272,7 @@ class CustomerCollection(Resource):
 class ActivateResource(Resource):
     """ Activate actions on a Customer """
 
+    @api.doc('activate_customers')
     @api.response(404, 'Customer not found')
     def put(self, customer_id):
         """
@@ -275,6 +299,7 @@ class ActivateResource(Resource):
 class DeactivateResource(Resource):
     """ Deactivate actions on a Customer """
 
+    @api.doc('deactivate_customers')
     @api.response(404, 'Customer not found')
     def put(self, customer_id):
         """
@@ -312,6 +337,7 @@ class AddressResource(Resource):
     # RETRIEVE AN ADDRESS
     # ------------------------------------------------------------------
 
+    @api.doc('get_addresses')
     @api.marshal_with(address_model)
     @api.response(404, 'Address not found')
     def get(self, address_id, customer_id):
@@ -338,6 +364,8 @@ class AddressResource(Resource):
     # ------------------------------------------------------------------
     # UPDATE AN EXISTING ADDRESS
     # ------------------------------------------------------------------
+
+    @api.doc('update_addresses')
     @api.response(404, 'Address not found')
     @api.expect(address_model)
     @api.marshal_with(address_model)
@@ -374,6 +402,8 @@ class AddressResource(Resource):
     # ------------------------------------------------------------------
     # DELETE AN ADDRESS
     # ------------------------------------------------------------------
+
+    @api.doc('delete_addresses')
     @api.response(204, 'Address deleted')
     def delete(self, address_id, customer_id):
         """
@@ -399,6 +429,8 @@ class AddressCollection(Resource):
     # ------------------------------------------------------------------
     # LIST ALL ADDRESSES FOR A CUSTOMER
     # ------------------------------------------------------------------
+
+    @api.doc('list_addresses')
     @api.marshal_list_with(address_model)
     def get(self, customer_id):
         """List all of the addresses of a Customer"""
@@ -414,6 +446,8 @@ class AddressCollection(Resource):
     # ------------------------------------------------------------------
     # ADD A NEW ADDRESS FOR A CUSTOMER
     # ------------------------------------------------------------------
+
+    @api.doc('create_addresses')
     @api.response(400, 'The posted data was not valid')
     @api.expect(create_address_model)
     @api.marshal_with(address_model, code=201)
