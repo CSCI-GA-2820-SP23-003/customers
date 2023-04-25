@@ -123,7 +123,7 @@ class TestCustomer(unittest.TestCase):
         self.assertEqual(len(customers), 1)
         self.assertEqual(customers[0].id, original_id)
         self.assertEqual(customers[0].email, "mya6511@nyu.edu")
-    
+
     def test_update_customer_password(self):
         """It should Update a Customer password"""
         customer = CustomerFactory()
@@ -136,7 +136,7 @@ class TestCustomer(unittest.TestCase):
         customer.email = "mya6511@nyu.edu"
         original_id = customer.id
         original_password = customer.password
-        new_password = "new password" 
+        new_password = "new password"
         customer.password = new_password
         customer.update(original_password)
         hashed_new_password = hashlib.sha256(new_password.encode("UTF-8")).hexdigest()
