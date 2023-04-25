@@ -114,27 +114,6 @@ class TestCustomer(unittest.TestCase):
         # Change it an save it
         customer.email = "mya6511@nyu.edu"
         original_id = customer.id
-        customer.update()
-        self.assertEqual(customer.id, original_id)
-        self.assertEqual(customer.email, "mya6511@nyu.edu")
-        # Fetch it back and make sure the id hasn't changed
-        # but the data did change
-        customers = Customer.all()
-        self.assertEqual(len(customers), 1)
-        self.assertEqual(customers[0].id, original_id)
-        self.assertEqual(customers[0].email, "mya6511@nyu.edu")
-
-    def test_update_customer_password(self):
-        """It should Update a Customer password"""
-        customer = CustomerFactory()
-        logging.debug(customer)
-        customer.id = None
-        customer.create()
-        logging.debug(customer)
-        self.assertIsNotNone(customer.id)
-        # Change it an save it
-        customer.email = "mya6511@nyu.edu"
-        original_id = customer.id
         original_password = customer.password
         new_password = "new password"
         customer.password = new_password
@@ -142,11 +121,13 @@ class TestCustomer(unittest.TestCase):
         hashed_new_password = hashlib.sha256(new_password.encode("UTF-8")).hexdigest()
         self.assertEqual(customer.id, original_id)
         self.assertEqual(customer.password, hashed_new_password)
+        self.assertEqual(customer.email, "mya6511@nyu.edu")
         # Fetch it back and make sure the id hasn't changed
         # but the data did change
         customers = Customer.all()
         self.assertEqual(len(customers), 1)
         self.assertEqual(customers[0].id, original_id)
+        self.assertEqual(customers[0].email, "mya6511@nyu.edu")
         self.assertEqual(customers[0].password, hashed_new_password)
 
     def test_update_no_id(self):
