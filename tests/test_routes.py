@@ -26,7 +26,9 @@ app.logger.critical(DATABASE_URI)
 BASE_URL = "/api/customers"
 FLAG = False
 
+
 def hash_passowrd(password):
+    """ Hashing Password """
     return hashlib.sha256(password.encode("UTF-8")).hexdigest()
 ######################################################################
 #  M O D U L E   C O D E

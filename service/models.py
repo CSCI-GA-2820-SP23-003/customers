@@ -10,8 +10,11 @@ from flask_sqlalchemy import SQLAlchemy
 
 logger = logging.getLogger("flask.app")
 
+
 def hash_password(password):
+    """ Hashing Passwords """
     return hashlib.sha256(password.encode("UTF-8")).hexdigest()
+
 
 # Create the SQLAlchemy object to be initialized later in init_db()
 db = SQLAlchemy()
@@ -242,18 +245,17 @@ class Customer(db.Model):
         db.session.add(self)
         db.session.commit()
 
-    def update(self,original_password=None):
+    def update(self, original_password=None):
         """
         Updates a Customer to the database
         """
         logger.info("Updating/Saving %s, %s", self.last_name, self.first_name)
         if not self.id:
             raise DataValidationError("Update called with empty ID field")
-        
-        print("org_pwd={org}, new_pwd={new}".format(org=original_password,new=self.password))
+
         # if PWD changed, hash again
-        if not original_password==None and not original_password==self.password:
-            self.password=hash_password(self.password)
+        if original_password is not None and not original_password == self.password:
+            self.password = hash_password(self.password)
 
         db.session.commit()
 
