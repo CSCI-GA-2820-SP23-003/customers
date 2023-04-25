@@ -2,6 +2,7 @@
 Test cases for Customer Model
 
 """
+from models import hash_password
 import os
 import logging
 import unittest
@@ -116,6 +117,29 @@ class TestCustomer(unittest.TestCase):
         customer.update()
         self.assertEqual(customer.id, original_id)
         self.assertEqual(customer.email, "mya6511@nyu.edu")
+        # Fetch it back and make sure the id hasn't changed
+        # but the data did change
+        customers = Customer.all()
+        self.assertEqual(len(customers), 1)
+        self.assertEqual(customers[0].id, original_id)
+        self.assertEqual(customers[0].email, "mya6511@nyu.edu")
+    
+    def test_update_customer_password(self):
+        """It should Update a Customer password"""
+        customer = CustomerFactory()
+        logging.debug(customer)
+        customer.id = None
+        customer.create()
+        logging.debug(customer)
+        self.assertIsNotNone(customer.id)
+        # Change it an save it
+        customer.email = "mya6511@nyu.edu"
+        original_id = customer.id
+        new_password = "new_password"
+        customer.password = new_password
+        customer.update()
+        self.assertEqual(customer.id, original_id)
+        self.assertEqual(customer.password, hash_password(new_password))
         # Fetch it back and make sure the id hasn't changed
         # but the data did change
         customers = Customer.all()
