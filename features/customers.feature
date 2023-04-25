@@ -51,7 +51,7 @@ Scenario: Retrieve a Customer and corresponding Address
     And I should see "Bob" in the "First Name" field
     And I should see "Alice" in the "Last Name" field
     And I should see "bob@gmail.com" in the "Email" field
-    And I should see "test" in the "Password" field
+    And I should see "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08" in the "Password" field
     And I should see "True" in the "Active" dropdown
     And I should see "Newport Pkwy" in the "Street" field
     And I should see "Jersey City" in the "City" field
@@ -93,7 +93,7 @@ Scenario: Create a Customer
     And I should see "John" in the "First Name" field
     And I should see "Doe" in the "Last Name" field
     And I should see "johndoe@gmail.com" in the "Email" field
-    And I should see "test" in the "Password" field
+    And I should see "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08" in the "Password" field
     And I should see "True" in the "Active" dropdown
     And I should see "Newport Pkwy" in the "Street" field
     And I should see "Jersey City" in the "City" field
@@ -365,7 +365,7 @@ Scenario: Update a Customer
     And I set the "First Name" to "Test FN"
     And I set the "Last Name" to "Test LN"
     And I set the "Email" to "test@gmail.com"
-    And I set the "Password" to "test788pass"
+    And I set the "Password" to "test"
     And I select "True" in the "Active" dropdown
     And I set the "Street" to "10th Casselberry Way"
     And I set the "City" to "monroe"
@@ -381,7 +381,7 @@ Scenario: Update a Customer
     And I should see "Test FN" in the "First Name" field
     And I should see "Test LN" in the "Last Name" field
     And I should see "test@gmail.com" in the "email" field
-    And I should see "test788pass" in the "password" field
+    And I should see "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08" in the "password" field
     And I should see "True" in the "Active" dropdown
     And I should see "10th Casselberry Way" in the "street" field
     And I should see "monroe" in the "city" field

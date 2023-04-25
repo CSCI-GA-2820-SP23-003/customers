@@ -153,13 +153,16 @@ class CustomerResource(Resource):
         """
         app.logger.info('Request to Update a Customer with id [%s]', customer_id)
         customer = Customer.find(customer_id)
+        original_passowrd = None
         if not customer:
             abort(status.HTTP_404_NOT_FOUND, f"Customer with id '{customer_id}' was not found.")
+        else:
+            original_passowrd = customer.password
         app.logger.debug('Payload = %s', api.payload)
         data = api.payload
         customer.deserialize(data)
         customer.id = customer_id
-        customer.update()
+        customer.update(original_passowrd)
         app.logger.info('Customer with ID [%s] updated.', customer.id)
         return customer.serialize(), status.HTTP_200_OK
 
