@@ -120,8 +120,8 @@ class TestCustomer(unittest.TestCase):
         customer.update(original_password)
         hashed_new_password = hashlib.sha256(new_password.encode("UTF-8")).hexdigest()
         self.assertEqual(customer.id, original_id)
-        self.assertEqual(customer.password, hashed_new_password)
         self.assertEqual(customer.email, "mya6511@nyu.edu")
+        self.assertEqual(customer.password, hashed_new_password)
         # Fetch it back and make sure the id hasn't changed
         # but the data did change
         customers = Customer.all()

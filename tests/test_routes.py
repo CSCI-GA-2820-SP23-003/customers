@@ -27,7 +27,7 @@ BASE_URL = "/api/customers"
 FLAG = False
 
 
-def hash_passowrd(password):
+def hash_password(password):
     """ Hashing Password """
     return hashlib.sha256(password.encode("UTF-8")).hexdigest()
 ######################################################################
@@ -503,7 +503,7 @@ class TestCustomersServer(TestCase):
         self.assertEqual(data["first_name"], customer.first_name)
         self.assertEqual(data["last_name"], customer.last_name)
         self.assertEqual(data["email"], customer.email)
-        self.assertEqual(data["password"], hash_passowrd(customer.password))
+        self.assertEqual(data["password"], hash_password(customer.password))
 
     def test_get_customer_not_found(self):
         """It should not Read a Customer that is not found"""
@@ -570,7 +570,7 @@ class TestCustomersServer(TestCase):
 
             self.assertEqual(
                 created_customer["password"],
-                hash_passowrd(cust.password),
+                hash_password(cust.password),
                 "Passwords are not matching")
 
     ######################################################################
