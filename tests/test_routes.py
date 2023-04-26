@@ -5,6 +5,7 @@ Test cases can be run with the following:
   nosetests -v --with-spec --spec-color
   coverage report -m
 """
+import hashlib
 import os
 import logging
 import random
@@ -26,6 +27,9 @@ BASE_URL = "/api/customers"
 FLAG = False
 
 
+def hash_password(password):
+    """ Hashing Password """
+    return hashlib.sha256(password.encode("UTF-8")).hexdigest()
 ######################################################################
 #  M O D U L E   C O D E
 ######################################################################
@@ -499,7 +503,7 @@ class TestCustomersServer(TestCase):
         self.assertEqual(data["first_name"], customer.first_name)
         self.assertEqual(data["last_name"], customer.last_name)
         self.assertEqual(data["email"], customer.email)
-        self.assertEqual(data["password"], customer.password)
+        self.assertEqual(data["password"], hash_password(customer.password))
 
     def test_get_customer_not_found(self):
         """It should not Read a Customer that is not found"""
@@ -566,7 +570,7 @@ class TestCustomersServer(TestCase):
 
             self.assertEqual(
                 created_customer["password"],
-                cust.password,
+                hash_password(cust.password),
                 "Passwords are not matching")
 
     ######################################################################

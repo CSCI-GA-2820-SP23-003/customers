@@ -3,11 +3,18 @@ Models for Customer
 
 All of the models are stored in this module
 """
+import hashlib
 import logging
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
 logger = logging.getLogger("flask.app")
+
+
+def hash_password(password):
+    """ Hashing Passwords """
+    return hashlib.sha256(password.encode("UTF-8")).hexdigest()
+
 
 # Create the SQLAlchemy object to be initialized later in init_db()
 db = SQLAlchemy()
@@ -233,16 +240,23 @@ class Customer(db.Model):
         logger.info("Creating %s, %s", self.last_name, self.first_name)
         # id must be none to generate next primary key
         self.id = None  # pylint: disable=invalid-name
+        # hash PWDs
+        self.password = hash_password(self.password)
         db.session.add(self)
         db.session.commit()
 
-    def update(self):
+    def update(self, original_password=None):
         """
         Updates a Customer to the database
         """
         logger.info("Updating/Saving %s, %s", self.last_name, self.first_name)
         if not self.id:
             raise DataValidationError("Update called with empty ID field")
+
+        # if PWD changed, hash again
+        if original_password is not None and not original_password == self.password:
+            self.password = hash_password(self.password)
+
         db.session.commit()
 
     def delete(self):

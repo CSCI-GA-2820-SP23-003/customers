@@ -2,6 +2,7 @@
 Test cases for Customer Model
 
 """
+import hashlib
 import os
 import logging
 import unittest
@@ -113,15 +114,21 @@ class TestCustomer(unittest.TestCase):
         # Change it an save it
         customer.email = "mya6511@nyu.edu"
         original_id = customer.id
-        customer.update()
+        original_password = customer.password
+        new_password = "new password"
+        customer.password = new_password
+        customer.update(original_password)
+        hashed_new_password = hashlib.sha256(new_password.encode("UTF-8")).hexdigest()
         self.assertEqual(customer.id, original_id)
         self.assertEqual(customer.email, "mya6511@nyu.edu")
+        self.assertEqual(customer.password, hashed_new_password)
         # Fetch it back and make sure the id hasn't changed
         # but the data did change
         customers = Customer.all()
         self.assertEqual(len(customers), 1)
         self.assertEqual(customers[0].id, original_id)
         self.assertEqual(customers[0].email, "mya6511@nyu.edu")
+        self.assertEqual(customers[0].password, hashed_new_password)
 
     def test_update_no_id(self):
         """It should not Update a Customer with no id"""
