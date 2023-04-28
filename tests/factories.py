@@ -18,6 +18,7 @@ class CustomerFactory(factory.Factory):
     last_name = factory.Faker("last_name")
     email = factory.Faker("email")
     password = factory.Faker("password")
+    active = True
 
 
 class AddressFactory(factory.Factory):

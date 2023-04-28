@@ -18,6 +18,7 @@ DATABASE_URI = os.getenv(
 
 
 # pylint: disable=invalid-name
+# pylint: disable=too-many-public-methods
 def setUpModule():
     """ Sets up the database, and other attributes"""
     app.config["TESTING"] = True
@@ -61,7 +62,8 @@ class TestCustomer(unittest.TestCase):
             last_name="J",
             email="mya6510@nyu.edu",
             password="12344321",
-            addresses=[])
+            addresses=[]
+            )
         self.assertTrue(customer is not None)
         self.assertEqual(customer.id, None)
         self.assertEqual(customer.first_name, "Marwan")
@@ -101,6 +103,7 @@ class TestCustomer(unittest.TestCase):
         self.assertEqual(found_customer.last_name, customer.last_name)
         self.assertEqual(found_customer.email, customer.email)
         self.assertEqual(found_customer.password, customer.password)
+        self.assertEqual(found_customer.active, customer.active)
         self.assertEqual(found_customer.addresses, [])
 
     def test_update_a_customer(self):
@@ -175,6 +178,8 @@ class TestCustomer(unittest.TestCase):
         self.assertEqual(data["email"], customer.email)
         self.assertIn("password", data)
         self.assertEqual(data["password"], customer.password)
+        self.assertIn("active", data)
+        self.assertEqual(data["active"], customer.active)
         self.assertEqual(len(data["addresses"]), 1)
         addresses = data["addresses"]
         self.assertEqual(addresses[0]["address_id"], address.address_id)
@@ -198,6 +203,7 @@ class TestCustomer(unittest.TestCase):
         self.assertEqual(new_customer.last_name, customer.last_name)
         self.assertEqual(new_customer.email, customer.email)
         self.assertEqual(new_customer.password, customer.password)
+        self.assertEqual(new_customer.active, customer.active)
 
     def test_deserialize_missing_data(self):
         """It should not deserialize a Customer with missing data"""
@@ -208,6 +214,12 @@ class TestCustomer(unittest.TestCase):
     def test_deserialize_bad_data(self):
         """It should not deserialize bad data"""
         data = "this is not a dictionary"
+        customer = Customer()
+        self.assertRaises(DataValidationError, customer.deserialize, data)
+
+    def test_deserialize_active_type_error(self):
+        """It should not deserialize bad data with active field as not bool"""
+        data = {"id": 1, "first_name": "Kit", "last_name": "Kat", "email": "k@gmail.com", "password": "test", "active": "true"}
         customer = Customer()
         self.assertRaises(DataValidationError, customer.deserialize, data)
 
@@ -227,6 +239,7 @@ class TestCustomer(unittest.TestCase):
         self.assertEqual(customer.last_name, customers[1].last_name)
         self.assertEqual(customer.email, customers[1].email)
         self.assertEqual(customer.password, customers[1].password)
+        self.assertEqual(customer.active, customers[1].active)
 
     def test_find_by_first_name(self):
         """It should Find Customer by First Name"""
@@ -292,6 +305,7 @@ class TestCustomer(unittest.TestCase):
         self.assertEqual(customer.first_name, customers[1].first_name)
         self.assertEqual(customer.last_name, customers[1].last_name)
         self.assertEqual(customer.email, customers[1].email)
+        self.assertEqual(customer.active, customers[1].active)
 
     def test_find_or_404_not_found(self):
         """It should return 404 not found for Customer"""
