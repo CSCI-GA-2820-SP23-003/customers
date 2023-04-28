@@ -373,21 +373,39 @@ $(function () {
 
         $("#flash_message").empty();
 
-        let ajax = $.ajax({
-            type: "DELETE",
+        let ajax1 = $.ajax({
+            type: "GET",
             url: `/api/customers/${customer_id}`,
             contentType: "application/json",
-            data: '',
+            data: ''
         })
 
-        ajax.done(function(res){
-            clear_form_data()
-            flash_message("Customer has been Deleted!")
+        ajax1.done(function(res1){
+
+            let ajax2 = $.ajax({
+                type: "DELETE",
+                url: `/api/customers/${customer_id}`,
+                contentType: "application/json",
+                data: ''
+            })
+
+            ajax2.done(function(res2){
+                clear_form_data()
+                let s1 = "Customer with ID " + customer_id +  " has been Deleted!";
+                flash_message(s1)
+            });
+
+            ajax2.fail(function(res2){
+                flash_message("Server error!")
+            });
         });
 
-        ajax.fail(function(res){
-            flash_message("Server error!")
+        ajax1.fail(function(res1){
+            let s2 = "Customer with ID " + customer_id + " does not exist!";
+            flash_message(s2)
         });
+
+        
     });
 
     // ****************************************
