@@ -292,7 +292,13 @@ class Customer(db.Model):
             self.last_name = data["last_name"]
             self.email = data["email"]
             self.password = data["password"]
-            self.active = data["active"]
+            if isinstance(data["active"], bool):
+                self.active = data["active"]
+            else:
+                raise DataValidationError(
+                    "Invalid type for boolean [active]: "
+                    + str(type(data["active"]))
+                )
             # handle inner list of addresses
             address_list = data.get("addresses")
             for json_address in address_list:
@@ -381,8 +387,6 @@ class Customer(db.Model):
             active (string): the active status of the Customers you want to match
         """
         logger.info("Processing active query for %s ...", active)
-        if isinstance(active, str):
-            active = active.lower() in ["true", "True"]
         return cls.query.filter(cls.active == active)
 
     @classmethod
