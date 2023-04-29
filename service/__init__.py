@@ -23,7 +23,7 @@ api = Api(
         app,
         version='1.0.0',
         title='Customers REST API Service',
-        description='This is a sample Customers microservice server.',
+        description='This is the Customers microservice server.',
         default='customers',
         default_label='Customer operations',
         doc='/apidocs',  # default also could use doc='/apidocs/'
