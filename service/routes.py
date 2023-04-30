@@ -128,7 +128,7 @@ class CustomerResource(Resource):
     def get(self, customer_id):
         """
         Retrieve a single Customer
-        This endpoint will return a Customer based on its id
+        This endpoint will return a Customer based on its ID.
         """
         app.logger.info("Request to Retrieve a Customer with id [%s]", customer_id)
         customer = Customer.find(customer_id)
@@ -149,7 +149,7 @@ class CustomerResource(Resource):
     def put(self, customer_id):
         """
         Update a Customer
-        This endpoint will update a Customer based the body that is posted
+        This endpoint will update a Customer based on the body that is posted.
         """
         app.logger.info('Request to Update a Customer with id [%s]', customer_id)
         customer = Customer.find(customer_id)
@@ -175,7 +175,7 @@ class CustomerResource(Resource):
     def delete(self, customer_id):
         """
         Delete a Customer
-        This endpoint will delete a Customer based the id specified in the path
+        This endpoint will delete a Customer based on the ID specified in the path.
         """
         app.logger.info('Request to Delete a Customer with id [%s]', customer_id)
         customer = Customer.find(customer_id)
@@ -200,7 +200,10 @@ class CustomerCollection(Resource):
     @api.expect(customer_args, validate=True)
     @api.marshal_list_with(customer_model)
     def get(self):
-        """ Lists all of the Customers """
+        """
+        Lists all of the Customers
+        This endpoint will list all the customers.
+        """
         app.logger.info('Request to list customers...')
         customers = []
         args = customer_args.parse_args()
@@ -250,7 +253,7 @@ class CustomerCollection(Resource):
     def post(self):
         """
         Creates a Customer
-        This endpoint will create a Customer based the data in the body that is posted
+        This endpoint will create a Customer based on the data in the body that is posted.
         """
         app.logger.info('Request to Create a Customer')
         customer = Customer()
@@ -280,7 +283,7 @@ class ActivateResource(Resource):
     def put(self, customer_id):
         """
         Activate a Customer
-        This endpoint will Activate a Customer
+        This endpoint will activate a Customer.
         """
         app.logger.info(f'Request to Activate a Customer with ID: {customer_id}')
         customer = Customer.find(customer_id)
@@ -307,7 +310,7 @@ class DeactivateResource(Resource):
     def put(self, customer_id):
         """
         Deactivate a Customer
-        This endpoint will Deactivate a Customer
+        This endpoint will deactivate a Customer.
         """
         app.logger.info(f'Request to Deactivate a Customer with ID: {customer_id}')
         customer = Customer.find(customer_id)
@@ -346,7 +349,7 @@ class AddressResource(Resource):
     def get(self, address_id, customer_id):
         """
         Retrieve an address
-        This endpoint will return an address from a customer based on its id
+        This endpoint will return an address from a customer based on its ID.
         """
         app.logger.info('Request to retrieve an Address %s from Customer with id: %s', address_id, customer_id)
         customer = Customer.find(customer_id)
@@ -375,7 +378,7 @@ class AddressResource(Resource):
     def put(self, address_id, customer_id):
         """
         Update an address of a customer
-        This endpoint will update an Address based on the body that is posted
+        This endpoint will update an Address based on the body that is posted.
         """
 
         app.logger.info('Request to Address with address_id [%s] and customer_id [%s] ...', address_id, customer_id)
@@ -411,7 +414,7 @@ class AddressResource(Resource):
     def delete(self, address_id, customer_id):
         """
         Delete an address from a customer
-        This endpoint will delete an Address based on the id specified in the path
+        This endpoint will delete an Address based on the ID specified in the path.
         """
         app.logger.info('Request to delete address with address_id [%s] and customer_id [%s] ...', address_id, customer_id)
 
@@ -436,7 +439,10 @@ class AddressCollection(Resource):
     @api.doc('list_addresses')
     @api.marshal_list_with(address_model)
     def get(self, customer_id):
-        """List all of the addresses of a Customer"""
+        """
+        List all of the addresses of a Customer
+        This endpoint will list all addresses of a Customer.
+        """
         app.logger.info('Request to list Addresses for Customer with id: %s', customer_id)
         customer = Customer.find(customer_id)
         if not customer:
@@ -457,7 +463,7 @@ class AddressCollection(Resource):
     def post(self, customer_id):
         """
         Create an address for a customer
-        This endpoint will add a new address for a customer
+        This endpoint will add a new address for a customer.
         """
         app.logger.info('Request to create an address for customer with id: %s', customer_id)
         customer = Customer.find(customer_id)
