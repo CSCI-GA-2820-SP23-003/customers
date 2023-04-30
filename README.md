@@ -71,7 +71,7 @@ deploy/               - yaml files for kubernetes deployment
 
 We've used Postgres for our database that stores the Customer and Address Tables.
 
-<img width="543" alt="image" src="https://user-images.githubusercontent.com/23705371/223218803-4b5ce9e9-3bdf-4bab-aa04-c1cb10638614.png">
+<img width="543" alt="image" src="https://user-images.githubusercontent.com/22293744/235336044-78df0398-fa6a-4b1f-92b2-febe15bc68d6.png">
 
 ## Customer Service APIs
 
