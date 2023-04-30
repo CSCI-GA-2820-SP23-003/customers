@@ -21,6 +21,8 @@ To run the all the test cases locally, please use the command `nosetests`. The t
 To run the BDD tests, first start the service in a terminal by running `honcho start` and then run `behave` in another terminal.
 
 ## Using the service on Cloud/Kubernetes
+The service is currently hosted on a Kubernetes Cluster on IBM Cloud.
+
 Dev: http://159.122.179.165:31001/
 
 Prod: http://159.122.179.165:31002/
