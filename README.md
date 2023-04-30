@@ -20,6 +20,11 @@ To run the all the test cases locally, please use the command `nosetests`. The t
 
 To run the BDD tests, first start the service in a terminal by running `honcho start` and then run `behave` in another terminal.
 
+## Current Service URLs
+Dev: http://159.122.179.165:31001/
+
+Prod: http://159.122.179.165:31002/
+
 ## Contents
 
 The `/service` folder contains the `models.py` file for the model and a `routes.py` file for the Customer service. The `/tests` folder has test cases code for testing the model and the service separately. The `/features` folder contains the code for BDD testing of the service. And the `/deploy` folder contains the yaml files that can be used for deploying the file to a Kubernetes cluster.
