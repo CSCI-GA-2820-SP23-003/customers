@@ -342,6 +342,12 @@ $(function () {
 
         let customer_id = $("#customer_id").val();
 
+        if(!customer_id){
+            displayFieldRequiredNotification("#customer_id")
+            $("#flash_message").html("Form Error(s)")
+            return false
+        };
+
         $("#flash_message").empty();
 
         let ajax = $.ajax({
@@ -371,6 +377,12 @@ $(function () {
 
         let customer_id = $("#customer_id").val();
 
+        if(!customer_id){
+            displayFieldRequiredNotification("#customer_id")
+            $("#flash_message").html("Form Error(s)")
+            return false
+        };
+
         $("#flash_message").empty();
 
         let ajax = $.ajax({
@@ -386,7 +398,7 @@ $(function () {
         });
 
         ajax.fail(function(res){
-            flash_message("Server error!")
+            flash_message(res.responseJSON.message)
         });
     });
 
