@@ -97,6 +97,7 @@ GET `/`
 | List Customers     | GET `/customers`
 | Activate Customer  | PUT `/customers/{int:customer_id}/activate`
 | Deactivate Customer  | PUT `/customers/{int:customer_id}/deactivate`
+| Search Customers and Addresses | GET `/customers?<query_field>=<query_value>`
 
 
 ### Address Operations
