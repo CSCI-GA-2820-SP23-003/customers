@@ -107,7 +107,7 @@ def index():
 ######################################################################
 #  PATH: /customers/{customer_id}
 ######################################################################
-@api.route('/customers/<int:customer_id>')
+@api.route('/customers/<customer_id>')
 @api.param('customer_id', 'The Customer identifier')
 class CustomerResource(Resource):
     """
@@ -273,7 +273,7 @@ class CustomerCollection(Resource):
 ######################################################################
 
 
-@api.route('/customers/<int:customer_id>/activate')
+@api.route('/customers/<customer_id>/activate')
 @api.param('customer_id', 'The Customer identifier')
 class ActivateResource(Resource):
     """ Activate actions on a Customer """
@@ -300,7 +300,7 @@ class ActivateResource(Resource):
 ######################################################################
 
 
-@api.route('/customers/<int:customer_id>/deactivate')
+@api.route('/customers/<customer_id>/deactivate')
 @api.param('customer_id', 'The Customer identifier')
 class DeactivateResource(Resource):
     """ Deactivate actions on a Customer """
@@ -327,7 +327,7 @@ class DeactivateResource(Resource):
 ######################################################################
 
 
-@api.route('/customers/<int:customer_id>/addresses/<int:address_id>')
+@api.route('/customers/<customer_id>/addresses/<address_id>')
 @api.param('customer_id', 'The Customer identifier')
 @api.param('address_id', 'The Address identifier')
 class AddressResource(Resource):
@@ -381,7 +381,7 @@ class AddressResource(Resource):
         This endpoint will update an Address based on the body that is posted.
         """
 
-        app.logger.info('Request to Address with address_id [%s] and customer_id [%s] ...', address_id, customer_id)
+        app.logger.info('Request to Update Address with address_id [%s] and customer_id [%s] ...', address_id, customer_id)
         customer = Customer.find(customer_id)
         if not customer:
             abort(status.HTTP_404_NOT_FOUND, f"Customer with id '{customer_id}' was not found.")
@@ -389,7 +389,7 @@ class AddressResource(Resource):
         # Find customer address with address_id
         addr_to_update = None
         for addr in customer.addresses:
-            if addr.address_id == address_id:
+            if addr.address_id == int(address_id):
                 addr_to_update = addr
                 break
 
@@ -428,7 +428,7 @@ class AddressResource(Resource):
 ######################################################################
 #  PATH: /customers/{customer_id}/addresses
 ######################################################################
-@api.route('/customers/<int:customer_id>/addresses', strict_slashes=False)
+@api.route('/customers/<customer_id>/addresses', strict_slashes=False)
 @api.param('customer_id', 'The Customer identifier')
 class AddressCollection(Resource):
     """ Handles all interactions with collections of addresses """
