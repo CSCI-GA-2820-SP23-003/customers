@@ -948,7 +948,7 @@ class TestAddressesServer(TestCase):
         self.assertEqual(len(customer.addresses), 3)
 
         # choose an address randomly to be deleted
-        address_id_to_delete = random.choice(addresses).address_id
+        address_id_to_delete = int(random.choice(addresses).address_id)
 
         # api call for deletion of address
         resp = self.client.delete(

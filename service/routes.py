@@ -419,7 +419,7 @@ class AddressResource(Resource):
         app.logger.info('Request to delete address with address_id [%s] and customer_id [%s] ...', address_id, customer_id)
 
         address = Address.find(address_id)
-        if address and address.customer_id == customer_id:
+        if address and address.customer_id == int(customer_id):
             address.delete()
             app.logger.info('Address with ID [%s] and customer ID [%s] delete completed.', address_id, customer_id)
         return '', status.HTTP_204_NO_CONTENT
