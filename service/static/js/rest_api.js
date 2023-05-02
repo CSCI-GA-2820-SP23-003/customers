@@ -68,6 +68,7 @@ $(function () {
 
     function removeAllNotifications() {
         const fields = [
+            "id",
             "first_name",
             "last_name",
             "email",
@@ -202,6 +203,7 @@ $(function () {
         ajax.done(function(res){
             update_form_data(res)
             flash_message("Success")
+            removeAllNotifications()
         });
 
         ajax.fail(function(res){
@@ -237,12 +239,24 @@ $(function () {
             removeFieldRequiredNotification("#customer_id")
         };
 
+        if(customer_id < 0){
+            displayFieldRequiredNotification("#customer_id")
+            $("#flash_message").html("Customer ID should be a positive number.")
+            return false
+        };
+
         if(!address_id){
             displayFieldRequiredNotification("#customer_address_id")
             $("#flash_message").html("Form Error(s)")
             return false
         }else{
             removeFieldRequiredNotification("#customer_address_id")
+        };
+
+        if(address_id < 0){
+            displayFieldRequiredNotification("#address_id")
+            $("#flash_message").html("Address ID should be a positive number.")
+            return false
         };
 
         let addr_data = {
@@ -255,8 +269,6 @@ $(function () {
             "customer_id": 0
 
         };
-
-        let to_pass = [addr_data];
 
         let cust_data = {
             "first_name": first_name,
@@ -321,6 +333,7 @@ $(function () {
                 // Append customer result to address result
                 update_form_data_two_responses(res1,res2)
                 flash_message("Success")
+                removeAllNotifications()
             });
             // Fail Updating Address
             ajax2.fail(function(res){
@@ -348,6 +361,12 @@ $(function () {
             return false
         };
 
+        if(customer_id < 0){
+            displayFieldRequiredNotification("#customer_id")
+            $("#flash_message").html("Customer ID should be a positive number.")
+            return false
+        };
+
         $("#flash_message").empty();
 
         let ajax = $.ajax({
@@ -360,6 +379,7 @@ $(function () {
         ajax.done(function(res){
             update_form_data(res)
             flash_message("Success")
+            removeAllNotifications()
         });
 
         ajax.fail(function(res){
@@ -383,6 +403,12 @@ $(function () {
             return false
         };
 
+        if(customer_id < 0){
+            displayFieldRequiredNotification("#customer_id")
+            $("#flash_message").html("Customer ID should be a positive number.")
+            return false
+        };
+
         $("#flash_message").empty();
 
         let ajax = $.ajax({
@@ -395,6 +421,7 @@ $(function () {
         ajax.done(function(res){
             clear_form_data()
             flash_message("Customer has been Deleted!")
+            removeAllNotifications()
         });
 
         ajax.fail(function(res){
@@ -415,6 +442,12 @@ $(function () {
             return false
         };
 
+        if(customer_id < 0){
+            displayFieldRequiredNotification("#customer_id")
+            $("#flash_message").html("Customer ID should be a positive number.")
+            return false
+        };
+
         $("#flash_message").empty();
 
         let ajax = $.ajax({
@@ -427,6 +460,7 @@ $(function () {
         ajax.done(function(res){
             update_form_data(res)
             flash_message("Customer has been Activated!")
+            removeAllNotifications()
         });
 
         ajax.fail(function(res){
@@ -447,6 +481,12 @@ $(function () {
             return false
         };
 
+        if(customer_id < 0){
+            displayFieldRequiredNotification("#customer_id")
+            $("#flash_message").html("Customer ID should be a positive number.")
+            return false
+        };
+
         $("#flash_message").empty();
 
         let ajax = $.ajax({
@@ -459,6 +499,7 @@ $(function () {
         ajax.done(function(res){
             update_form_data(res)
             flash_message("Customer has been Deactivated!")
+            removeAllNotifications()
         });
 
         ajax.fail(function(res){
@@ -602,6 +643,7 @@ $(function () {
             }
 
             flash_message("Success")
+            removeAllNotifications()
         });
 
         ajax.fail(function(res){
