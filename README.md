@@ -104,6 +104,7 @@ GET `/`
 | List Customers     | GET `/customers`
 | Activate Customer  | PUT `/customers/{int:customer_id}/activate`
 | Deactivate Customer  | PUT `/customers/{int:customer_id}/deactivate`
+| Search Customers and Addresses | GET `/customers?<query_field>=<query_value>`
 
 
 ### Address Operations
@@ -115,7 +116,6 @@ GET `/`
 | Update an Address| PUT `/customers/{int:customer_id}/addresses/{int:address_id}`  
 | Delete an Address| DELETE `/customers/{int:customer_id}/addresses/{int:address_id}`           
 | List Addresses    | GET `/customers/{int:customer_id}/addresses`  
-| Search Customers and Addresses | GET `/customers?<query_field>=<query_value>`
 
 ## Customer Service APIs - Usage
 
