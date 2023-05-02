@@ -115,7 +115,7 @@ GET `/`
 | Update an Address| PUT `/customers/{int:customer_id}/addresses/{int:address_id}`  
 | Delete an Address| DELETE `/customers/{int:customer_id}/addresses/{int:address_id}`           
 | List Addresses    | GET `/customers/{int:customer_id}/addresses`  
-| Search Customers and Addresses | GET `/customers/<query_field>=<query_value>`
+| Search Customers and Addresses | GET `/customers?<query_field>=<query_value>`
 
 ## Customer Service APIs - Usage
 
@@ -548,7 +548,7 @@ Failure Response : `HTTP_404_NOT_FOUND`
 
 ### Search Customers and Addresses
 
-URL : `http://127.0.0.1:8080/api/customers/<query_field>=<query_value>`
+URL : `http://127.0.0.1:8080/api/customers?<query_field>=<query_value>`
 
 Method : GET
 
