@@ -16,7 +16,7 @@ In this project, we have created a Customer Resource along with its subordinate 
 
 To run the service, please use the command `honcho start`. The service is available at localhost: `http://127.0.0.1:8080`
 
-To run the all the test cases locally, please use the command `nosetests`. The test cases have 99% coverage currently.
+To run all the test cases locally, please use the command `nosetests`. The test cases have 99% coverage currently.
 
 To run the BDD tests, first start the service in a terminal by running `honcho start` and then run `behave` in another terminal.
 
@@ -26,6 +26,10 @@ The service is currently hosted on a Kubernetes Cluster on IBM Cloud.
 Dev: http://159.122.179.165:31001/
 
 Prod: http://159.122.179.165:31002/
+
+## Flask-RESTX
+The documentation for the api can be found here - `http://127.0.0.1:8080/apidocs` when running locally.    
+Or on the cloud it can be found at `homeurl/apidocs`.
 
 ## Contents
 
@@ -86,6 +90,9 @@ We've used Postgres for our database that stores the Customer and Address Tables
 
 GET `/`
 
+### Base URL for all the APIs
+`/api`
+
 ### Customer Operations
 
 | Description     | Endpoint                       
@@ -108,12 +115,13 @@ GET `/`
 | Update an Address| PUT `/customers/{int:customer_id}/addresses/{int:address_id}`  
 | Delete an Address| DELETE `/customers/{int:customer_id}/addresses/{int:address_id}`           
 | List Addresses    | GET `/customers/{int:customer_id}/addresses`  
+| Search Customers and Addresses | GET `/customers?<query_field>=<query_value>`
 
 ## Customer Service APIs - Usage
 
 ### Create a Customer
 
-URL : `http://127.0.0.1:8080/customers`
+URL : `http://127.0.0.1:8080/api/customers`
 
 Method : POST
 
@@ -155,7 +163,7 @@ Success Response : `HTTP_201_CREATED`
 
 ### Read/Get a Customer
 
-URL : `http://127.0.0.1:8080/customers/{int:customer_id}`
+URL : `http://127.0.0.1:8080/api/customers/{int:customer_id}`
 
 Method : GET
 
@@ -189,7 +197,7 @@ Failure Response : `HTTP_404_NOT_FOUND`
 
 ### Update a Customer
 
-URL : `http://127.0.0.1:8080/customers/{int:customer_id}`
+URL : `http://127.0.0.1:8080/api/customers/{int:customer_id}`
 
 Method : PUT
 
@@ -237,7 +245,7 @@ Failure Response : `HTTP_404_NOT_FOUND`
 
 ### Delete a Customer
 
-URL : `http://127.0.0.1:8080/customers/{int:customer_id}`
+URL : `http://127.0.0.1:8080/api/customers/{int:customer_id}`
 
 Method : DELETE
 
@@ -253,7 +261,7 @@ Success Response : `204 NO CONTENT`
 
 ### List Customers
 
-URL : `http://127.0.0.1:8080/customers`
+URL : `http://127.0.0.1:8080/api/customers`
 
 Method : GET
 
@@ -282,7 +290,7 @@ Success Response : `HTTP_200_OK`
 
 ### Activate Customers
 
-URL : `http://127.0.0.1:8080/customers/{customer_id}/activate`
+URL : `http://127.0.0.1:8080/api/customers/{customer_id}/activate`
 
 Method : PUT
 
@@ -315,7 +323,7 @@ Failure Response : `HTTP_404_NOT_FOUND`
 ```
 
 ### Deactivate Customers
-URL : `http://127.0.0.1:8080/customers/{customer_id}/deactivate`
+URL : `http://127.0.0.1:8080/api/customers/{customer_id}/deactivate`
 
 Method : PUT
 
@@ -348,7 +356,7 @@ Failure Response : `HTTP_404_NOT_FOUND`
 ```
 
 ### Create an Address
-URL : `http://127.0.0.1:8080/customers/{int:customer_id}/addresses`
+URL : `http://127.0.0.1:8080/api/customers/{int:customer_id}/addresses`
 
 Method : POST
 
@@ -394,7 +402,7 @@ Failure Response (When invalid Customer ID is provided in the URL) : `HTTP_404_N
 
 ### Read/Get an Address
 
-URL : `http://127.0.0.1:8080/customers/{int:customer_id}/addresses/{int:address_id}`
+URL : `http://127.0.0.1:8080/api/customers/{int:customer_id}/addresses/{int:address_id}`
 
 Method : GET
 
@@ -434,7 +442,7 @@ Failure Response : `HTTP_404_NOT_FOUND`
 
 ### Update an Address
 
-URL : `http://127.0.0.1:8080/customers/{int:customer_id}/addresses/{int:address_id}`
+URL : `http://127.0.0.1:8080/api/customers/{int:customer_id}/addresses/{int:address_id}`
 
 Method : PUT
 
@@ -487,7 +495,7 @@ Failure Response : `HTTP_404_NOT_FOUND`
 
 ### Delete an Address
 
-URL : `http://127.0.0.1:8080/customers/{int:customer_id}/addresses/{int:address_id}`
+URL : `http://127.0.0.1:8080/api/customers/{int:customer_id}/addresses/{int:address_id}`
 
 Method : DELETE
 
@@ -503,7 +511,7 @@ Success Response : `204 NO CONTENT`
 
 ### List Addresses
 
-URL : `http://127.0.0.1:8080/customers/{int:customer_id}/addresses`
+URL : `http://127.0.0.1:8080/api/customers/{int:customer_id}/addresses`
 
 Method : GET
 
@@ -538,6 +546,45 @@ Failure Response : `HTTP_404_NOT_FOUND`
 }
 ```
 
+### Search Customers and Addresses
+
+URL : `http://127.0.0.1:8080/api/customers?<query_field>=<query_value>`
+
+Method : GET
+
+Auth required : No
+
+Permissions required : None
+
+Search for Customers and Addresses based on these query_fields - `first_name, last_name, email, active, street, city, state, country, pin_code`
+
+Example:
+
+Success Response for querying state=NJ : `HTTP_200_OK`
+
+```json
+[
+  {
+    "id": 4,
+    "first_name": "Akshama",
+    "last_name": "Akshama",
+    "password": "b075b18d6e273c802744f832e3f4cb807b72922e92f203af671a45d3bbe3c658",
+    "email": "akshama@gmail.com",
+    "active": false,
+    "addresses": [
+      {
+        "address_id": 3,
+        "street": "40 Newport Pkwy",
+        "city": "Jersey City",
+        "state": "NJ",
+        "country": "USA",
+        "pin_code": "07310",
+        "customer_id": 4
+      }
+    ]
+  }
+]
+```
 
 ## License
 
